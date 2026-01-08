@@ -1,0 +1,80 @@
+.parentSection {
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.parentCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.parentCard:hover {
+  background: var(--color-bg-3);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.parentInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.parentIcon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.parentName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0 0 0.25rem 0;
+}
+
+.parentHint {
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}
+
+.arrowIcon {
+  color: var(--color-fg-muted);
+  transition: all 0.2s ease;
+}
+
+.parentCard:hover .arrowIcon {
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.emptyParent {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-fg-muted);
+}
+
+.emptyParent p {
+  margin: 0;
+  font-size: 1rem;
+}
+

@@ -1,0 +1,214 @@
+/* Form container */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.5rem 2rem;
+    width: 50%;
+    min-height: fit-content;
+}
+
+/* Title */
+.title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: var(--color-fg-heading);
+    margin-bottom: 0.5rem;
+}
+
+/* Form control */
+.formControl {
+    width: 100%;
+    position: relative;
+}
+
+/* Phone input wrapper */
+.phoneInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.countryCode {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.phoneInputWrapper .input {
+    padding-left: 3rem;
+}
+
+/* Input */
+.input {
+    width: 100%;
+    background-color: var(--color-bg-2);
+    border: 1px solid var(--color-border-4);
+    outline: none;
+    color: var(--color-fg-text);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.input:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 3px rgba(143, 155, 179, 0.1);
+}
+
+.input:disabled {
+    background-color: var(--color-bg-3);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Label */
+.label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: var(--color-fg);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    background-color: var(--color-bg-2);
+    padding: 0 0.25rem;
+}
+
+.phoneInputWrapper .label {
+    left: 3rem;
+}
+
+.input:focus+.label,
+.input:valid+.label {
+    top: 0;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    background-color: var(--color-bg);
+}
+
+.phoneInputWrapper .input:focus+.label,
+.phoneInputWrapper .input:valid+.label {
+    left: 2.75rem;
+}
+
+/* Send code button */
+.sendCodeBtn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.5rem 1rem;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 4rem;
+}
+
+.sendCodeBtn:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+}
+
+.sendCodeBtn:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.sendCodeBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Submit button */
+.submitBtn {
+    width: 100%;
+    background-color: var(--color-primary);
+    border: none;
+    outline: none;
+    color: white;
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.submitBtn:hover {
+    background-color: var(--color-primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(143, 155, 179, 0.25);
+}
+
+.submitBtn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Back button */
+.backButton {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--color-border-4);
+    color: var(--color-fg-text);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.backButton:hover {
+    background-color: var(--color-bg-2);
+    border-color: var(--color-primary);
+}
+
+/* Bottom text */
+.bottomText {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-fg);
+}
+
+.switch {
+    color: var(--color-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.switch:hover {
+    color: var(--color-primary-light);
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .form {
+        padding: 2rem 1.5rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+}

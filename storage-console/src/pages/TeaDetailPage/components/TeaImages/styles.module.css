@@ -1,0 +1,140 @@
+.imageSection {
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+}
+
+.mainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.emptyImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: var(--color-fg-muted);
+}
+
+.navBtn {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.navBtnNext {
+  left: auto;
+  right: 1rem;
+}
+
+.navBtn:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.indicator {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  border-radius: 1rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.thumbnailList {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--color-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.thumbnail:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.thumbnailActive {
+  border-color: var(--color-fg-highlight);
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Scrollbar for thumbnail list */
+.thumbnailList::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbnailList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thumbnailList::-webkit-scrollbar-thumb {
+  background: var(--color-border-4);
+  border-radius: 3px;
+}
+
+.thumbnailList::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fg-muted);
+}
+

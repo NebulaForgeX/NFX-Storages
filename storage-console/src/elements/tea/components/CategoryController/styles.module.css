@@ -1,0 +1,27 @@
+.fieldContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.error {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}

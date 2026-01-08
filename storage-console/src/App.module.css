@@ -1,0 +1,16 @@
+/* 加载状态容器 */
+.loadingContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: var(--color-bg-2);
+}
+
+.loadingText {
+  color: var(--color-fg-text);
+  font-size: 0.9rem;
+}
+

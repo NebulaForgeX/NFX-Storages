@@ -1,0 +1,58 @@
+.infoSection {
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 1.75rem 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0 0 1.25rem 0;
+}
+
+.attributeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.iconWrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--color-bg-3);
+  color: var(--color-fg-highlight);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attributeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.attributeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--color-bg-3);
+  border: 1px solid var(--color-border-3);
+  font-size: 0.85rem;
+  color: var(--color-fg-text);
+}
+
+.attributeKey {
+  font-weight: 600;
+}
+
+.attributeValue {
+  color: var(--color-fg-muted);
+}
+
+

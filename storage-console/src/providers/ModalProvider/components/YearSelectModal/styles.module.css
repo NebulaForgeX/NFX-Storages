@@ -1,0 +1,161 @@
+.modal {
+  width: min(520px, 92vw);
+  max-height: 56vh;
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--color-bg-2) 0%, var(--color-bg) 100%);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-3);
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-2) 100%);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+}
+
+.subtitle {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--color-fg-muted);
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-fg-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-fg-heading);
+  transform: translateY(-1px);
+}
+
+.quickActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-3);
+}
+
+.quickGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quickButton {
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-3);
+  background: var(--color-bg);
+  color: var(--color-fg-heading);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.quickButton:hover {
+  background: var(--color-primary-alpha);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.content {
+  padding: 1rem 1.5rem;
+  overflow: auto;
+  outline: none;
+}
+
+.yearSections {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.decadeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.decadeHeader {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-fg-muted);
+  letter-spacing: 0.05em;
+}
+
+.yearList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.5rem;
+}
+
+.yearButton {
+  padding: 0.65rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: var(--color-bg);
+  color: var(--color-fg-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.yearButton:hover {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--color-primary);
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+.highlighted {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 14px rgba(59, 130, 246, 0.35);
+}
+
+@media (max-width: 480px) {
+  .yearList {
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  }
+
+  .quickActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quickGroup {
+    justify-content: center;
+  }
+}
+
+

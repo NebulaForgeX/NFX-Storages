@@ -1,0 +1,74 @@
+.listContainer {
+  margin-top: 1rem;
+}
+
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: var(--color-fg-muted);
+  text-align: center;
+  padding: 3rem;
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0;
+}
+
+.emptyText {
+  font-size: 1rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}
+
+.loadingMore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+  color: var(--color-fg-muted);
+  font-size: 0.875rem;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.endState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 0;
+  color: var(--color-fg-muted);
+}
+
+.endLine {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.endText {
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+

@@ -1,0 +1,130 @@
+/* ============================================
+   Category Add Page
+   ============================================ */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--color-bg-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-fg-heading);
+}
+
+.backBtn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-fg-heading);
+  margin: 0;
+  flex: 1;
+}
+
+/* ============================================
+   Content
+   ============================================ */
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  flex: 1;
+  overflow: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.rightColumn {
+  background: var(--color-bg-2);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+}
+
+.loadingText {
+  color: var(--color-fg-muted);
+  font-size: 1rem;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .header {
+    padding: 1rem 1.5rem;
+  }
+
+  .rightColumn {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+}

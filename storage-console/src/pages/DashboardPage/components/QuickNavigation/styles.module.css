@@ -1,0 +1,315 @@
+.container {
+  margin-top: 2rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-fg-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.navCardWrapper {
+  position: relative;
+}
+
+.navCard {
+  width: 100%;
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border-3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.navCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.navCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--card-color);
+}
+
+.navCard:hover::before {
+  transform: scaleX(1);
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--card-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.navCard:hover .iconWrapper {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0 0 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.navCard:hover .cardTitle {
+  color: var(--card-color);
+}
+
+.navCard:disabled {
+  cursor: default;
+}
+
+.navCard:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--color-border-3);
+}
+
+.navCard:disabled:hover::before {
+  transform: scaleX(0);
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  color: var(--color-fg-highlight);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background: var(--color-bg-2);
+  color: var(--color-fg-highlight);
+  transform: scale(1.1);
+}
+
+.deleteButton:active {
+  transform: scale(0.95);
+}
+
+.addCardWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.addButton {
+  width: 100%;
+  background: var(--color-bg-2);
+  border: 2px dashed var(--color-border-3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  color: var(--color-fg-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.addButton:hover {
+  border-color: var(--color-fg-highlight);
+  color: var(--color-fg-highlight);
+  background: var(--color-bg-1);
+}
+
+.addButton:hover .cardTitle {
+  color: var(--color-fg-highlight);
+}
+
+.addMenu {
+  width: 100%;
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border-3);
+  border-radius: 12px;
+  padding: 1rem;
+  position: absolute;
+  z-index: 20;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.addMenuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border-3);
+}
+
+.addMenuHeader h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+}
+
+.closeMenuButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  color: var(--color-fg-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.closeMenuButton:hover {
+  background: var(--color-bg-1);
+  color: var(--color-fg-text);
+}
+
+.addMenuItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.addMenuItem {
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-border-3);
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.addMenuItem:hover {
+  border-color: var(--card-color);
+  background: var(--color-bg-2);
+  transform: translateX(4px);
+}
+
+.addMenuItemIcon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--card-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.addMenuItemContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.addMenuItemTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin-bottom: 0.25rem;
+}
+
+.addMenuItemDescription {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .navCard {
+    padding: 1rem;
+  }
+
+  .iconWrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cardTitle {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navCard {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .iconWrapper {
+    align-self: center;
+  }
+}
+

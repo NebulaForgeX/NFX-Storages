@@ -1,0 +1,375 @@
+.teaListItem {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+.teaListItem:hover {
+  background: var(--color-bg-3);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.imageContainer {
+  position: relative;
+  width: 8rem;
+  height: 8rem;
+  flex-shrink: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.teaImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-3);
+  color: var(--color-fg-muted);
+}
+
+.imagePlaceholder svg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.imageCount {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+
+.contentContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  color: var(--color-fg-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.deleteButton {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.deleteButton:hover {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: #ffffff;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--color-fg-text);
+  margin: 0;
+  line-height: 1.5;
+  text-align: left;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.priceGroup {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.currentPrice {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.originalPrice {
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+  text-decoration: line-through;
+}
+
+.stock {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+}
+
+.statusBadge,
+.visibilityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.visibilityBadge.show {
+  background: var(--color-success);
+  color: var(--color-success-fg);
+}
+
+.visibilityBadge.hide {
+  background: var(--color-danger);
+  color: var(--color-danger-fg);
+}
+
+.statusBadge {
+  background: rgba(0, 123, 255, 0.1);
+  color: var(--color-primary);
+}
+
+.views {
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+}
+
+.categoryRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.categoryTag,
+.subcategoryTag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.categoryTag {
+  background: var(--color-primary-alpha);
+  color: var(--color-fg-highlight);
+}
+
+.subcategoryTag {
+  background: var(--color-bg-3);
+  color: var(--color-fg-muted);
+  border: 1px solid var(--color-border);
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-3);
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-fg-text);
+}
+
+.metaItem svg {
+  color: var(--color-fg-highlight);
+}
+
+.tagRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.tagIcon {
+  color: var(--color-fg-highlight);
+  flex-shrink: 0;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tagText {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: var(--color-bg-3);
+  color: var(--color-fg-text);
+  border: 1px solid var(--color-border-3);
+}
+
+.attributesRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.attributeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--color-bg-3);
+  color: var(--color-fg-highlight);
+}
+
+.attributeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.attributeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: var(--color-bg-3);
+  border: 1px solid var(--color-border-3);
+  font-size: 0.75rem;
+}
+
+.attributeKey {
+  font-weight: 600;
+  color: var(--color-fg-text);
+}
+
+.attributeValue {
+  color: var(--color-fg-muted);
+}
+
+.status-on_shelf {
+  background: rgba(24, 160, 88, 0.15);
+  color: #138f58;
+}
+
+.status-off_shelf {
+  background: rgba(128, 128, 128, 0.18);
+  color: #5a5a5a;
+}
+
+.status-sold_out {
+  background: rgba(255, 92, 0, 0.15);
+  color: #d15b00;
+}
+
+.status-restocking {
+  background: rgba(0, 153, 255, 0.15);
+  color: #0077cc;
+}
+
+@media (max-width: 768px) {
+  .teaListItem {
+    flex-direction: column;
+  }
+
+  .imageContainer {
+    width: 100%;
+    height: 12rem;
+  }
+
+  .headerRow {
+    flex-direction: column;
+  }
+
+  .actions {
+    align-self: flex-end;
+  }
+}
+

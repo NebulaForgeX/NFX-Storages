@@ -1,0 +1,89 @@
+/* ===== One Column Layout ===== */
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    background: var(--color-bg);
+    position: relative;
+}
+
+/* ===== Header ===== */
+.header {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    width: 100%;
+    box-shadow: 0 0.125rem 0.25rem 0 rgba(44, 51, 73, 0.1);
+}
+
+/* ===== Main Wrapper (Sidebar + Content) ===== */
+.mainWrapper {
+    display: flex;
+    flex: 1;
+    position: relative;
+    flex-direction: row;
+}
+
+/* ===== Sidebar ===== */
+
+.sidebarContainer {
+  position: fixed;
+  left: 0;
+  z-index: 99;
+
+}
+
+.sidebar {
+  /* height: 90vh; */
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  flex-shrink: 0;
+}
+
+/* ===== Content ===== */
+.content {
+    flex: 1;
+    padding: 2rem;
+    background: var(--color-bg);
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: calc(100vh - 10rem);
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+}
+
+/* ===== Footer ===== */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+
+/* ===== 响应式 ===== */
+@media (max-width: 1024px) {
+    .content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+    }
+}

@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: 0.25rem;
+}
+
+.dropdown {
+  width: 100%;
+  background: var(--color-bg);
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}
+
+.error {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+

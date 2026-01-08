@@ -1,0 +1,294 @@
+/* 登录页面容器 */
+.loginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg-2);
+    padding: 2rem;
+}
+
+/* 加载状态 */
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loadingText {
+    color: var(--color-fg-text);
+    font-size: 0.9rem;
+}
+
+/* 主容器 */
+.container {
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--color-bg);
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.07),
+        0 1px 3px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 隐藏切换的 checkbox */
+.registerToggle {
+    display: none;
+}
+
+/* 滑动容器 */
+.slider {
+    width: 200%;
+    position: relative;
+    transition: transform ease-out 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 注册模式时滑动 */
+.registerToggle:checked+.slider {
+    transform: translateX(-50%);
+}
+
+/* 表单容器 */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.5rem 2rem;
+    width: 50%;
+    min-height: fit-content;
+}
+
+/* 标题 */
+.title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: var(--color-fg-heading);
+    margin-bottom: 0.5rem;
+}
+
+/* 登录类型切换按钮组 */
+.loginTypeSwitch {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background-color: var(--color-bg-2);
+    border-radius: 8px;
+}
+
+.loginTypeBtn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: var(--color-fg);
+    font-size: 0.875rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.loginTypeBtn.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.loginTypeBtn:hover:not(.active) {
+    background-color: rgba(143, 155, 179, 0.1);
+}
+
+/* 表单控件 */
+.formControl {
+    width: 100%;
+    position: relative;
+}
+
+/* 手机号输入包装器 */
+.phoneInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.countryCode {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.phoneInputWrapper .input {
+    padding-left: 3rem;
+}
+
+/* 输入框 */
+.input {
+    width: 100%;
+    background-color: var(--color-bg-2);
+    border: 1px solid var(--color-border-4);
+    outline: none;
+    color: var(--color-fg-text);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.input:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 3px rgba(143, 155, 179, 0.1);
+}
+
+/* 浮动标签 */
+.label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: var(--color-fg);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    background-color: var(--color-bg-2);
+    padding: 0 0.25rem;
+}
+
+.phoneInputWrapper .label {
+    left: 3rem;
+}
+
+.input:focus+.label,
+.input:valid+.label {
+    top: 0;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    background-color: var(--color-bg);
+}
+
+.phoneInputWrapper .input:focus+.label,
+.phoneInputWrapper .input:valid+.label {
+    left: 2.75rem;
+}
+
+/* 发送验证码按钮 */
+.sendCodeBtn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.5rem 1rem;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sendCodeBtn:hover {
+    background-color: var(--color-primary-light);
+}
+
+.sendCodeBtn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* 提交按钮 */
+.submitBtn {
+    width: 100%;
+    background-color: var(--color-primary);
+    border: none;
+    outline: none;
+    color: white;
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.submitBtn:hover {
+    background-color: var(--color-primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(143, 155, 179, 0.25);
+}
+
+.submitBtn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 返回按钮 */
+.backButton {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--color-border-4);
+    color: var(--color-fg-text);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.backButton:hover {
+    background-color: var(--color-bg-2);
+    border-color: var(--color-primary);
+}
+
+/* 底部文字 */
+.bottomText {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-fg);
+}
+
+.switch {
+    color: var(--color-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.switch:hover {
+    color: var(--color-primary-light);
+    text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .container {
+        width: 100%;
+    }
+
+    .form {
+        padding: 2rem 1.5rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,231 @@
+/* 全局主题样式 - 使用 CSS Variables */
+
+:root {
+  /* 基础颜色 - 默认值 (会被 ThemeProvider 动态覆盖) */
+  --color-primary: #8f9bb3;
+  --color-primary-light: #b4bcc7;
+  --color-primary-fg: #ffffff;
+  --color-primary-hover: #7a8ba3;
+  --color-success: #00d68f;
+  --color-success-light: #33dfaa;
+  --color-success-fg: #ffffff;
+  --color-success-hover: #00c27a;
+  --color-info: #0095ff;
+  --color-info-light: #33a7ff;
+  --color-info-fg: #ffffff;
+  --color-info-hover: #0085e6;
+  --color-warning: #ffaa00;
+  --color-warning-light: #ffbb33;
+  --color-warning-fg: #ffffff;
+  --color-warning-hover: #e69900;
+  --color-danger: #ff3d71;
+  --color-danger-light: #ff6491;
+  --color-danger-fg: #ffffff;
+  --color-danger-hover: #e6365f;
+
+  /* 背景色 */
+  --color-bg: #ffffff;
+  --color-bg-2: #f7f9fc;
+  --color-bg-3: #edf1f7;
+  --color-bg-4: #e4e9f2;
+  --color-bg-subtle: #f7f9fc;
+
+  /* 边框色 */
+  --color-border: #ffffff;
+  --color-border-2: #f7f9fc;
+  --color-border-3: #edf1f7;
+  --color-border-4: #e4e9f2;
+  --color-border-5: #c5cee0;
+
+  /* 文字色 */
+  --color-fg: #8f9bb3;
+  --color-fg-text: #222b45;
+  --color-fg-heading: #192038;
+  --color-fg-highlight: #003694;
+  --color-fg-muted: #8f9bb3;
+
+  /* 分隔符 */
+  --color-separator: #edf1f7;
+
+  /* ECharts */
+  --echarts-bg: #ffffff;
+  --echarts-text-color: #222b45;
+  --echarts-axis-line-color: #222b45;
+  --echarts-split-line-color: #edf1f7;
+  --echarts-item-hover-shadow-color: rgba(0, 0, 0, 0.5);
+  --echarts-tooltip-bg-color: #8f9bb3;
+  --echarts-area-opacity: 0.7;
+
+  /* ChartJS */
+  --chartjs-axis-line-color: #edf1f7;
+  --chartjs-text-color: #222b45;
+}
+
+/* 应用主题到 body */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg-text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* 标题颜色 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-fg-heading);
+}
+
+/* 链接颜色 */
+a {
+  color: var(--color-primary);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+/* 按钮样式 */
+button {
+  transition: all 0.2s ease;
+}
+
+/* 输入框样式 */
+input,
+textarea,
+select {
+  background-color: var(--color-bg-2);
+  border-color: var(--color-border-4);
+  color: var(--color-fg-text);
+  transition: all 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border-4);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 分隔线 */
+hr {
+  border-color: var(--color-separator);
+}
+
+/* 滚动条样式 - 隐藏但保持滚动功能 */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+/* Firefox 滚动条隐藏 */
+* {
+  scrollbar-width: none;
+}
+
+/* IE/Edge 滚动条隐藏 */
+* {
+  -ms-overflow-style: none;
+}
+
+/* 工具提示样式 */
+.tooltip {
+  background-color: var(--color-bg-2);
+  border: 1px solid var(--color-border-4);
+  border-radius: 4px;
+  color: var(--color-fg-text);
+  padding: 8px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 状态颜色工具类 */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-success {
+  background-color: var(--color-success);
+}
+
+.bg-info {
+  background-color: var(--color-info);
+}
+
+.bg-warning {
+  background-color: var(--color-warning);
+}
+
+.bg-danger {
+  background-color: var(--color-danger);
+}
+
+/* 边框颜色工具类 */
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.border-success {
+  border-color: var(--color-success);
+}
+
+.border-info {
+  border-color: var(--color-info);
+}
+
+.border-warning {
+  border-color: var(--color-warning);
+}
+
+.border-danger {
+  border-color: var(--color-danger);
+}

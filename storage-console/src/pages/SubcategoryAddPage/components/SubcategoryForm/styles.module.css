@@ -1,0 +1,171 @@
+/* ============================================
+   Subcategory Form
+   ============================================ */
+
+.container {
+  height: 100%;
+  padding: 1rem;
+}
+
+.formCard {
+  background: var(--color-bg-2);
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-fg-heading);
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ============================================
+   Sections
+   ============================================ */
+
+.section {
+  background: var(--color-bg);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ============================================
+   Actions
+   ============================================ */
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.submitBtn {
+  padding: 1rem 3rem;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  min-width: 200px;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   Basic Information Grid
+   ============================================ */
+
+.basicInfoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  min-height: 240px;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .formCard {
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .section {
+    padding: 1rem;
+  }
+
+  .basicInfoGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .submitBtn {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formCard {
+    padding: 1rem;
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .formTitle {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .submitBtn {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 0.9375rem;
+  }
+}
+

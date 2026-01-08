@@ -1,0 +1,173 @@
+/* Section container */
+.section {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border-4);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+/* Section header button */
+.sectionHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sectionHeader:hover {
+    background-color: var(--color-bg-2);
+}
+
+/* Left content */
+.leftContent {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.icon {
+  color: var(--color-fg-highlight);
+}
+
+.label {
+    color: var(--color-fg-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Value */
+.value {
+    color: var(--color-fg);
+    font-size: 0.875rem;
+}
+
+/* Edit form */
+.editForm {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--color-border-4);
+    background-color: var(--color-bg-2);
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border-4);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--color-fg-text);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(143, 155, 179, 0.1);
+}
+
+/* Phone input wrapper */
+.phoneInputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.countryCode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.75rem;
+    background-color: var(--color-bg-2);
+    border: 1px solid var(--color-border-4);
+    border-radius: 6px;
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.cancelBtn,
+.saveBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelBtn {
+    background-color: transparent;
+    border: 1px solid var(--color-border-4);
+    color: var(--color-fg-text);
+}
+
+.cancelBtn:hover:not(:disabled) {
+    background-color: var(--color-bg);
+    border-color: var(--color-primary);
+}
+
+.saveBtn {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.saveBtn:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(143, 155, 179, 0.25);
+}
+
+.saveBtn:active {
+    transform: translateY(0);
+}
+
+.saveBtn:disabled,
+.cancelBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Resend button */
+.resendBtn {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: 1px solid var(--color-border-4);
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.resendBtn:hover:not(:disabled) {
+    background-color: var(--color-bg);
+    border-color: var(--color-primary);
+}
+
+.resendBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
