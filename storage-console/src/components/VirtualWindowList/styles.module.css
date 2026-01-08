@@ -1,0 +1,54 @@
+/* 外层容器 */
+.virtualList {
+    width: 100%;
+    position: relative;
+    overflow: visible; /* ✅ window 滚动，不是列表滚动 */
+    padding-bottom: 300px;
+  }
+  
+  /* 内层：撑出总高度 */
+  .virtualListInner {
+    width: 100%;
+    position: relative;
+  }
+  
+  /* 基于 translateY 的内容容器 */
+  .virtualListItems {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  /* 行样式（你不一定用得上，但可选） */
+  .virtualListRow {
+    width: 100%;
+  }
+  
+  /* 无数据 */
+  .emptyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    color: var(--color-fg-muted);
+  }
+  
+  /* 加载中 */
+  .loadingMore {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem 0;
+    color: var(--color-fg-muted);
+  }
+  
+  /* 末尾提示 */
+  .endOfList {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0;
+    color: var(--color-fg-muted);
+    border-top: 1px solid var(--color-border-3);
+  }
+  

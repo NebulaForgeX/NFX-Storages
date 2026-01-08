@@ -1,0 +1,197 @@
+/* ===== RightContainer Styles ===== */
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* ===== Actions ===== */
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 0;
+}
+
+/* Placeholder */
+.placeholder {
+    color: var(--color-fg);
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+}
+
+.action {
+    height: auto;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    /* 增加 padding 给更多空间 */
+    background: none;
+    border: none;
+    color: var(--color-fg);
+    cursor: pointer;
+    transition: color 0.15s ease;
+    position: relative;
+    min-width: 3rem;
+    /* 确保最小宽度 */
+}
+
+/* 联系信息 */
+.contactInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+}
+
+.email {
+    font-weight: 500;
+}
+
+/* 分隔线 */
+.separator {
+    width: 2px;
+    background-color: var(--color-separator);
+    margin: 0 0.75rem;
+}
+
+/* 不同长度的分隔线 */
+.separator:nth-child(2) {
+    height: 1.2rem;
+    /* 第一个分隔线稍短 */
+}
+
+.separator:nth-child(4) {
+    height: 1.5rem;
+    /* 第二个分隔线稍长 */
+}
+
+.separator:nth-child(6) {
+    height: 1.9rem;
+    /* 第三个分隔线中等 */
+}
+
+.separator:nth-child(8) {
+    height: 1.4rem;
+    /* 第四个分隔线 */
+}
+
+.action:hover {
+    color: var(--color-primary);
+}
+
+/* Badge */
+.badge {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    min-width: 1.125rem;
+    height: 1.125rem;
+    padding: 0 0.25rem;
+    background-color: var(--color-danger);
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1.125rem;
+    text-align: center;
+    border-radius: 0.5625rem;
+}
+
+/* ===== User Action ===== */
+.userAction {
+    position: relative;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    /* 增加 padding */
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    border-radius: 0.25rem;
+    min-width: 8rem;
+    /* 确保用户区域有足够宽度 */
+}
+
+.user:hover {
+    background-color: var(--color-bg-2);
+}
+
+.userPicture {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userName {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-fg-text);
+}
+
+/* Context Menu */
+.contextMenu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 10rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-4);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+    overflow: hidden;
+    z-index: 1001;
+}
+
+.menuItem {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.menuItem:hover {
+    background-color: var(--color-bg-2);
+}
+
+/* ===== 响应式 ===== */
+
+/* 小屏幕（<= 576px）：隐藏控制项 */
+@media (max-width: 576px) {
+    .controlItem {
+        display: none !important;
+    }
+
+    .userAction {
+        border: none;
+        padding: 0;
+    }
+
+    .userName {
+        display: none;
+    }
+}
+
+/* 超小屏幕（<= 480px）：隐藏主题选择器 */
+@media (max-width: 480px) {
+    .headerContainer:first-child .logoContainer+* {
+        display: none;
+    }
+}

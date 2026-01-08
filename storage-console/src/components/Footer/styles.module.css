@@ -1,0 +1,49 @@
+/* ===== Footer Component ===== */
+
+.footer {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-separator);
+    padding: 1rem 2rem;
+    width: 100%;
+}
+
+.footerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.copyright {
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+}
+
+.links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.link {
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: var(--color-primary);
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .footerContent {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .links {
+        gap: 1rem;
+    }
+}

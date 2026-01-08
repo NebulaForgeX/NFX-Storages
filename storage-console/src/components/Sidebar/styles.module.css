@@ -1,0 +1,115 @@
+/* ===== Sidebar Component ===== */
+
+.sidebar {
+    height: 100%;
+    min-height: 50vh;
+}
+
+.sidebarContent {
+    padding-top: 1rem;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* 自定义滚动条样式 - 隐藏但保持滚动功能 */
+.sidebarContent::-webkit-scrollbar {
+    width: 0px;
+}
+
+.sidebarContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebarContent::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.sidebarContent::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}
+
+/* 覆盖 react-pro-sidebar 默认样式 */
+.sidebar :global(.ps-sidebar-root) {
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    background-color: var(--color-bg-2) !important;
+    border-right: 1px solid var(--color-separator) !important;
+}
+
+.sidebar :global(.ps-sidebar-container) {
+    height: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: var(--color-bg-2) !important;
+    color: var(--color-fg-text) !important;
+}
+
+.sidebar :global(.ps-menu-button) {
+    padding: 0.5rem 0.75rem !important;
+    margin: 0.125rem 0.5rem !important;
+    border-radius: 0.375rem !important;
+    transition: all 0.2s ease !important;
+    color: var(--color-fg-text) !important;
+    font-size: 0.875rem !important;
+}
+
+.sidebar :global(.ps-menu-button:hover) {
+    background-color: var(--color-bg-3) !important;
+    color: var(--color-fg-text) !important;
+}
+
+.sidebar :global(.ps-menu-button.ps-active) {
+    background-color: var(--color-primary) !important;
+    color: #ffffff !important;
+}
+
+.sidebar :global(.ps-menu-button.ps-active *) {
+    color: #ffffff !important;
+}
+
+.sidebar :global(.ps-menu-button.ps-active .ps-menu-icon) {
+    color: #ffffff !important;
+}
+
+.sidebar :global(.ps-menu-button.ps-active .ps-menu-label) {
+    color: #ffffff !important;
+}
+
+/* 菜单图标样式 */
+.sidebar :global(.ps-menu-icon) {
+    margin-right: 0.5rem !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    color: var(--color-fg-text) !important;
+}
+
+/* 子菜单样式 */
+.sidebar :global(.ps-submenu-content) {
+    background-color: var(--color-bg-3) !important;
+    padding-left: 0.5rem !important;
+    overflow: hidden !important;
+}
+
+.sidebar :global(.ps-submenu-content .ps-menu-button) {
+    padding: 0.375rem 0.5rem !important;
+    margin: 0.125rem 0.25rem !important;
+    font-size: 0.8125rem !important;
+    transition: all 0.2s ease !important;
+}
+
+/* 子菜单标题样式 */
+.sidebar :global(.ps-menu-label) {
+    color: var(--color-fg-text) !important;
+    font-weight: 500 !important;
+}
+
+/* 强制选中状态的所有子元素为白色 */
+.sidebar :global(.ps-menu-button.ps-active),
+.sidebar :global(.ps-menu-button.ps-active span),
+.sidebar :global(.ps-menu-button.ps-active div),
+.sidebar :global(.ps-menu-button.ps-active .ps-menu-icon),
+.sidebar :global(.ps-menu-button.ps-active .ps-menu-label) {
+    color: #ffffff !important;
+}

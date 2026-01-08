@@ -1,0 +1,120 @@
+/* Match ThemeSwitcher sizing and typography */
+
+.nbSelect {
+    display: inline-block;
+    position: relative;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+}
+
+.selectButton {
+    position: relative;
+    width: 100%;
+    min-width: 8rem;
+    padding: 0.4375rem 2.2rem 0.4375rem 1.125rem;
+    border: 1px solid;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.15s ease-in-out;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+.selectButton.primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
+}
+
+.selectButton.primary:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+}
+
+.selectButton.primary:focus,
+.selectButton.primary.open {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+    box-shadow: 0 0 0 0.125rem rgba(143, 155, 179, 0.25);
+}
+
+.selectButton.default {
+    background-color: var(--color-bg);
+    border-color: var(--color-border-4);
+    color: var(--color-fg-text);
+}
+
+.selectButton.default:hover:not(:disabled) {
+    background-color: var(--color-bg-2);
+    border-color: var(--color-primary);
+}
+
+.selectButton.default:focus,
+.selectButton.default.open {
+    background-color: var(--color-bg-2);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.125rem rgba(143, 155, 179, 0.25);
+}
+
+.buttonText { /* same font-size via inherit */ }
+
+.chevronIcon {
+    position: absolute;
+    right: 0.41rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.selectButton.primary .chevronIcon { color: #ffffff; }
+.selectButton.default .chevronIcon { color: var(--color-fg); }
+.selectButton.open .chevronIcon { transform: rotate(180deg); }
+
+.optionsPanel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border-4);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.optionsList {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.option {
+    padding: 0.75rem 1.125rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-fg-text);
+}
+
+.option:hover { background-color: var(--color-bg-2); }
+.option.selected {
+    background-color: var(--color-primary);
+    color: var(--color-primary-fg);
+    font-weight: 700;
+}
+
+

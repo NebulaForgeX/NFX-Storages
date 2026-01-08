@@ -1,0 +1,72 @@
+/* ===== Button 基础样式 ===== */
+.button {
+    position: relative;
+    padding: 0.4375rem 1.125rem;
+    border: 1px solid;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.15s ease-in-out;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Primary 按钮样式 ===== */
+.button.primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-primary-fg);
+}
+
+.button.primary:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+}
+
+.button.primary:focus:not(:disabled) {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+    box-shadow: 0 0 0 0.125rem rgba(34, 43, 69, 0.25);
+}
+
+/* ===== Secondary 按钮样式 ===== */
+.button.secondary {
+    background-color: var(--color-bg);
+    border-color: var(--color-border-4);
+    color: var(--color-fg-text);
+}
+
+.button.secondary:hover:not(:disabled) {
+    background-color: var(--color-bg-2);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.button.secondary:focus:not(:disabled) {
+    background-color: var(--color-bg-2);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.125rem rgba(34, 43, 69, 0.25);
+}
+
+/* ===== 禁用状态 ===== */
+.button:disabled,
+.button.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .button {
+        min-width: 100px;
+        padding: 0.375rem 1rem;
+        font-size: 0.875rem;
+    }
+}

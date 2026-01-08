@@ -1,0 +1,23 @@
+/* ===== Header - 主容器样式 ===== */
+
+.header {
+    display: flex;
+    width: 100%;
+    padding: 1rem 2rem;
+}
+
+/* 左侧容器：占一半，左对齐 */
+.header> :first-child {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* 右侧容器：占一半，右对齐 */
+.header> :last-child {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
