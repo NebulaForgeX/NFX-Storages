@@ -1,0 +1,173 @@
+version: "3.8"
+
+services:
+  # RustFS main service
+  rustfs:
+    security_opt:
+      - "no-new-privileges:true"
+    image: rustfs/rustfs:latest
+    container_name: rustfs-server
+    build:
+      context: ./rustfs
+      dockerfile: Dockerfile.source
+      args:
+        TARGETPLATFORM: linux/amd64
+    ports:
+      - "9000:9000" # S3 API port (Console API endpoints available at /rustfs/console/*)
+    environment:
+      - RUSTFS_VOLUMES=/data/rustfs{0..3}  # Define 4 storage volumes
+      - RUSTFS_ADDRESS=0.0.0.0:9000
+      - RUSTFS_EXTERNAL_ADDRESS=:9000
+      - RUSTFS_CORS_ALLOWED_ORIGINS=*
+      - RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS=*
+      - RUSTFS_ACCESS_KEY=rustfsadmin
+      - RUSTFS_SECRET_KEY=rustfsadmin
+      - RUSTFS_LOG_LEVEL=info
+      - RUSTFS_TLS_PATH=/opt/tls
+      - RUSTFS_OBS_ENDPOINT=http://otel-collector:4317
+    volumes:
+      - ./rustfs/deploy/data/pro:/data
+      - ./rustfs/deploy/logs:/app/logs
+      - ./rustfs/deploy/data/certs/:/opt/tls
+    networks:
+      - nfx-storages-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh", "-c",
+          "curl -f http://localhost:9000/health && curl -f http://localhost:9000/rustfs/console/health"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - otel-collector
+
+  # RustFS Console (Web UI)
+  rustfsconsole:
+    build:
+      context: ./rustfsconsole
+      dockerfile: Dockerfile
+    container_name: rustfsconsole
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NUXT_PUBLIC_API_URL=http://rustfs:9000
+    networks:
+      - nfx-storages-network
+    restart: unless-stopped
+    depends_on:
+      - rustfs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Storage Backend (NebulaFX)
+  storage-backend:
+    build:
+      context: ./storage-backend
+      dockerfile: Dockerfile.prod
+    container_name: storage-backend
+    restart: unless-stopped
+    security_opt:
+      - "no-new-privileges:true"
+    env_file:
+      - .env
+    ports:
+      - "${STORAGE_BACKEND_PORT:-9001}:9000" # S3 API port
+    environment:
+      - NEUBULAFX_VOLUMES=${NEUBULAFX_VOLUMES:-/deploy/data/pro/nebulafx{1...8}}
+      - NEUBULAFX_ADDRESS=0.0.0.0:9000
+      - NEUBULAFX_EXTERNAL_ADDRESS=${NEUBULAFX_EXTERNAL_ADDRESS:-:9001}
+      - NEUBULAFX_CORS_ALLOWED_ORIGINS=${NEUBULAFX_CORS_ALLOWED_ORIGINS:-*}
+      - NEUBULAFX_CONSOLE_CORS_ALLOWED_ORIGINS=${NEUBULAFX_CONSOLE_CORS_ALLOWED_ORIGINS:-*}
+      - NEUBULAFX_ACCESS_KEY=${NEUBULAFX_ACCESS_KEY:-nebulafxadmin}
+      - NEUBULAFX_SECRET_KEY=${NEUBULAFX_SECRET_KEY:-nebulafxadmin}
+      - NEUBULAFX_LOG_LEVEL=${NEUBULAFX_LOG_LEVEL:-info}
+      - RUST_LOG=${RUST_LOG:-info}
+      - NEUBULAFX_TLS_PATH=${NEUBULAFX_TLS_PATH:-/opt/tls}
+    volumes:
+      - ./storage-backend/deploy/data/pro:/deploy/data/pro
+      - ./storage-backend/deploy/logs:/app/logs
+      - ./storage-backend/deploy/data/certs:/opt/tls
+    networks:
+      - nfx-storages-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh", "-c",
+          "curl -f http://localhost:9000/health && curl -f http://localhost:9000/nebulafx/console/health"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Storage Console (Frontend UI)
+  storage-console:
+    build:
+      context: ./storage-console
+      dockerfile: Dockerfile
+    container_name: storage-console
+    ports:
+      - "${STORAGE_CONSOLE_PORT:-3001}:3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=http://storage-backend:9000
+    networks:
+      - nfx-storages-network
+    restart: unless-stopped
+    depends_on:
+      - storage-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # OpenTelemetry Collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    command:
+      - --config=/etc/otelcol-contrib/otel-collector.yml
+    volumes:
+      - ./rustfs/.docker/observability/otel-collector-config.yaml:/etc/otelcol-contrib/otel-collector.yml:ro
+    ports:
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+      - "8888:8888" # Prometheus metrics
+      - "8889:8889" # Prometheus exporter metrics
+    networks:
+      - nfx-storages-network
+    restart: unless-stopped
+    profiles:
+      - observability
+
+networks:
+  nfx-storages-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  rustfs_data_0:
+    driver: local
+  rustfs_data_1:
+    driver: local
+  rustfs_data_2:
+    driver: local
+  rustfs_data_3:
+    driver: local
+  logs:
+    driver: local

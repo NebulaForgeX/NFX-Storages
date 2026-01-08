@@ -1,0 +1,54 @@
+services:
+  nebulafx-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: NebulaFX-Dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${NEUBULAFX_DEV_PORT:-9000}:9000" # S3 API port
+    environment:
+      - ENV=dev
+      - NEUBULAFX_VOLUMES=${NEUBULAFX_DEV_VOLUMES:-/deploy/data/dev{1...8}}
+      - NEUBULAFX_ADDRESS=0.0.0.0:9000
+      - NEUBULAFX_EXTERNAL_ADDRESS=${NEUBULAFX_DEV_EXTERNAL_ADDRESS:-:9000}
+      - NEUBULAFX_CORS_ALLOWED_ORIGINS=${NEUBULAFX_CORS_ALLOWED_ORIGINS:-*}
+      - NEUBULAFX_CONSOLE_CORS_ALLOWED_ORIGINS=${NEUBULAFX_CONSOLE_CORS_ALLOWED_ORIGINS:-*}
+      - NEUBULAFX_ACCESS_KEY=${NEUBULAFX_DEV_ACCESS_KEY:-devadmin}
+      - NEUBULAFX_SECRET_KEY=${NEUBULAFX_DEV_SECRET_KEY:-devadmin}
+      - NEUBULAFX_LOG_LEVEL=${NEUBULAFX_DEV_LOG_LEVEL:-warn}
+      - RUST_LOG=${RUST_LOG_DEV:-nebulafx=warn,ecstore=warn,s3s=warn,iam=warn}
+    volumes:
+      - .:/app # Mount source code for development (changes are automatically synced)
+      - ./deploy/data:/deploy/data # Mount data directory
+      - ./deploy/logs/dev:/app/logs
+    networks:
+      - resources
+    develop:
+      watch:
+        - action: sync
+          path: ./nebulafx/src
+          target: /app/nebulafx/src
+        - action: sync
+          path: ./crates
+          target: /app/crates
+        - action: sync
+          path: ./config.toml
+          target: /app/config.toml
+        - action: rebuild
+          path: ./Cargo.toml
+        - action: rebuild
+          path: ./Cargo.lock
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -f http://localhost:9000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  resources:
+    external: true
+

@@ -1,0 +1,87 @@
+# Development Dockerfile for NebulaFX
+# Uses Makefile for build and run commands
+
+FROM rust:1.88-bookworm
+
+# Install build dependencies including make
+RUN set -eux; \
+    export DEBIAN_FRONTEND=noninteractive; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    make \
+    pkg-config \
+    libssl-dev \
+    lld \
+    protobuf-compiler \
+    flatbuffers-compiler \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install cargo-watch for hot-reload
+RUN cargo install cargo-watch
+
+WORKDIR /app
+
+# Copy entrypoint script (if needed)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh || true
+
+# Default environment variables
+ENV NEUBULAFX_ADDRESS=":9000" \
+    NEUBULAFX_ACCESS_KEY="devadmin" \
+    NEUBULAFX_SECRET_KEY="devadmin" \
+    NEUBULAFX_VOLUMES="/data" \
+    RUST_LOG="debug" \
+    NEUBULAFX_OBS_LOG_DIRECTORY="/app/logs"
+
+EXPOSE 9000
+
+VOLUME ["/data", "/app/logs"]
+
+# Create a startup script that mimics make run but with cargo watch
+RUN echo '#!/bin/bash\n\
+set -e\n\
+cd /app\n\
+echo "🔓 Cleaning cargo lock files..."\n\
+find target -name ".cargo-lock" -type f -delete 2>/dev/null || true\n\
+find target -name "*.lock" -type f -path "*/incremental/*" -delete 2>/dev/null || true\n\
+CARGO_PIDS=$(pgrep -x cargo 2>/dev/null || true)\n\
+RUSTC_PIDS=$(pgrep -x rustc 2>/dev/null || true)\n\
+if [ -n "$CARGO_PIDS$RUSTC_PIDS" ]; then\n\
+    echo "⚠️  Warning: cargo/rustc processes detected. Waiting 3 seconds..."\n\
+    sleep 3\n\
+    CARGO_PIDS=$(pgrep -x cargo 2>/dev/null || true)\n\
+    RUSTC_PIDS=$(pgrep -x rustc 2>/dev/null || true)\n\
+    if [ -n "$CARGO_PIDS$RUSTC_PIDS" ]; then\n\
+        echo "🛑 Stopping cargo/rustc processes..."\n\
+        for pid in $CARGO_PIDS; do kill $pid 2>/dev/null || true; done\n\
+        for pid in $RUSTC_PIDS; do kill $pid 2>/dev/null || true; done\n\
+        sleep 2\n\
+        CARGO_PIDS=$(pgrep -x cargo 2>/dev/null || true)\n\
+        RUSTC_PIDS=$(pgrep -x rustc 2>/dev/null || true)\n\
+        if [ -n "$CARGO_PIDS$RUSTC_PIDS" ]; then\n\
+            echo "⚠️  Some processes still running, forcing kill..."\n\
+            for pid in $CARGO_PIDS; do kill -9 $pid 2>/dev/null || true; done\n\
+            for pid in $RUSTC_PIDS; do kill -9 $pid 2>/dev/null || true; done\n\
+            sleep 1\n\
+        fi\n\
+    fi\n\
+fi\n\
+echo "✅ Lock files cleaned"\n\
+export RUST_LOG="${RUST_LOG:-nebulafx=warn,ecstore=warn,s3s=warn,iam=warn}"\n\
+export NEUBULAFX_OBS_LOGGER_LEVEL="${NEUBULAFX_OBS_LOGGER_LEVEL:-warn}"\n\
+export NEUBULAFX_OBS_LOG_STDOUT_ENABLED="${NEUBULAFX_OBS_LOG_STDOUT_ENABLED:-true}"\n\
+export NEUBULAFX_LOG_JSON="${NEUBULAFX_LOG_JSON:-false}"\n\
+echo "📝 Log level: $RUST_LOG"\n\
+echo "📝 Log format: $([ "$NEUBULAFX_LOG_JSON" = "true" ] && echo "JSON" || echo "Text (compact)")"\n\
+echo "📦 Using volumes: $NEUBULAFX_VOLUMES"\n\
+echo "👀 Watching for changes (like make run but with hot-reload)..."\n\
+exec cargo watch -w . -i "target/**" -i "logs/**" -i ".git/**" -i "deploy/data/**" -i "deploy/logs/**" -s "eval 'cargo run --bin nebulafx -- \"\$NEUBULAFX_VOLUMES\" --address 0.0.0.0:9000'"\n\
+' > /start-dev.sh && chmod +x /start-dev.sh
+
+# Use the startup script
+CMD ["/start-dev.sh"]
+
