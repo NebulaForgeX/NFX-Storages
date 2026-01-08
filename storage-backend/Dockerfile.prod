@@ -1,0 +1,160 @@
+# Production Dockerfile for NebulaFX
+# Multi-stage build for optimized production image
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+# -----------------------------
+# Build stage
+# -----------------------------
+FROM rust:1.88-bookworm AS builder
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+RUN echo "Build info -> BUILDPLATFORM=${BUILDPLATFORM}, TARGETPLATFORM=${TARGETPLATFORM}"
+
+# Install build dependencies
+RUN set -eux; \
+    export DEBIAN_FRONTEND=noninteractive; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    pkg-config \
+    libssl-dev \
+    lld \
+    protobuf-compiler \
+    flatbuffers-compiler; \
+    rm -rf /var/lib/apt/lists/*
+
+# Optional: cross toolchain for aarch64
+RUN set -eux; \
+    if [ "${TARGETPLATFORM:-linux/amd64}" = "linux/arm64" ]; then \
+    export DEBIAN_FRONTEND=noninteractive; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends gcc-aarch64-linux-gnu; \
+    rm -rf /var/lib/apt/lists/*; \
+    fi
+
+# Add Rust targets based on TARGETPLATFORM
+RUN set -eux; \
+    case "${TARGETPLATFORM:-linux/amd64}" in \
+    linux/amd64) rustup target add x86_64-unknown-linux-gnu ;; \
+    linux/arm64) rustup target add aarch64-unknown-linux-gnu ;; \
+    *) echo "Unsupported TARGETPLATFORM=${TARGETPLATFORM}" >&2; exit 1 ;; \
+    esac
+
+# Cross-compilation environment
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+ENV CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+ENV CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+
+WORKDIR /usr/src/nebulafx
+
+# Copy manifests for dependency caching
+COPY Cargo.toml Cargo.lock ./
+COPY nebulafx/Cargo.toml nebulafx/Cargo.toml
+COPY crates/*/Cargo.toml crates/
+COPY cli/nebulafx-gui/Cargo.toml cli/nebulafx-gui/Cargo.toml
+
+# Pre-fetch dependencies
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    cargo fetch --locked || true
+
+# Copy full source code
+COPY . .
+
+# Build configuration for optimized release
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true \
+    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse \
+    CARGO_INCREMENTAL=0 \
+    CARGO_PROFILE_RELEASE_DEBUG=false \
+    CARGO_PROFILE_RELEASE_SPLIT_DEBUGINFO=off \
+    CARGO_PROFILE_RELEASE_STRIP=symbols
+
+# Generate protobuf/flatbuffers code
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    --mount=type=cache,target=/usr/src/nebulafx/target \
+    cargo run --bin gproto
+
+# Build NebulaFX
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    --mount=type=cache,target=/usr/src/nebulafx/target \
+    set -eux; \
+    case "${TARGETPLATFORM:-linux/amd64}" in \
+    linux/amd64) \
+    cargo build --release --locked --target x86_64-unknown-linux-gnu --bin nebulafx -j "$(nproc)"; \
+    install -m 0755 target/x86_64-unknown-linux-gnu/release/nebulafx /usr/local/bin/nebulafx \
+    ;; \
+    linux/arm64) \
+    cargo build --release --locked --target aarch64-unknown-linux-gnu --bin nebulafx -j "$(nproc)"; \
+    install -m 0755 target/aarch64-unknown-linux-gnu/release/nebulafx /usr/local/bin/nebulafx \
+    ;; \
+    *) \
+    echo "Unsupported TARGETPLATFORM=${TARGETPLATFORM}" >&2; exit 1 \
+    ;; \
+    esac
+
+# -----------------------------
+# Runtime stage
+# -----------------------------
+FROM ubuntu:22.04
+
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL name="NebulaFX" \
+    maintainer="NebulaFX Team" \
+    build-date="${BUILD_DATE}" \
+    vcs-ref="${VCS_REF}" \
+    description="NebulaFX - Production image"
+
+# Minimal runtime dependencies
+RUN set -eux; \
+    export DEBIAN_FRONTEND=noninteractive; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
+    tzdata \
+    coreutils \
+    curl; \
+    rm -rf /var/lib/apt/lists/*
+
+# Create runtime user
+RUN set -eux; \
+    groupadd -g 1000 nebulafx; \
+    useradd -u 1000 -g nebulafx -M -s /usr/sbin/nologin nebulafx
+
+WORKDIR /app
+
+# Prepare data/log directories
+RUN set -eux; \
+    mkdir -p /data /logs; \
+    chown -R nebulafx:nebulafx /data /logs /app; \
+    chmod 0750 /data /logs
+
+# Copy binary and entrypoint
+COPY --from=builder /usr/local/bin/nebulafx /usr/bin/nebulafx
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /usr/bin/nebulafx /entrypoint.sh
+
+# Default environment variables (only for direct docker run, docker-compose will override)
+# These are kept as fallback defaults when not using docker-compose
+ENV NEUBULAFX_OBS_LOG_DIRECTORY="/logs" \
+    NEUBULAFX_USERNAME="nebulafx" \
+    NEUBULAFX_GROUPNAME="nebulafx" \
+    NEUBULAFX_UID="1000" \
+    NEUBULAFX_GID="1000"
+
+EXPOSE 9000
+VOLUME ["/data", "/logs"]
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/bin/nebulafx"]
+

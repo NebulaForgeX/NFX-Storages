@@ -1,0 +1,23 @@
+[package]
+name = "nebulafx-postgresqlx"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "PostgreSQL connection pool and configuration management"
+keywords = ["postgresql", "database", "connection-pool", "nebulafx"]
+categories = ["web-programming", "development-tools", "database"]
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid"] }
+tokio = { workspace = true, features = ["time"] }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+humantime = { workspace = true }
+
+[lints]
+workspace = true
+

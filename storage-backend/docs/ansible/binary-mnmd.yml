@@ -1,0 +1,168 @@
+---
+- name: Prepare for NebulaFX installation
+  hosts: nebulafx
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  remote_user: root
+
+  tasks:
+    - name: Create Workspace
+      file:
+        path: /opt/nebulafx
+        state: directory
+        mode: '0755'
+      register: create_dir_result
+
+    - name: Dir Creation Result Check
+      debug:
+        msg: "NebulaFX dir created successfully"
+      when: create_dir_result.changed
+
+    - name: Modify Target Server's hosts file
+      blockinfile:
+        path: /etc/hosts
+        block: |
+          127.0.0.1     localhost
+          172.20.92.199  nebulafx-node1
+          172.20.92.200  nebulafx-node2
+          172.20.92.201  nebulafx-node3
+          172.20.92.202  nebulafx-node4
+
+    - name: Create nebulafx group
+      group:
+        name: nebulafx
+        system: yes
+        state: present    
+
+    - name: Create nebulafx user
+      user:
+        name: nebulafx
+        shell: /bin/bash
+        system: yes
+        create_home: no
+        group: nebulafx
+        state: present
+
+    - name: Get nebulafx user id
+      command: id -u nebulafx
+      register: nebulafx_uid
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Check nebulafx user id
+      debug:
+        msg: "nebulafx uid is {{ nebulafx_uid.stdout }}"
+
+    - name: Create volume dir
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: nebulafx
+        group: nebulafx
+        mode: '0755'
+      loop:
+        - /data/nebulafx0
+        - /data/nebulafx1
+        - /data/nebulafx2
+        - /data/nebulafx3
+        - /var/logs/nebulafx
+
+- name: Install NebulaFX
+  hosts: nebulafx
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    install_script_url: "https://nebulafx.com/install_nebulafx.sh"
+    install_script_tmp: "/opt/nebulafx/install_nebulafx.sh"
+  tags: nebulafx_install
+
+  tasks:
+    - name: Prepare configuration file
+      copy:
+        dest: /etc/default/nebulafx
+        content: |
+          NEUBULAFX_ACCESS_KEY=nebulafxadmin
+          NEUBULAFX_SECRET_KEY=nebulafxadmin
+          NEUBULAFX_VOLUMES="http://nebulafx-node{1...4}:9000/data/nebulafx{0...3}"
+          NEUBULAFX_ADDRESS=":9000"
+          NEUBULAFX_CONSOLE_ENABLE=true
+          RUST_LOG=error
+          NEUBULAFX_OBS_LOG_DIRECTORY="/var/logs/nebulafx/"
+          NEUBULAFX_EXTERNAL_ADDRESS=0.0.0.0:9000
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: present
+        update_cache: yes
+
+    - name: Download the nebulafx install script
+      get_url:
+        url: "{{ install_script_url }}"
+        dest: "{{ install_script_tmp }}"
+        mode: '0755'
+    
+    - name: Run nebulafx installation script
+      expect:
+        command: bash "{{install_script_tmp}}"
+        responses:
+          '.*Enter your choice.*': "1\n"
+          '.*Please enter NebulaFX service port.*': "9000\n"
+          '.*Please enter NebulaFX console port.*': "9001\n"
+          '.*Please enter data storage directory.*': "http://nebulafx-node{1...4}:9000/data/nebulafx{0...3}\n"
+        timeout: 300
+      register: nebulafx_install_result
+      tags:
+        - nebulafx_install
+
+    - name: Debug installation output
+      debug:
+        var: nebulafx_install_result.stdout_lines
+
+    - name: Installation confirmation
+      command: nebulafx --version
+      register: nebulafx_version
+      changed_when: false
+      failed_when: nebulafx_version.rc != 0
+
+    - name: Show nebulafx version
+      debug:
+        msg: "NebulaFX version is {{ nebulafx_version.stdout }}"
+
+- name: Uninstall NebulaFX
+  hosts: nebulafx
+  become: yes
+  vars:
+    install_script_tmp: /opt/nebulafx/install_nebulafx.sh
+    ansible_python_interpreter: /usr/bin/python3
+  tags: nebulafx_uninstall
+
+  tasks:
+    - name: Run nebulafx uninstall script
+      expect:
+        command: bash "{{ install_script_tmp }}"
+        responses:
+          'Enter your choice.*': "2\n"
+          'Are you sure you want to uninstall NebulaFX.*': "y\n"
+      timeout: 300
+      register: nebulafx_uninstall_result
+      tags: nebulafx_uninstall
+
+    - name: Debug uninstall output
+      debug:
+        var: nebulafx_uninstall_result.stdout_lines
+
+    - name: Delete data dir
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /data/nebulafx0
+        - /data/nebulafx1
+        - /data/nebulafx2
+        - /data/nebulafx3
+        - /var/logs/nebulafx

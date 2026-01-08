@@ -1,0 +1,147 @@
+
+
+[package]
+name = "nebulafx"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+homepage.workspace = true
+description = "NebulaFX is a high-performance, distributed file system designed for modern cloud-native applications, providing efficient data storage and retrieval with advanced features like S3 Select, IAM, and policy management."
+keywords.workspace = true
+categories.workspace = true
+documentation = "https://docs.nebulafx.com/"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "nebulafx"
+path = "src/main.rs"
+
+[features]
+default = []
+
+[lints]
+workspace = true
+
+[dependencies]
+# NebulaFX Internal Crates
+nebulafx-ahm = { workspace = true }
+nebulafx-appauth = { workspace = true }
+nebulafx-audit = { workspace = true }
+nebulafx-common = { workspace = true }
+nebulafx-config = { workspace = true, features = ["constants", "notify"] }
+nebulafx-ecstore = { workspace = true }
+nebulafx-filemeta.workspace = true
+nebulafx-iamx = { workspace = true }
+nebulafx-kms = { workspace = true }
+nebulafx-lock.workspace = true
+nebulafx-madmin = { workspace = true }
+nebulafx-notify = { workspace = true }
+nebulafx-obs = { workspace = true }
+nebulafx-policy = { workspace = true }
+nebulafx-profilingx = { workspace = true }
+nebulafx-protos = { workspace = true }
+nebulafx-rio.workspace = true
+nebulafx-s3select-api = { workspace = true }
+nebulafx-s3select-query = { workspace = true }
+nebulafx-targets = { workspace = true }
+nebulafx-utils = { workspace = true, features = ["full"] }
+nebulafx-zip = { workspace = true }
+nebulafx-tomlx = { workspace = true }
+nebulafx-postgresqlx = { workspace = true }
+nebulafx-tokiox = { workspace = true }
+
+# Async Runtime and Networking
+async-trait = { workspace = true }
+axum.workspace = true
+axum-extra = { workspace = true }
+axum-server = { workspace = true }
+futures.workspace = true
+futures-util.workspace = true
+hyper.workspace = true
+hyper-util.workspace = true
+http.workspace = true
+http-body.workspace = true
+reqwest = { workspace = true }
+socket2 = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "signal", "process"] }
+tokio-rustls = { workspace = true }
+tokio-stream.workspace = true
+tokio-util.workspace = true
+tonic = { workspace = true }
+tower.workspace = true
+tower-http = { workspace = true, features = ["trace", "compression-full", "cors", "catch-panic", "timeout", "limit", "request-id"] }
+
+# Serialization and Data Formats
+bytes = { workspace = true }
+flatbuffers.workspace = true
+rmp-serde.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_urlencoded = { workspace = true }
+
+# Cryptography and Security
+rustls = { workspace = true }
+
+# Time and Date
+chrono = { workspace = true }
+time = { workspace = true, features = ["parsing", "formatting", "serde"] }
+
+# Utilities and Tools
+astral-tokio-tar = { workspace = true }
+atoi = { workspace = true }
+atomic_enum = { workspace = true }
+base64 = { workspace = true }
+base64-simd.workspace = true
+clap = { workspace = true }
+const-str = { workspace = true }
+datafusion = { workspace = true }
+hex-simd.workspace = true
+matchit = { workspace = true }
+md5.workspace = true
+mime_guess = { workspace = true }
+pin-project-lite.workspace = true
+# rust-embed = { workspace = true, features = ["interpolate-folder-path"] } # 已移除：前端独立运行，不再嵌入静态文件
+s3s.workspace = true
+shadow-rs = { workspace = true, features = ["build", "metadata"] }
+sysinfo = { workspace = true, features = ["multithread"] }
+thiserror = { workspace = true }
+tracing.workspace = true
+url = { workspace = true }
+urlencoding = { workspace = true }
+uuid = { workspace = true }
+zip = { workspace = true }
+
+# Observability and Metrics
+metrics = { workspace = true }
+
+[target.'cfg(any(target_os = "macos", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd"))'.dependencies]
+sysctl = { workspace = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libsystemd.workspace = true
+
+[target.'cfg(all(target_os = "linux", target_env = "musl"))'.dependencies]
+mimalloc = { workspace = true }
+[target.'cfg(all(target_os = "linux", target_env = "gnu"))'.dependencies]
+tikv-jemallocator = { workspace = true }
+[target.'cfg(all(not(target_env = "msvc"), not(target_os = "windows")))'.dependencies]
+tikv-jemalloc-ctl = { workspace = true }
+jemalloc_pprof = { workspace = true }
+pprof = { workspace = true }
+
+[dev-dependencies]
+uuid = { workspace = true, features = ["v4"] }
+
+[build-dependencies]
+http.workspace = true
+futures.workspace = true
+s3s = { workspace = true }
+clap = { workspace = true }
+hyper-util = { workspace = true, features = [
+    "tokio",
+    "server-auto",
+    "server-graceful",
+] }
+shadow-rs = { workspace = true, features = ["build"] }

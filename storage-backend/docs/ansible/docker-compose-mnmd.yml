@@ -1,0 +1,115 @@
+---
+- name: Prepare for NebulaFX installation
+  hosts: nebulafx
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    install_script_url: "https://nebulafx.com/install_nebulafx.sh"
+    docker_compose: "/opt/nebulafx/docker-compose"
+  remote_user: root
+
+  tasks:
+    - name: Install docker
+      tags: docker_install
+      shell: |
+            apt-get remove -y docker docker.io containerd runc || true
+            apt-get update -y
+            apt-get install -y ca-certificates curl gnupg lsb-release
+            install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+            chmod a+r /etc/apt/keyrings/docker.gpg
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu \
+              $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+            apt-get update -y
+            apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      become: yes
+      register: docker_installation_result
+      changed_when: false
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Installation check
+      debug:
+        var: docker_installation_result.stdout
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Create docker compose dir
+      file:
+        path: "{{ docker_compose }}"
+        state: directory
+        mode: '0755'
+
+    - name: Prepare docker compose file
+      copy:
+        content: |
+          services:
+            nebulafx:
+              image: nebulafx/nebulafx:latest
+              container_name: nebulafx
+              hostname: nebulafx
+              network_mode: host
+              environment:
+                # Use service names and correct disk indexing (1..4 to match mounted paths)
+                - NEUBULAFX_VOLUMES=http://nebulafx-node{1...4}:9000/data/nebulafx{1...4}
+                - NEUBULAFX_ADDRESS=0.0.0.0:9000
+                - NEUBULAFX_CONSOLE_ENABLE=true
+                - NEUBULAFX_CONSOLE_ADDRESS=0.0.0.0:9001
+                - NEUBULAFX_EXTERNAL_ADDRESS=0.0.0.0:9000  # Same as internal since no port mapping
+                - NEUBULAFX_ACCESS_KEY=nebulafxadmin
+                - NEUBULAFX_SECRET_KEY=nebulafxadmin
+                - NEUBULAFX_CMD=nebulafx
+              command: ["sh", "-c", "sleep 3 && nebulafx"]
+              healthcheck:
+                test:
+                  [
+                    "CMD-SHELL",
+                    "curl -f http://localhost:9000/health && curl -f http://localhost:9001/health || exit 1"
+                  ]
+                interval: 10s
+                timeout: 5s
+                retries: 3
+                start_period: 30s
+              ports:
+                - "9000:9000"  # API endpoint
+                - "9001:9001"  # Console
+              volumes:
+                - nebulafx-data1:/data/nebulafx1
+                - nebulafx-data2:/data/nebulafx2
+                - nebulafx-data3:/data/nebulafx3
+                - nebulafx-data4:/data/nebulafx4
+              extra_hosts:
+                - "nebulafx-node1:172.20.92.202"
+                - "nebulafx-node2:172.20.92.201"
+                - "nebulafx-node3:172.20.92.200"
+                - "nebulafx-node4:172.20.92.199"
+
+          volumes:
+            nebulafx-data1:
+            nebulafx-data2:
+            nebulafx-data3:
+            nebulafx-data4:
+
+        dest: "{{ docker_compose }}/docker-compose.yml"
+        mode: '0644'
+    
+    - name: Install nebulafx using docker compose
+      tags: nebulafx_install
+      command: docker compose -f "{{ docker_compose}}/docker-compose.yml" up -d
+      args:
+        chdir: "{{ docker_compose }}"
+
+    - name: Get docker compose output
+      command: docker compose ps
+      args:
+        chdir: "{{ docker_compose }}"
+      register: docker_compose_output
+
+    - name: Check the docker compose installation output
+      debug:
+        msg: "{{ docker_compose_output.stdout }}"
+
+    - name: Uninstall nebulafx using docker compose
+      tags: nebulafx_uninstall 
+      command: docker compose -f "{{ docker_compose}}/docker-compose.yml" down
+      args:
+        chdir: "{{ docker_compose }}"

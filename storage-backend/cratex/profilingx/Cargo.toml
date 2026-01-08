@@ -1,0 +1,27 @@
+
+[package]
+name = "nebulafx-profilingx"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Performance profiling tools for NebulaFX, providing CPU and memory profiling capabilities."
+keywords = ["profiling", "performance", "pprof", "cpu", "memory", "NebulaFX"]
+categories = ["development-tools::profiling", "development-tools::debugging"]
+documentation = "https://docs.rs/nebulafx-profilingx/latest/nebulafx_profilingx/"
+
+[lints]
+workspace = true
+
+[dependencies]
+chrono = { workspace = true }
+jemalloc_pprof = { workspace = true }
+pprof = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
+tikv-jemalloc-ctl = { workspace = true }
+tokio = { workspace = true, features = ["sync", "fs", "rt", "time", "macros"] }
+tracing = { workspace = true, features = ["std"] }
+

@@ -1,0 +1,21 @@
+[package]
+name = "nebulafx-tokiox"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Tokio runtime configuration and builder for NebulaFX"
+keywords = ["tokio", "runtime", "async", "nebulafx"]
+categories = ["asynchronous", "development-tools", "web-programming"]
+
+[lints]
+workspace = true
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+sysinfo = { workspace = true }
+tokio = { workspace = true, features = ["rt", "macros"] }
+chrono = { workspace = true }
+

@@ -1,0 +1,42 @@
+
+
+[package]
+name = "nebulafx-iamx"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Identity and Access Management (IAMX) for NebulaFX, providing user management, roles, and permissions."
+keywords = ["iam", "iamx", "identity", "access-management", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "authentication"]
+documentation = "https://docs.rs/nebulafx-iamx/latest/nebulafx_iamx/"
+
+[lints]
+workspace = true
+
+[dependencies]
+tokio.workspace = true
+time = { workspace = true, features = ["serde-human-readable"] }
+serde = { workspace = true, features = ["derive", "rc"] }
+nebulafx-ecstore = { workspace = true }
+nebulafx-policy.workspace = true
+serde_json.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+nebulafx-crypto = { workspace = true }
+futures.workspace = true
+rand.workspace = true
+base64-simd = { workspace = true }
+jsonwebtoken = { workspace = true }
+tracing.workspace = true
+nebulafx-madmin.workspace = true
+nebulafx-utils = { workspace = true, features = ["path"] }
+tokio-util.workspace = true
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "macros"] }
+chrono = { workspace = true }
+refinery = { workspace = true }
+tokio-postgres = "0.7"
+
+[dev-dependencies]

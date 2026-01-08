@@ -1,0 +1,109 @@
+
+
+# MNMD (Multi-Node Multi-Drive) Docker Compose Example
+# 4 nodes x 4 drives configuration
+# This example demonstrates a complete, ready-to-use MNMD deployment
+# addressing startup coordination and VolumeNotFound issues.
+
+x-node-template: &node-template
+  image: nebulafx/nebulafx:latest
+  environment:
+    # Use service names and correct disk indexing (1..4 to match mounted paths)
+    - NEUBULAFX_VOLUMES=http://nebulafx-node{1...4}:9000/data/nebulafx{1...4}
+    - NEUBULAFX_ADDRESS=0.0.0.0:9000
+    - NEUBULAFX_CONSOLE_ENABLE=true
+    - NEUBULAFX_CONSOLE_ADDRESS=0.0.0.0:9001
+    - NEUBULAFX_EXTERNAL_ADDRESS=0.0.0.0:9000  # Same as internal since no port mapping
+    - NEUBULAFX_ACCESS_KEY=nebulafxadmin
+    - NEUBULAFX_SECRET_KEY=nebulafxadmin
+    - NEUBULAFX_CMD=nebulafx
+  command: ["sh", "-c", "sleep 3 && nebulafx"]
+  healthcheck:
+    test:
+      [
+        "CMD",
+        "sh", "-c",
+        "curl -f http://localhost:9000/health && curl -f http://localhost:9001/health"
+      ]
+    interval: 10s
+    timeout: 5s
+    retries: 3
+    start_period: 30s
+  networks:
+    - nebulafx-mnmd
+
+
+services:
+  nebulafx-node1:
+    <<: *node-template
+    container_name: nebulafx-node1
+    hostname: nebulafx-node1
+    ports:
+      - "9000:9000"  # API endpoint
+      - "9001:9001"  # Console
+    volumes:
+      - node1-data1:/data/nebulafx1
+      - node1-data2:/data/nebulafx2
+      - node1-data3:/data/nebulafx3
+      - node1-data4:/data/nebulafx4
+
+  nebulafx-node2:
+    <<: *node-template
+    container_name: nebulafx-node2
+    hostname: nebulafx-node2
+    ports:
+      - "9010:9000"  # API endpoint
+      - "9011:9001"  # Console
+    volumes:
+      - node2-data1:/data/nebulafx1
+      - node2-data2:/data/nebulafx2
+      - node2-data3:/data/nebulafx3
+      - node2-data4:/data/nebulafx4
+
+  nebulafx-node3:
+    <<: *node-template
+    container_name: nebulafx-node3
+    hostname: nebulafx-node3
+    ports:
+      - "9020:9000"  # API endpoint
+      - "9021:9001"  # Console
+    volumes:
+      - node3-data1:/data/nebulafx1
+      - node3-data2:/data/nebulafx2
+      - node3-data3:/data/nebulafx3
+      - node3-data4:/data/nebulafx4
+
+  nebulafx-node4:
+    <<: *node-template
+    container_name: nebulafx-node4
+    hostname: nebulafx-node4
+    ports:
+      - "9030:9000"  # API endpoint
+      - "9031:9001"  # Console
+    volumes:
+      - node4-data1:/data/nebulafx1
+      - node4-data2:/data/nebulafx2
+      - node4-data3:/data/nebulafx3
+      - node4-data4:/data/nebulafx4
+
+networks:
+  nebulafx-mnmd:
+    driver: bridge
+
+volumes:
+  node1-data1:
+  node1-data2:
+  node1-data3:
+  node1-data4:
+  node2-data1:
+  node2-data2:
+  node2-data3:
+  node2-data4:
+  node3-data1:
+  node3-data2:
+  node3-data3:
+  node3-data4:
+  node4-data1:
+  node4-data2:
+  node4-data3:
+  node4-data4:
