@@ -1,0 +1,32 @@
+
+
+[package]
+name = "nebulafx-zip"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "ZIP file handling for NebulaFX, providing support for reading and writing ZIP archives."
+keywords = ["zip", "compression", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "compression"]
+documentation = "https://docs.rs/nebulafx-zip/latest/nebulafx_zip/"
+
+
+[dependencies]
+async-compression = { workspace = true, features = [
+    "tokio",
+    "bzip2",
+    "gzip",
+    "zlib",
+    "zstd",
+    "xz",
+] }
+tokio = { workspace = true, features = ["full"] }
+tokio-stream = { workspace = true }
+astral-tokio-tar = { workspace = true }
+
+
+[lints]
+workspace = true

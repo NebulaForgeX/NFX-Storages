@@ -1,0 +1,29 @@
+
+
+[package]
+name = "nebulafx-protos"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+homepage.workspace = true
+description = "Protocol definitions for NebulaFX, providing gRPC and FlatBuffers interfaces for communication between components."
+keywords = ["protocols", "gRPC", "FlatBuffers", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "data-structures", "asynchronous"]
+documentation = "https://docs.rs/nebulafx-protos/latest/nebulafx_protos/"
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "gproto"
+path = "src/main.rs"
+
+[dependencies]
+nebulafx-common.workspace = true
+flatbuffers = { workspace = true }
+prost = { workspace = true }
+tonic = { workspace = true, features = ["transport"] }
+tonic-prost = { workspace = true }
+tonic-prost-build = { workspace = true }

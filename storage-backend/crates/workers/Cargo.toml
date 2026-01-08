@@ -1,0 +1,21 @@
+
+
+[package]
+name = "nebulafx-workers"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Workers for NebulaFX, providing background processing capabilities for tasks such as data synchronization, indexing, and more."
+keywords = ["workers", "tasks", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools"]
+documentation = "https://docs.rs/nebulafx-workers/latest/nebulafx_workers/"
+
+[lints]
+workspace = true
+
+[dependencies]
+tokio = { workspace = true, features = ["sync"] }
+tracing.workspace = true

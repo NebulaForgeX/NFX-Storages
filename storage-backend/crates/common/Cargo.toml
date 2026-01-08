@@ -1,0 +1,29 @@
+
+
+[package]
+name = "nebulafx-common"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+homepage.workspace = true
+description = "Common utilities and data structures for NebulaFX, providing shared functionality across the project."
+keywords = ["common", "utilities", "data-structures", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "data-structures"]
+
+[lints]
+workspace = true
+
+[dependencies]
+tokio = { workspace = true }
+tonic = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+nebulafx-madmin = { workspace = true }
+nebulafx-filemeta = { workspace = true }
+serde = { workspace = true }
+path-clean = { workspace = true }
+rmp-serde = { workspace = true }
+async-trait = { workspace = true }
+s3s = { workspace = true }

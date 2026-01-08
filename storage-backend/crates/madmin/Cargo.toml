@@ -1,0 +1,25 @@
+
+
+[package]
+name = "nebulafx-madmin"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Management and administration tools for NebulaFX, providing a web interface and API for system management."
+keywords = ["management", "administration", "web-interface", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "config"]
+documentation = "https://docs.rs/nebulafx-madmin/latest/nebulafx_madmin/"
+
+[lints]
+workspace = true
+
+[dependencies]
+chrono.workspace = true
+humantime.workspace = true
+hyper.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+time.workspace = true

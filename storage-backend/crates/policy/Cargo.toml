@@ -1,0 +1,39 @@
+
+
+[package]
+name = "nebulafx-policy"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Policy management for NebulaFX, providing a framework for defining and enforcing policies across the system."
+keywords = ["policy", "management", "enforcement", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "accessibility"]
+documentation = "https://docs.rs/nebulafx-policy/latest/nebulafx_policy/"
+
+[lints]
+workspace = true
+
+[dependencies]
+nebulafx-config = { workspace = true, features = ["constants","opa"] }
+tokio = { workspace = true, features = ["full"] }
+time = { workspace = true, features = ["serde-human-readable"] }
+serde = { workspace = true, features = ["derive", "rc"] }
+serde_json.workspace = true
+thiserror.workspace = true
+strum = { workspace = true, features = ["derive"] }
+nebulafx-crypto = { workspace = true }
+ipnetwork = { workspace = true, features = ["serde"] }
+rand.workspace = true
+base64-simd = { workspace = true }
+jsonwebtoken = { workspace = true }
+regex = { workspace = true }
+reqwest.workspace = true
+chrono.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+test-case.workspace = true
+temp-env = { workspace = true }

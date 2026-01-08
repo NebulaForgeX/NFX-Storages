@@ -1,0 +1,27 @@
+
+
+[package]
+name = "nebulafx-s3select-query"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+homepage.workspace = true
+description = "S3 Select query engine for NebulaFX, enabling efficient data retrieval from S3-compatible storage using SQL-like queries."
+keywords = ["s3-select", "query-engine", "nebulafx", "Minio", "data-retrieval"]
+categories = ["web-programming", "development-tools", "data-structures"]
+documentation = "https://docs.rs/nebulafx-s3select-query/latest/nebulafx_s3select_query/"
+
+[dependencies]
+nebulafx-s3select-api = { workspace = true }
+async-recursion = { workspace = true }
+async-trait.workspace = true
+datafusion = { workspace = true }
+derive_builder = { workspace = true }
+futures = { workspace = true }
+parking_lot = { workspace = true }
+s3s.workspace = true
+snafu = { workspace = true, features = ["backtrace"] }
+tokio = { workspace = true }
+tracing = { workspace = true }

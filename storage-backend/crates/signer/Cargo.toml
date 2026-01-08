@@ -1,0 +1,30 @@
+
+
+[package]
+name = "nebulafx-signer"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Digital signature generation and verification for NebulaFX, ensuring data integrity and authenticity."
+keywords = ["digital-signature", "verification", "integrity", "nebulafx", "Minio"]
+categories = ["web-programming", "development-tools", "cryptography"]
+documentation = "https://docs.rs/nebulafx-signer/latest/nebulafx_signer/"
+
+[dependencies]
+tracing.workspace = true
+bytes = { workspace = true }
+http.workspace = true
+time.workspace = true
+hyper.workspace = true
+serde_urlencoded.workspace = true
+nebulafx-utils = { workspace = true, features = ["full"] }
+s3s.workspace = true
+base64-simd.workspace = true
+
+[dev-dependencies]
+
+[lints]
+workspace = true
