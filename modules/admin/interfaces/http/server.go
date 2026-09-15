@@ -4,11 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	authconn "nfxstorages/connections/auth"
-	"nfxstorages/engine/iam"
-	"nfxstorages/engine/store"
-	adminhandler "nfxstorages/modules/admin/interfaces/http/handler"
+	adminapp "nfxstorages/modules/admin/application/admin"
 	systemapp "nfxstorages/modules/admin/application/system"
+	adminhandler "nfxstorages/modules/admin/interfaces/http/handler"
 	"nfxstorages/pkgs/fiberx"
 	"nfxstorages/pkgs/fiberx/middleware"
 	"nfxstorages/pkgs/httpx"
@@ -20,9 +18,7 @@ import (
 
 type httpDeps interface {
 	AppSvc() *systemapp.Service
-	Store() *store.Engine
-	IAM() *iam.Service
-	AuthClient() *authconn.Client
+	AdminSvc() *adminapp.Service
 	UserTokenVerifier() token.Verifier
 	ErrorsLangsPath() string
 }
@@ -40,7 +36,7 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		AllowCredentials: false, MaxAge: 3600,
 	}))
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
-	admin := adminhandler.NewAdminHandler(d.Store(), d.IAM(), d.AuthClient(), d.UserTokenVerifier())
+	admin := adminhandler.NewAdminHandler(d.AdminSvc())
 	NewRouter(app, NewRegistry(d.AppSvc(), admin, d.ErrorsLangsPath())).RegisterRoutes()
 	return app
 }

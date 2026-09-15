@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 
+import { Inbox } from "lucide-react";
 import { Table } from "@radix-ui/themes";
+import { EmptyState } from "nfx-ui/components";
 
 export interface Column<T> {
   key: string;
@@ -18,10 +20,10 @@ interface DataTableProps<T> {
 
 export function DataTable<T>({ columns, rows, rowKey, empty, loading }: DataTableProps<T>) {
   if (loading) {
-    return <p>{empty ?? "Loading..."}</p>;
+    return <EmptyState icon={Inbox} title={empty ?? "Loading..."} />;
   }
   if (!rows.length) {
-    return <p>{empty ?? "No data"}</p>;
+    return <EmptyState icon={Inbox} title={empty ?? "No data"} />;
   }
   return (
     <Table.Root variant="surface">

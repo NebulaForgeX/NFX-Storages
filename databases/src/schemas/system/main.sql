@@ -1,2 +1,3 @@
 -- atlas:import schema.sql
 -- atlas:import tables/system_state.sql
+-- atlas:import views/system_state_active_view.sql

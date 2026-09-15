@@ -7,7 +7,7 @@ import { Repeat } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { bucketRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { BucketSelect } from "@/components/BucketSelect";
 import { DataTable } from "@/components/DataTable";
 
@@ -20,6 +20,7 @@ interface ReplicationRule {
 }
 
 export default function ReplicationPage() {
+  const { buckets: bucketRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const [bucket, setBucket] = useState("");

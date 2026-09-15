@@ -7,7 +7,7 @@ import { Users } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { usersRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
 interface UserRow {
@@ -16,6 +16,7 @@ interface UserRow {
 }
 
 export default function UsersPage() {
+  const { users: usersRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");

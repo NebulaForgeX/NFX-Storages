@@ -7,9 +7,13 @@ import (
 
 	"google.golang.org/grpc"
 	authconn "nfxstorages/connections/auth"
+	"nfxstorages/engine/store"
+	objectapp "nfxstorages/modules/object/application/object"
 	resourceApp "nfxstorages/modules/object/application/resource"
 	systemapp "nfxstorages/modules/object/application/system"
 	"nfxstorages/modules/object/config"
+	systemstateQuery "nfxstorages/modules/object/infrastructure/query/systemstate"
+	systemstateRepo "nfxstorages/modules/object/infrastructure/repository/systemstate"
 	"nfxstorages/pkgs/cachex"
 	"nfxstorages/pkgs/connections/otelx"
 	"nfxstorages/pkgs/health"
@@ -35,6 +39,7 @@ type Dependencies struct {
 	errorsLangsPath     string
 	conns               []*grpc.ClientConn
 	identityAuth        *authconn.Client
+	objectSvc           *objectapp.Service
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -90,7 +95,12 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier: userTokenVerifier, serverTokenVerifier: serverTokenVerifier, errorsLangsPath: errorsLangsPath,
 		identityAuth: identityClient,
 	}
-	d.appSvc = systemapp.NewService(postgres.DB())
+	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
+	eng, err := store.New(nil, 1, 0)
+	if err != nil {
+		return nil, fmt.Errorf("init object store: %w", err)
+	}
+	d.objectSvc = objectapp.New(eng)
 	_ = provider
 	return d, nil
 }
@@ -118,6 +128,7 @@ func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaCon
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
 func (d *Dependencies) ErrorsLangsPath() string              { return d.errorsLangsPath }
 func (d *Dependencies) AuthClient() *authconn.Client         { return d.identityAuth }
+func (d *Dependencies) ObjectSvc() *objectapp.Service        { return d.objectSvc }
 
 type tokenxVerifierAdapter struct{ tokenx *tokenx.Tokenx }
 

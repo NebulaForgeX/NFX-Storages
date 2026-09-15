@@ -1,29 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Box, Button, Flex, Heading, Section, Text, TextField } from "@radix-ui/themes";
-import { Settings2 } from "@/assets/icons/lucide";
-import { PageHeader, ThemeSettings } from "nfx-ui/components";
+import { Button, Card, Flex, Text, TextField } from "@radix-ui/themes";
+import { Server, Settings2 } from "lucide-react";
+import { CardHeader, PageHeader, ThemeSettings } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
 import { useHostConfigStore } from "@/stores/hostConfigStore";
 import { configManager } from "@/utils/config";
-
-function SettingsSection({ id, title, description, children }: { id: string; title: string; description: string; children: React.ReactNode }) {
-  return (
-    <Section size="1" py="0" aria-labelledby={id}>
-      <Box mb="3">
-        <Heading as="h2" id={id} size="4" mb="1">
-          {title}
-        </Heading>
-        <Text as="p" size="2" color="gray">
-          {description}
-        </Text>
-      </Box>
-      {children}
-    </Section>
-  );
-}
 
 export default function SettingsPage() {
   const { t } = useTranslation("EditPreferencePage");
@@ -52,10 +36,9 @@ export default function SettingsPage() {
     <PageFrame>
       <PageHeader icon={Settings2} title={t("title")} description={t("subtitle")} />
       <Flex direction="column" gap="6" width="100%">
-        <SettingsSection id="settings-theme" title={t("title")} description={t("subtitle")}>
-          <ThemeSettings />
-        </SettingsSection>
-        <SettingsSection id="settings-host" title={t("serverHost.label")} description={t("serverHost.description")}>
+        <ThemeSettings />
+        <Card>
+          <CardHeader icon={<Server size={18} />} title={t("serverHost.label")} description={t("serverHost.description")} />
           <Flex direction="column" gap="3" maxWidth="480px">
             <Text size="2" color="gray">
               {tc("Server Host")}: {current.serverHost || t("serverHost.placeholder")}
@@ -80,7 +63,7 @@ export default function SettingsPage() {
               </Text>
             ) : null}
           </Flex>
-        </SettingsSection>
+        </Card>
       </Flex>
     </PageFrame>
   );

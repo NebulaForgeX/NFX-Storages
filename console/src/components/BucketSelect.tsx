@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Select } from "@radix-ui/themes";
 
-import { bucketRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 
 interface BucketSelectProps {
   value: string;
@@ -11,6 +11,7 @@ interface BucketSelectProps {
 }
 
 export function BucketSelect({ value, onChange, placeholder }: BucketSelectProps) {
+  const { buckets: bucketRepository } = useStorageRepositories();
   const { data = [] } = useQuery({
     queryKey: ["buckets"],
     queryFn: async () => {

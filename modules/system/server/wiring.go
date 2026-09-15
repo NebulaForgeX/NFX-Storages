@@ -10,6 +10,8 @@ import (
 	resourceApp "nfxstorages/modules/system/application/resource"
 	systemapp "nfxstorages/modules/system/application/system"
 	"nfxstorages/modules/system/config"
+	systemstateQuery "nfxstorages/modules/system/infrastructure/query/systemstate"
+	systemstateRepo "nfxstorages/modules/system/infrastructure/repository/systemstate"
 	"nfxstorages/pkgs/cachex"
 	"nfxstorages/pkgs/connections/otelx"
 	"nfxstorages/pkgs/health"
@@ -90,7 +92,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier: userTokenVerifier, serverTokenVerifier: serverTokenVerifier, errorsLangsPath: errorsLangsPath,
 		identityAuth: identityClient,
 	}
-	d.appSvc = systemapp.NewService(postgres.DB())
+	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
 	_ = provider
 	return d, nil
 }

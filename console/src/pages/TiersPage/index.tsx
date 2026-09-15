@@ -7,7 +7,7 @@ import { HardDrive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { tiersRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
 interface TierRow {
@@ -21,6 +21,7 @@ function getConfig(row: TierRow): { name?: string } | undefined {
 }
 
 export default function TiersPage() {
+  const { tiers: tiersRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const [name, setName] = useState("");

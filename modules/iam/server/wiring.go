@@ -10,6 +10,10 @@ import (
 	resourceApp "nfxstorages/modules/iam/application/resource"
 	systemapp "nfxstorages/modules/iam/application/system"
 	"nfxstorages/modules/iam/config"
+	systemstateQuery "nfxstorages/modules/iam/infrastructure/query/systemstate"
+	systemstateRepo "nfxstorages/modules/iam/infrastructure/repository/systemstate"
+	iamapp "nfxstorages/modules/iam/application/iam"
+	iaminfra "nfxstorages/modules/iam/infrastructure/iam"
 	"nfxstorages/pkgs/cachex"
 	"nfxstorages/pkgs/connections/otelx"
 	"nfxstorages/pkgs/health"
@@ -35,6 +39,7 @@ type Dependencies struct {
 	errorsLangsPath     string
 	conns               []*grpc.ClientConn
 	identityAuth        *authconn.Client
+	iamSvc              *iamapp.Service
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -90,7 +95,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier: userTokenVerifier, serverTokenVerifier: serverTokenVerifier, errorsLangsPath: errorsLangsPath,
 		identityAuth: identityClient,
 	}
-	d.appSvc = systemapp.NewService(postgres.DB())
+	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
+	d.iamSvc = iamapp.New(iaminfra.New(postgres.DB()))
 	_ = provider
 	return d, nil
 }
@@ -118,6 +124,7 @@ func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaCon
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
 func (d *Dependencies) ErrorsLangsPath() string              { return d.errorsLangsPath }
 func (d *Dependencies) AuthClient() *authconn.Client         { return d.identityAuth }
+func (d *Dependencies) IAMSvc() *iamapp.Service              { return d.iamSvc }
 
 type tokenxVerifierAdapter struct{ tokenx *tokenx.Tokenx }
 

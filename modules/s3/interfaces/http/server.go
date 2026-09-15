@@ -4,8 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"nfxstorages/engine/iam"
-	"nfxstorages/engine/store"
+	s3app "nfxstorages/modules/s3/application/s3"
 	systemapp "nfxstorages/modules/s3/application/system"
 	"nfxstorages/modules/s3/interfaces/http/handler"
 	"nfxstorages/pkgs/fiberx"
@@ -18,8 +17,7 @@ import (
 
 type httpDeps interface {
 	AppSvc() *systemapp.Service
-	Store() *store.Engine
-	IAM() *iam.Service
+	S3Svc() *s3app.Service
 	ErrorsLangsPath() string
 }
 
@@ -36,7 +34,7 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		AllowCredentials: false, MaxAge: 3600,
 	}))
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
-	s3h := handler.NewS3Handler(d.Store(), d.IAM())
+	s3h := handler.NewS3Handler(d.S3Svc())
 	NewRouter(app, NewRegistry(d.AppSvc(), s3h, d.ErrorsLangsPath())).RegisterRoutes()
 	return app
 }

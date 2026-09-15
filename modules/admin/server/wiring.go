@@ -7,11 +7,16 @@ import (
 
 	"google.golang.org/grpc"
 	authconn "nfxstorages/connections/auth"
-	"nfxstorages/engine/iam"
 	"nfxstorages/engine/store"
+	adminapp "nfxstorages/modules/admin/application/admin"
 	resourceApp "nfxstorages/modules/admin/application/resource"
 	systemapp "nfxstorages/modules/admin/application/system"
 	"nfxstorages/modules/admin/config"
+	systemstateQuery "nfxstorages/modules/admin/infrastructure/query/systemstate"
+	systemstateRepo "nfxstorages/modules/admin/infrastructure/repository/systemstate"
+	iamapp "nfxstorages/modules/iam/application/iam"
+	iaminfra "nfxstorages/modules/iam/infrastructure/iam"
+	objectapp "nfxstorages/modules/object/application/object"
 	"nfxstorages/pkgs/cachex"
 	"nfxstorages/pkgs/connections/otelx"
 	"nfxstorages/pkgs/health"
@@ -37,8 +42,7 @@ type Dependencies struct {
 	errorsLangsPath     string
 	conns               []*grpc.ClientConn
 	identityAuth        *authconn.Client
-	storeEngine         *store.Engine
-	iamSvc              *iam.Service
+	adminSvc            *adminapp.Service
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -94,15 +98,12 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier: userTokenVerifier, serverTokenVerifier: serverTokenVerifier, errorsLangsPath: errorsLangsPath,
 		identityAuth: identityClient,
 	}
-	d.appSvc = systemapp.NewService(postgres.DB())
-	_ = postgres.DB().Exec(`CREATE SCHEMA IF NOT EXISTS storages`)
-	_ = postgres.DB().AutoMigrate(&iam.AccessKey{}, &iam.Policy{}, &iam.Group{}, &iam.EventTarget{}, &iam.Tier{}, &iam.KMSKey{}, &iam.KMSState{}, &iam.RemoteTarget{})
+	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
 	eng, err := store.New(cfg.Storage.Disks(), cfg.Storage.DataShards, cfg.Storage.ParityShards)
 	if err != nil {
 		return nil, fmt.Errorf("init object store: %w", err)
 	}
-	d.storeEngine = eng
-	d.iamSvc = iam.New(postgres.DB())
+	d.adminSvc = adminapp.New(iamapp.New(iaminfra.New(postgres.DB())), objectapp.New(eng), identityClient, userTokenVerifier)
 	_ = provider
 	return d, nil
 }
@@ -130,8 +131,7 @@ func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaCon
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
 func (d *Dependencies) ErrorsLangsPath() string              { return d.errorsLangsPath }
 func (d *Dependencies) AuthClient() *authconn.Client         { return d.identityAuth }
-func (d *Dependencies) Store() *store.Engine                 { return d.storeEngine }
-func (d *Dependencies) IAM() *iam.Service                    { return d.iamSvc }
+func (d *Dependencies) AdminSvc() *adminapp.Service          { return d.adminSvc }
 
 type tokenxVerifierAdapter struct{ tokenx *tokenx.Tokenx }
 

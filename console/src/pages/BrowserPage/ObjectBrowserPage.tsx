@@ -8,7 +8,7 @@ import { FolderOpen } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { objectRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 import { niceBytes } from "@/utils/functions";
 
@@ -20,6 +20,7 @@ interface ObjectRow {
 }
 
 export default function ObjectBrowserPage() {
+  const { objects: objectRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const queryClient = useQueryClient();

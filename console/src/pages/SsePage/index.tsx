@@ -6,10 +6,11 @@ import { FileKey } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { sseRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
 export default function SsePage() {
+  const { sse: sseRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
 

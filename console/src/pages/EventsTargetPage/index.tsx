@@ -7,7 +7,7 @@ import { Database } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { eventsTargetRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
 interface RowData {
@@ -17,6 +17,7 @@ interface RowData {
 }
 
 export default function EventsTargetPage() {
+  const { eventsTarget: eventsTargetRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");

@@ -4,50 +4,44 @@ import (
 	"context"
 	"time"
 
+	systemstateDomain "nfxstorages/modules/s3/domain/systemstate"
+	systemstateQuery "nfxstorages/modules/s3/query/systemstate"
 	"nfxstorages/pkgs/errx"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
-type State struct {
-	ID                    uuid.UUID  `gorm:"type:uuid;primaryKey" json:"id"`
-	Initialized           bool       `json:"initialized"`
-	InitializedAt        *time.Time `json:"initialized_at"`
-	InitializationVersion *string     `json:"initialization_version"`
-	ResetCount            int        `json:"reset_count"`
-	CreatedAt             time.Time `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt             time.Time `gorm:"autoUpdateTime" json:"updated_at"`
-}
-
-func (State) TableName() string { return "system.system_state" }
+type State = systemstateQuery.StateVO
 
 type Service struct {
-	db *gorm.DB
+	repo  *systemstateDomain.Repo
+	query *systemstateQuery.Query
 }
 
-func NewService(db *gorm.DB) *Service { return &Service{db: db} }
+func NewService(repo *systemstateDomain.Repo, query *systemstateQuery.Query) *Service {
+	return &Service{repo: repo, query: query}
+}
 
 func (s *Service) Latest(ctx context.Context) (*State, error) {
-	var row State
-	err := s.db.WithContext(ctx).Order("created_at desc").First(&row).Error
-	if err == gorm.ErrRecordNotFound {
+	row, err := s.query.Latest.Get(ctx)
+	if err != nil {
+		return nil, errx.Internal("SYSTEM_STATE", "lookup failed").WithCause(err)
+	}
+	if row == nil {
 		return &State{Initialized: false}, nil
 	}
-	if err != nil {
-		return nil, errx.ErrInternal.WithCause(err)
-	}
-	return &row, nil
+	return row, nil
 }
 
 func (s *Service) Initialize(ctx context.Context, version string) (*State, error) {
 	now := time.Now()
-	row := State{ID: uuid.Must(uuid.NewV7()), Initialized: true, InitializedAt: &now}
+	id := uuid.Must(uuid.NewV7())
+	st := systemstateDomain.Inner{ID: id, Initialized: true, InitializedAt: &now, CreatedAt: now, UpdatedAt: now}
 	if version != "" {
-		row.InitializationVersion = &version
+		st.InitializationVersion = &version
 	}
-	if err := s.db.WithContext(ctx).Create(&row).Error; err != nil {
-		return nil, errx.ErrInternal.WithCause(err)
+	if err := s.repo.Create.New(ctx, systemstateDomain.NewFromState(st)); err != nil {
+		return nil, errx.Internal("SYSTEM_STATE", "initialize failed").WithCause(err)
 	}
-	return &row, nil
+	return &State{ID: id, Initialized: true, InitializedAt: &now, InitializationVersion: st.InitializationVersion, CreatedAt: now, UpdatedAt: now}, nil
 }

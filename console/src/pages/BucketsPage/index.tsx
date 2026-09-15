@@ -2,14 +2,15 @@ import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
-import { Button, Flex, Heading, Text } from "@radix-ui/themes";
-import { Settings } from "@/assets/icons/lucide";
-import { PageHeader } from "nfx-ui/components";
+import { Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Settings, Shield, KeyRound, Lock } from "lucide-react";
+import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { bucketRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 
 export default function BucketsPage() {
+  const { buckets: bucketRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const params = useParams();
   const bucket = decodeURIComponent(params.key ?? "");
@@ -33,18 +34,22 @@ export default function BucketsPage() {
   return (
     <PageFrame>
       <PageHeader icon={Settings} title={bucket} description={t("Settings")} />
-      {isLoading ? <Text>{t("Loading")}</Text> : null}
-      {error ? (
-        <Text color="red">{error instanceof Error ? error.message : t("Failed to fetch data")}</Text>
-      ) : null}
+      {isLoading ? <EmptyState icon={Settings} title={t("Loading")} /> : null}
+      {error ? <EmptyState icon={Settings} title={error instanceof Error ? error.message : t("Failed to fetch data")} /> : null}
       {data ? (
         <Flex direction="column" gap="4">
-          <Heading size="4">{t("Versioning")}</Heading>
-          <Text>{String(data.versioning ?? "-")}</Text>
-          <Heading size="4">{t("Access Policy")}</Heading>
-          <pre style={{ whiteSpace: "pre-wrap" }}>{data.policy || "-"}</pre>
-          <Heading size="4">{t("Encryption")}</Heading>
-          <pre style={{ whiteSpace: "pre-wrap" }}>{data.encryption || "-"}</pre>
+          <Card>
+            <CardHeader icon={<Shield size={18} />} title={t("Versioning")} />
+            <Text>{String(data.versioning ?? "-")}</Text>
+          </Card>
+          <Card>
+            <CardHeader icon={<KeyRound size={18} />} title={t("Access Policy")} />
+            <pre style={{ whiteSpace: "pre-wrap" }}>{data.policy || "-"}</pre>
+          </Card>
+          <Card>
+            <CardHeader icon={<Lock size={18} />} title={t("Encryption")} />
+            <pre style={{ whiteSpace: "pre-wrap" }}>{data.encryption || "-"}</pre>
+          </Card>
           <Button asChild>
             <a href={`/browser/${encodeURIComponent(bucket)}`}>{t("Browser")}</a>
           </Button>

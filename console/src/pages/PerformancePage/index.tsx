@@ -1,15 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Button, Flex, Heading, Text } from "@radix-ui/themes";
-import { Activity } from "@/assets/icons/lucide";
-import { PageHeader } from "nfx-ui/components";
+import { Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Activity, HardDrive, Server } from "lucide-react";
+import { CardHeader, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { systemRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { niceBytes } from "@/utils/functions";
 
 export default function PerformancePage() {
+  const { system: systemRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const { data } = useQuery({
@@ -42,12 +43,18 @@ export default function PerformancePage() {
         }
       />
       <Flex direction="column" gap="4">
-        <Heading size="4">{t("Used Capacity")}</Heading>
-        <Text size="6">{niceBytes(String(used))}</Text>
-        <Heading size="4">{t("Server Information")}</Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(data?.info ?? {}, null, 2)}</pre>
-        <Heading size="4">{t("Backend")}</Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(data?.storage ?? {}, null, 2)}</pre>
+        <Card>
+          <CardHeader icon={<HardDrive size={18} />} title={t("Used Capacity")} />
+          <Text size="6">{niceBytes(String(used))}</Text>
+        </Card>
+        <Card>
+          <CardHeader icon={<Server size={18} />} title={t("Server Information")} />
+          <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(data?.info ?? {}, null, 2)}</pre>
+        </Card>
+        <Card>
+          <CardHeader icon={<Activity size={18} />} title={t("Backend")} />
+          <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(data?.storage ?? {}, null, 2)}</pre>
+        </Card>
       </Flex>
     </PageFrame>
   );

@@ -8,11 +8,12 @@ import { Archive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { bucketRepository, systemRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 import { niceBytes } from "@/utils/functions";
 
 export default function BrowserPage() {
+  const { buckets: bucketRepository, system: systemRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const queryClient = useQueryClient();

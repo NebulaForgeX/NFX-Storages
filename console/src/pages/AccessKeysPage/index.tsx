@@ -7,7 +7,7 @@ import { KeyRound } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { accessKeysRepository } from "@/apis/repositories";
+import { useStorageRepositories } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
 interface AccessKeyRow {
@@ -19,6 +19,7 @@ interface AccessKeyRow {
 }
 
 export default function AccessKeysPage() {
+  const { accessKeys: accessKeysRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
