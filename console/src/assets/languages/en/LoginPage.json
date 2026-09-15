@@ -1,0 +1,20 @@
+{
+  "title": "Welcome Back",
+  "subtitle": "Sign in with NFX Identity, then use issued S3 keys",
+  "login": "Sign In",
+  "keyLogin": "Key Login",
+  "stsLogin": "STS Login",
+  "loggingIn": "Signing in...",
+  "loginFailed": "Login failed",
+  "loginSuccess": "Login Success",
+  "serverConfig": "Server Configuration",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "verificationCode": "Verification code",
+  "sendCode": "Send code",
+  "noAccount": "No account?",
+  "registerNow": "Register now",
+  "hasAccount": "Have an account?",
+  "signInNow": "Sign in"
+}

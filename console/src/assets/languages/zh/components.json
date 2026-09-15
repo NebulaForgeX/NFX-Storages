@@ -1,0 +1,25 @@
+{
+  "header": {
+    "user": "用户",
+    "logout": "退出登录",
+    "settings": "设置"
+  },
+  "sidebar": {
+    "browser": "对象浏览器",
+    "accessKeys": "访问密钥",
+    "policies": "策略",
+    "users": "用户",
+    "userGroups": "用户组",
+    "importExport": "导入/导出",
+    "performance": "性能",
+    "bucketSetting": "存储桶设置",
+    "events": "存储桶事件",
+    "replication": "存储桶复制",
+    "lifecycle": "生命周期",
+    "tiers": "分层存储",
+    "eventsTarget": "事件目标",
+    "sse": "SSE 设置",
+    "license": "许可证",
+    "settings": "设置"
+  }
+}

@@ -1,0 +1,48 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  args_bin = []
+  bin = "tmp/system-pipeline-service"
+  cmd = "go build -trimpath -buildvcs=false -ldflags='-s -w' -o ./tmp/system-pipeline-service ./inputs/system/pipeline"
+  delay = 500
+  exclude_file = []
+  exclude_unchanged = true
+  follow_symlink = true
+  include_dir = ["inputs/system/pipeline", "inputs/system/configuration", "modules/system", "enums", "errors/src", "events", "pkgs", "protos"]
+  include_ext = ["go","mod","sum","toml"]
+  include_file = []
+  kill_delay = "0s"
+  log = "build-errors.log"
+  poll = true
+  poll_interval = 1000
+  post_cmd = []
+  pre_cmd = []
+  rerun = false
+  rerun_delay = 500
+  send_interrupt = false
+  stop_on_error = false
+
+[color]
+  app = ""
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  main_only = true
+  silent = false
+  time = true
+
+[misc]
+  clean_on_exit = false
+
+[proxy]
+  app_port = 0
+  enabled = false
+  proxy_port = 0
+
+[screen]
+  clear_on_rebuild = false
+  keep_scroll = true

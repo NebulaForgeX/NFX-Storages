@@ -1,0 +1,7 @@
+{
+  "EMAIL_TAKEN": "e-mail déjà enregistré",
+  "INVALID_CREDENTIALS": "e-mail ou mot de passe invalide",
+  "NEWS_NOT_FOUND": "actualité introuvable",
+  "REPORT_NOT_FOUND": "rapport introuvable",
+  "SOURCE_NOT_FOUND": "source introuvable"
+}

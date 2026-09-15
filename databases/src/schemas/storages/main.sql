@@ -1,0 +1,9 @@
+-- atlas:import schema.sql
+-- atlas:import tables/access_keys.sql
+-- atlas:import tables/policies.sql
+-- atlas:import tables/groups.sql
+-- atlas:import tables/event_targets.sql
+-- atlas:import tables/tiers.sql
+-- atlas:import tables/kms_keys.sql
+-- atlas:import tables/kms_state.sql
+-- atlas:import tables/remote_targets.sql

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>新的联系表单留言 - NebulaForgeX Identity</title>
+</head>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background-color:#fafafa;">
+	<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fafafa;padding:32px 0;">
+		<tr>
+			<td align="center">
+				<table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+					<tr>
+						<td style="padding:32px 32px 24px;background:linear-gradient(135deg,#fa1e16 0%,#f86807 100%);border-radius:12px 12px 0 0;color:#ffffff;">
+							<h2 style="margin:0;font-size:24px;">🍵 有新的用户留言</h2>
+							<p style="margin:12px 0 0;font-size:14px;opacity:0.85;">来自 {{.Name}} ({{.Email}})</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:32px;">
+							<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+								<tr>
+									<td style="width:120px;padding:12px 0;color:#888888;font-size:14px;">姓名</td>
+									<td style="padding:12px 0;font-size:15px;color:#161515;">{{.Name}}</td>
+								</tr>
+								<tr>
+									<td style="width:120px;padding:12px 0;color:#888888;font-size:14px;">邮箱</td>
+									<td style="padding:12px 0;font-size:15px;color:#fa1e16;">{{.Email}}</td>
+								</tr>
+								{{if .Phone}}
+								<tr>
+									<td style="width:120px;padding:12px 0;color:#888888;font-size:14px;">电话</td>
+									<td style="padding:12px 0;font-size:15px;color:#161515;">{{.Phone}}</td>
+								</tr>
+								{{end}}
+								{{if .Wechat}}
+								<tr>
+									<td style="width:120px;padding:12px 0;color:#888888;font-size:14px;">微信</td>
+									<td style="padding:12px 0;font-size:15px;color:#161515;">{{.Wechat}}</td>
+								</tr>
+								{{end}}
+								<tr>
+									<td style="width:120px;padding:12px 0;color:#888888;font-size:14px;vertical-align:top;">留言内容</td>
+									<td style="padding:12px 0;font-size:15px;color:#161515;line-height:1.6;">
+										<div style="padding:16px;background-color:#f5f5f5;border-radius:8px;border:1px solid #e2e0e0;white-space:pre-wrap;">{{.Message}}</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:20px 32px 32px;border-top:1px solid #e2e0e0;text-align:center;color:#888888;font-size:12px;">
+							<p style="margin:0;">这是一封来自官网联系表单的自动通知邮件，请及时跟进。</p>
+							<p style="margin:8px 0 0;">© 2025 NebulaForgeX. All rights reserved.</p>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

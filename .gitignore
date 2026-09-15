@@ -1,36 +1,187 @@
-# Ignore subdirectories
-rustfs/
-rustfsconsole/
+# NFX-Storages — Go API + Vite console
+# Canonical ignore list vs Example PulsoLink-API. rustfs/ is leftover, not the product.
 
-# Common ignores
-.DS_Store
-Thumbs.db
-*.log
+## Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.o
+bin/
+dist/
+tmp/
+build/
+target/
+*.test
+*.out
+*.prof
+*.pprof
+*.cover
+cover.out
+coverage/
+
+## Go module overrides
+vendor/
+go.work
+go.work.sum
+
+## Tooling & temporary files
+.air.toml.local
+.buildcache/
+.cache/
+cache/
+.task/
+*.pid
+*.sock
 *.tmp
-*.bak
-*~
+*.temp
+*.cache
+*.orig
+*.rej
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+## Secrets — ignore real env, keep examples
+.env
+.env.*
+.env.local
+.env.*.local
+*.env
+!.example.env
+!.env.example
 
-# Node modules (if any)
-node_modules/
+# Redis SSH tunnel (task run / scripts/redis_ssh_tunnel.sh)
+.env.redis-tunnel
+.redis-ssh-tunnel.pid
+
+## Logs
+logs/
+*.log
+log/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build outputs
-dist/
-build/
-target/
-*.o
-*.so
-*.dylib
+## Uploaded assets
+assets/**/*
+!assets/**/.gitkeep
+static/images/pictures/*
+!static/images/pictures/.gitkeep
 
-# Environment files
-.env
-.env.local
-.env.*.local
+## Runtime data (never push)
+stores/
+stores/mysql/
+stores/redis/
+stores/kafka/
+data/
+data/postgresql/
+data/redis/
+data/kafka/
+dump.rdb
+*.rdb
+*.sqlite
+*.db
+*.db-journal
+!data/**/.gitkeep
+
+## Secrets & certificates
+*.key
+*.pem
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+static/keys/*
+!static/keys/.gitkeep
+certs/
+certificates/
+ssl/
+
+## Leftover Rust trees (product is Go)
+rustfs/
+rustfsconsole/
+
+## Docker & local overrides
+docker-compose.override.yml
+.dockerignore.local
+
+## IDE, editor & OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Database dumps (keep Atlas migrations)
+*.sql
+*.dump
+*.bak
+*.backup
+!databases/
+!databases/**
+databases/build/
+databases/gen/
+databases/debug.txt
+databases/bin/
+
+## Protect source trees (never exclude pkgs)
+!scripts/
+!scripts/**
+!pkg/
+!pkg/**
+!pkg/cachex/
+!pkg/cachex/**
+!pkgs/
+!pkgs/**
+!pkgs/cachex/
+!pkgs/cachex/**
+!atlas/
+!atlas/**
+!enums/
+!enums/**
+!inputs/
+!inputs/**
+!modules/
+!modules/**
+!protos/
+!protos/**
+!events/
+!events/**
+!connections/
+!connections/**
+!errors/
+!errors/**
+!certs/
+!certs/**
+!ssl/
+!ssl/**
+!docker-compose.yml
+!docker-compose.dev.yml
+!go.mod
+!go.sum
+!Taskfile.yml
+!README.md
+!STRUCTURE.md
+!LICENSE
+!CONTRIBUTING.md
+
+## Console (Vite)
+/console/dist/
+/console/node_modules/
+/console/.turbo/
+node_modules/
+!/console/.env.dev
+!/console/.env.prod
+!/console/.env.example
+!/console/.example.env

@@ -1,0 +1,2 @@
+-- atlas:import schema.sql
+-- atlas:import tables/system_state.sql

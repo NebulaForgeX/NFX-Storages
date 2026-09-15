@@ -1,0 +1,131 @@
+# NFX-News System Service (dev)
+
+[server]
+    name = "S3 Service"
+    host = "0.0.0.0"
+    http_port = "${HTTP_PORT}"
+    grpc_port = "${GRPC_PORT_S3}"
+
+    [server.access_log]
+    mode = "logger"
+
+[postgresql]
+    host = "${POSTGRESQL_HOST}"
+    port = "${POSTGRESQL_PORT}"
+    user = "${POSTGRESQL_USER}"
+    password = "${POSTGRESQL_PASSWORD}"
+    dbname = "${POSTGRESQL_NAME_DEV}"
+    sslmode = "disable"
+    timezone = "UTC"
+    logger_level = "warn"
+    auto_migrate = false
+
+    [postgresql.connection]
+        timeout = "5s"
+        max_retries = 5
+        retry_interval = "2s"
+        max_idle_connections = 10
+        max_open_connections = 100
+        conn_max_idle_time = "15m"
+        conn_max_lifetime = "1h"
+
+[cache]
+    host = "${REDIS_HOST}"
+    port = "${REDIS_PORT}"
+    password = "${REDIS_PASSWORD}"
+
+    [cache.connection]
+        dial_timeout = "3s"
+        write_timeout = "3s"
+        read_timeout = "3s"
+        max_retries = 5
+        retry_interval = "2s"
+
+    [cache.tls]
+        enabled = true
+        server_name = ""
+
+[logger]
+    level = "debug"
+    format = "console"
+    output = "stdout"
+    file_path = "logs/system.log"
+    max_size_mb = 100
+    max_backups = 10
+    max_age_day = 30
+    compress = false
+
+[kafka]
+    brokers = ["${KAFKA_BROKERS}"]
+    client_id = "nfxstorages-s3-service"
+
+    [kafka.network]
+        max_open_requests = 1
+
+    [kafka.producer]
+        acks = "all"
+        compression = "snappy"
+        retries = 3
+        batch_bytes = 1048576
+        linger_ms = 5
+        idempotent = true
+
+    [kafka.consumer]
+        group_id = "nfxstorages-system"
+        initial_offset = "latest"
+        session_timeout_ms = 10000
+        heartbeat_interval_ms = 3000
+        fetch_min_bytes = 1
+        fetch_max_bytes = 5242880
+        return_errors = true
+
+    [kafka.producer_topics]
+        system = "nfxstorages.system"
+        system_poison = "nfxstorages.system_poison"
+
+    [kafka.consumer_topics]
+        system = "nfxstorages.system"
+        system_poison = "nfxstorages.system_poison"
+
+    [kafka.security]
+        enabled = true
+        mechanism = "PLAIN"
+        username = ""
+        password = ""
+        tls_insecure_skip_verify = false
+
+[token]
+    secret_key = "${TOKEN_SECRET_KEY}"
+    issuer = "${TOKEN_ISSUER}"
+    access_token_ttl = "${TOKEN_ACCESS_TTL}"
+    refresh_token_ttl = "${TOKEN_REFRESH_TTL}"
+    algorithm = "${TOKEN_ALGORITHM}"
+
+[i18n]
+    errors_langs_path = "errors/langs"
+
+[grpc_client]
+    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
+    source_addr = "${GRPC_HOST_SOURCE}:${GRPC_PORT_SOURCE}"
+    news_addr = "${GRPC_HOST_NEWS}:${GRPC_PORT_NEWS}"
+    crawl_addr = "${GRPC_HOST_CRAWL}:${GRPC_PORT_CRAWL}"
+    report_addr = "${GRPC_HOST_REPORT}:${GRPC_PORT_REPORT}"
+    notify_addr = "${GRPC_HOST_NOTIFY}:${GRPC_PORT_NOTIFY}"
+    mcp_addr = "${GRPC_HOST_MCP}:${GRPC_PORT_MCP}"
+    system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
+
+[otel]
+    enabled = true
+    endpoint = "${OTEL_EXPORTER_OTLP_ENDPOINT}"
+    insecure = true
+    sampler_arg = 1.0
+    traces = true
+    metrics = true
+    logs = true
+    export_timeout = "10s"
+
+
+[storage]
+    volumes = ["${STORAGES_VOLUME_0}", "${STORAGES_VOLUME_1}", "${STORAGES_VOLUME_2}", "${STORAGES_VOLUME_3}"]
+    data_shards = 2
+    parity_shards = 2

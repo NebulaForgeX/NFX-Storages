@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS "storages"."tiers" (
+  "name" VARCHAR(255) PRIMARY KEY,
+  "config" JSONB NOT NULL DEFAULT '{}'::jsonb,
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

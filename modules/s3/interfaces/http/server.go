@@ -1,0 +1,42 @@
+package http
+
+import (
+	"encoding/json"
+	"time"
+
+	"nfxstorages/engine/iam"
+	"nfxstorages/engine/store"
+	systemapp "nfxstorages/modules/s3/application/system"
+	"nfxstorages/modules/s3/interfaces/http/handler"
+	"nfxstorages/pkgs/fiberx"
+	"nfxstorages/pkgs/fiberx/middleware"
+	"nfxstorages/pkgs/httpx"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
+)
+
+type httpDeps interface {
+	AppSvc() *systemapp.Service
+	Store() *store.Engine
+	IAM() *iam.Service
+	ErrorsLangsPath() string
+}
+
+func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
+	app := fiber.New(fiber.Config{
+		JSONEncoder: json.Marshal, JSONDecoder: json.Unmarshal, ErrorHandler: fiberx.ErrorHandler,
+		ReadTimeout: 60 * time.Second, WriteTimeout: 120 * time.Second, IdleTimeout: 120 * time.Second,
+		BodyLimit: 512 * 1024 * 1024,
+	})
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Amz-Date", "X-Amz-Content-Sha256", "X-Amz-Security-Token", "X-Amz-Target", "X-Requested-With"},
+		AllowCredentials: false, MaxAge: 3600,
+	}))
+	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
+	s3h := handler.NewS3Handler(d.Store(), d.IAM())
+	NewRouter(app, NewRegistry(d.AppSvc(), s3h, d.ErrorsLangsPath())).RegisterRoutes()
+	return app
+}

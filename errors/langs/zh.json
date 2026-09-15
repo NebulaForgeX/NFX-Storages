@@ -1,0 +1,7 @@
+{
+  "EMAIL_TAKEN": "邮箱已被注册",
+  "INVALID_CREDENTIALS": "邮箱或密码错误",
+  "NEWS_NOT_FOUND": "新闻不存在",
+  "REPORT_NOT_FOUND": "报告不存在",
+  "SOURCE_NOT_FOUND": "来源不存在"
+}
