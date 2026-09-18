@@ -69,8 +69,9 @@ nfxstorages_ensure_psql_cli() {
     return 1
   fi
   read -r -p "使用 apt 安装 postgresql-client？[y/N] / Install with apt? [y/N]: " reply
+  reply="${reply:0:1}"
   case "${reply}" in
-    [yY]|[yY][eE][sS]) ;;
+    [yY]) ;;
     *)
       echo "已跳过。可手动执行 / Skipped. Run: sudo apt-get install -y postgresql-client"
       return 1

@@ -296,6 +296,7 @@ else
   else
     read -r -p "Have you finished adding views to migration files? (Y/n): " response || true
     response="${response:-y}"
+    response="${response:0:1}"
     if [[ "${response}" =~ ^[yY]$ ]]; then
       echo "Continuing with the pipeline..."
     elif [[ "${response}" =~ ^[nN]$ ]]; then

@@ -153,6 +153,7 @@ tasks:
         export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
         export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_models.sh
 
@@ -172,6 +173,7 @@ tasks:
         export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
         export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_views.sh
 
@@ -191,6 +193,7 @@ tasks:
         export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
         export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_enums.sh
 
@@ -222,6 +225,7 @@ tasks:
         export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
         export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
         bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
 
