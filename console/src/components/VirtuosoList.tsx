@@ -9,7 +9,7 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import { safeStringable } from "nfx-ui/utils";
 import { Virtuoso } from "react-virtuoso";
 
-import { EmptyState } from "@/components/EmptyState";
+import EmptyState from "@/components/EmptyState";
 
 type ColumnCount = 1 | 2 | 3 | 4 | 5;
 

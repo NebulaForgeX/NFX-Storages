@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Avatar, Box, Button, Card, Flex, IconButton, Text } from "@radix-ui/themes";
-import { Calendar, ChevronRight, Home, Info, LogOut, Mail, Map, UserRound } from "lucide-react";
+import { ChevronRight, Home, LogOut, UserRound } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { clearAuth, closeAsider, useAuthStore, useLayoutStore } from "nfx-ui/stores";
@@ -115,30 +115,6 @@ function Asider() {
                 <Home size={18} aria-hidden="true" />
                 <Text as="span" size="3">
                   {t("header.home")}
-                </Text>
-              </button>
-              <button type="button" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.EXPLORE)}>
-                <Map size={18} aria-hidden="true" />
-                <Text as="span" size="3">
-                  {t("header.explore")}
-                </Text>
-              </button>
-              <button type="button" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.EVENTS)}>
-                <Calendar size={18} aria-hidden="true" />
-                <Text as="span" size="3">
-                  {t("header.events")}
-                </Text>
-              </button>
-              <button type="button" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.ABOUT)}>
-                <Info size={18} aria-hidden="true" />
-                <Text as="span" size="3">
-                  {t("header.about")}
-                </Text>
-              </button>
-              <button type="button" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.CONTACT)}>
-                <Mail size={18} aria-hidden="true" />
-                <Text as="span" size="3">
-                  {t("header.contact")}
                 </Text>
               </button>
             </nav>

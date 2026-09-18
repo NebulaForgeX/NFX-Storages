@@ -4,11 +4,10 @@ import type { UserProfileBackgroundDraft, UserProfileBackgroundUploadStatus } fr
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
-import { AssetCategoryEnum, AssetTypeEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useConfirmProfileBackgrounds, useDeleteImage, usePrepareImageUpload } from "nfx-ui/hooks";
 import { createUserProfileBackgroundsFieldSchema } from "nfx-ui/schemas";
-import { buildImageUrl, getApiPulsoLinkErrorMessage, safeArray } from "nfx-ui/utils";
+import { buildImageUrl, getApiErrorMessage, safeArray } from "nfx-ui/utils";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -122,12 +121,10 @@ export function useUserProfileBackgroundUpload(profile: Profile.Response.Profile
 
     try {
       const slot = await prepareUpload.mutateAsync({
-        assetType: AssetTypeEnum.IMAGE,
-        assetCategory: AssetCategoryEnum.BACKGROUND,
         fileName: file.name,
         mimeType: file.type || "image/png",
       });
-      serverId = slot.imageId;
+      serverId = slot.id;
 
       setDrafts((current) =>
         normalizeUserProfileBackgroundSortOrders(
@@ -135,7 +132,7 @@ export function useUserProfileBackgroundUpload(profile: Profile.Response.Profile
             item.imageId === localId
               ? {
                   ...item,
-                  imageId: slot.imageId,
+                  imageId: slot.id,
                   hasTmpAsset: true,
                   committed: false,
                   uploading: true,
@@ -165,7 +162,7 @@ export function useUserProfileBackgroundUpload(profile: Profile.Response.Profile
       });
       setDirty(true);
     } catch (error) {
-      const message = getApiPulsoLinkErrorMessage(error, t("backgroundUpload.uploadFailed"));
+      const message = getApiErrorMessage(error, t("backgroundUpload.uploadFailed"));
       patchDraft(localId, serverId, {
         pending: false,
         uploading: false,

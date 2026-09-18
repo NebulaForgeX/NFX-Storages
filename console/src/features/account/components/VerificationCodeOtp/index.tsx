@@ -2,7 +2,7 @@ import type { ReactNode, Ref } from "react";
 
 import { useEffect, useState } from "react";
 import { Flex } from "@radix-ui/themes";
-import { normalizeVerificationCode } from "nfx-ui/utils/domain/verificationCode";
+import { normalizeVerificationCode } from "nfx-ui/utils";
 import { unstable_OneTimePasswordField as OneTimePasswordField } from "radix-ui";
 
 import styles from "./styles.module.css";
