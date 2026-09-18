@@ -39,7 +39,7 @@
     "jszip": "^3.10.2",
     "lucide-react": "^1.47.0",
     "motion": "^13.4.0",
-    "nfx-ui": "file:../../NFX-UI",
+    "nfx-ui": "^0.23.0",
     "node-forge": "^1.4.0",
     "radix-ui": "^1.6.7",
     "react": "^19.3.0",
