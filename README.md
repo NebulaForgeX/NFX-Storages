@@ -39,8 +39,8 @@ NFX-Storages/
 ├── console/              # Vite + React console (nfx-ui)
 ├── errors/src            # i18n error codes (not a News leftover)
 ├── events/               # Kafka topic keys
-├── databases/scripts     # Atlas + license-free (psqldef/goose) pipeline
-├── Taskfile.yml          # task start / go:up / errors / atlas / databases
+├── databases/scripts     # Atlas pipeline (gen_*.sh)
+├── Taskfile.yml          # task start / go:up / errors / atlas
 ├── docker-compose.dev.yml
 └── docker-compose.yml
 ```
@@ -56,7 +56,7 @@ task install
 task errors                # add i18n templates + generate langs
 task proto:gen
 task db:create
-task atlas:pipeline:run    # or: task databases:pipeline:run
+task atlas:pipeline:run
 task run                   # docker compose (needs nfx-edge)
 task scripts:test-db
 task console

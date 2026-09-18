@@ -1,6 +1,6 @@
 # Codex / agent notes for NFX-Storages
 
-Scaffolding follows **CityPulso PulsoLoop-API** (Taskfile `start`/`run`/`errors`/`atlas`/`databases`, errors i18n, databases/scripts, license-free DB pipeline) and **NFX-Identity** (console, testdb/cleardata, Edge attach).
+Scaffolding follows **CityPulso PulsoLoop-API** (Taskfile `start`/`run`/`errors`/`atlas`, errors i18n, databases/scripts Atlas pipeline) and **NFX-Identity** (console, testdb/cleardata, Edge attach).
 
 HTTP ingress is **only NFX-Edge**. This repo does not run Traefik.
 

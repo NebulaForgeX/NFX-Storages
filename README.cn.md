@@ -37,8 +37,8 @@ NFX-Storages/
 ├── console/              # Vite + React（nfx-ui）
 ├── errors/src            # i18n 错误码（Storages 域，不是 News 拷贝）
 ├── events/               # Kafka topic keys
-├── databases/scripts     # Atlas + license-free (psqldef/goose)
-├── Taskfile.yml          # task start / run / errors / atlas / databases
+├── databases/scripts     # Atlas pipeline (gen_*.sh)
+├── Taskfile.yml          # task start / run / errors / atlas
 ├── docker-compose.dev.yml
 └── docker-compose.yml
 ```
@@ -54,7 +54,7 @@ task install
 task errors                # i18n 模板 + langs
 task proto:gen
 task db:create
-task atlas:pipeline:run    # 或: task databases:pipeline:run
+task atlas:pipeline:run
 task run                   # 需要 nfx-edge
 task console
 ```

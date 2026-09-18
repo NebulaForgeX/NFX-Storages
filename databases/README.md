@@ -1,6 +1,6 @@
 # nfxstorages 数据库（PostgreSQL）
 
-结构与 **CityPulso PulsoLoop-API** / **NFX-Identity** 的 `databases/` 对齐：Atlas 或 license-free（psqldef/goose）管理 schema 与迁移，模板生成 Go 模型等。
+结构与 **CityPulso PulsoLoop-API** / **NFX-Identity** 的 `databases/` 对齐：Atlas 管理 schema 与迁移，模板生成 Go 模型等。
 
 HTTP 入口只有 **NFX-Edge**；本仓不跑 Traefik。
 
@@ -38,14 +38,14 @@ databases/
 │       ├── storages/
 │       └── system/
 ├── migrations/
-└── scripts/          # gen_*.sh / db_*.sh / *.ps1
+└── scripts/          # Atlas gen_*.sh / postgres_client.sh / *.ps1
 ```
 
 改 schema 请改 `databases/src/**` 源 SQL，再跑：
 
 ```bash
 task db:create
-task atlas:pipeline:run        # 或 task databases:pipeline:run
+task atlas:pipeline:run
 task atlas:gen
 ```
 
