@@ -21,6 +21,7 @@
     "eventsTarget": "Event Destinations",
     "sse": "SSE Settings",
     "license": "License",
+    "profile": "Profile",
     "settings": "Settings"
   }
 }

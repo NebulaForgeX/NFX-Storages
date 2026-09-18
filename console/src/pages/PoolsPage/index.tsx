@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { HardDrive } from "@/assets/icons/lucide";
-import { PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 
 import { useCancelPoolDecommission, useDecommissionPool, usePools } from "@/hooks";
 import { DataTable } from "@/components/DataTable";

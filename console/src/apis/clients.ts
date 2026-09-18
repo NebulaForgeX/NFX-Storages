@@ -1,9 +1,9 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import type { DeserializeHandler, DeserializeHandlerArguments, DeserializeHandlerOutput } from "@aws-sdk/types";
 
-import ApiClient from "@/lib/api-client";
-import { AwsClient } from "@/lib/aws4fetch";
-import { ApiErrorHandler } from "@/lib/utils/api-error-handler";
+import ApiClient from "@/utils/api-client";
+import { AwsClient } from "@/utils/aws4fetch";
+import { ApiErrorHandler } from "@/utils/api-error-handler";
 import { AuthStore } from "@/stores/authStore";
 import { configManager } from "@/utils/config";
 import type { SiteConfig } from "@/types/config";

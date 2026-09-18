@@ -1,0 +1,131 @@
+.campfire {
+  --cf-unit: clamp(0.85rem, 2.4vw, 1rem);
+  position: relative;
+  width: calc(6 * var(--cf-unit));
+  height: calc(6 * var(--cf-unit));
+}
+
+.fireContainer {
+  position: absolute;
+  bottom: calc(2.5 * var(--cf-unit));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.flame {
+  position: absolute;
+  background: linear-gradient(180deg, #ff6b00 0%, #ffd700 70%);
+  border-radius: 50%;
+  animation: flicker 0.8s ease-in-out infinite alternate;
+}
+
+.flameMain {
+  width: calc(1.8 * var(--cf-unit));
+  height: calc(2.5 * var(--cf-unit));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.flameLeft,
+.flameRight {
+  width: calc(1.2 * var(--cf-unit));
+  height: calc(1.8 * var(--cf-unit));
+  top: calc(0.5 * var(--cf-unit));
+}
+
+.flameLeft {
+  left: calc(-1.2 * var(--cf-unit));
+  clip-path: polygon(70% 0, 100% 100%, 0 100%);
+  animation-delay: 0.2s;
+}
+
+.flameRight {
+  right: calc(-1.2 * var(--cf-unit));
+  clip-path: polygon(30% 0, 100% 100%, 0 100%);
+  animation-delay: 0.4s;
+}
+
+.logs {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 calc(0.8 * var(--cf-unit));
+}
+
+.log {
+  width: calc(1.5 * var(--cf-unit));
+  height: calc(0.5 * var(--cf-unit));
+  background: linear-gradient(45deg, #6b4226, #8b4513);
+  border-radius: calc(0.2 * var(--cf-unit));
+  transform: rotate(-15deg);
+}
+
+.log:last-child {
+  transform: rotate(15deg);
+}
+
+.embers {
+  position: absolute;
+  inset: 0;
+}
+
+.ember {
+  position: absolute;
+  width: calc(0.3 * var(--cf-unit));
+  height: calc(0.3 * var(--cf-unit));
+  background: #ff4500;
+  border-radius: 50%;
+  animation: float 1.5s ease-in infinite;
+  animation-delay: calc(var(--delay) * 1s);
+  bottom: calc(2.8 * var(--cf-unit));
+  left: 50%;
+}
+
+.sparkles {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 60%);
+  animation: glow 1.5s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0% {
+    transform: scaleY(1) skew(2deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scaleY(1.2) skew(-3deg);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(-3 * var(--cf-unit))) translateX(calc(var(--delay) * calc(1 * var(--cf-unit)))) scale(0.2);
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flame,
+  .ember,
+  .sparkles {
+    animation: none;
+  }
+}

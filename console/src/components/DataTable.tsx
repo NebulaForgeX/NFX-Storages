@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { Inbox } from "lucide-react";
 import { Table } from "@radix-ui/themes";
-import { EmptyState } from "nfx-ui/components";
+import { EmptyState } from "@/components";
 
 export interface Column<T> {
   key: string;

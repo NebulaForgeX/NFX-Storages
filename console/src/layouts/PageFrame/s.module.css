@@ -1,0 +1,13 @@
+/* Sidebar full-height pages: grow vertically without breaking Container centering. */
+.fullHeightFrame {
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fullHeightBody {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+}

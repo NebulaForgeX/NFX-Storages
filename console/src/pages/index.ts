@@ -1,6 +1,3 @@
-export { default as LoginPage } from "./LoginPage";
-export { default as GitHubCallbackPage } from "./LoginPage/GitHubCallbackPage";
-export { default as SelectProfilePage } from "./SelectProfilePage";
 export { default as ConfigPage } from "./ConfigPage";
 export { default as BrowserPage } from "./BrowserPage";
 export { default as ObjectBrowserPage } from "./BrowserPage/ObjectBrowserPage";
@@ -21,3 +18,9 @@ export { default as PoolsPage } from "./PoolsPage";
 export { default as LicensePage } from "./LicensePage";
 export { default as SettingsPage } from "./User/Settings";
 export { default as NotFoundPage } from "./NotFoundPage";
+export { default as LoginPage } from "./Account/Login";
+export { default as SignupPage } from "./Account/Signup";
+export { default as GitHubCallbackPage } from "./Account/GitHubCallback";
+export { default as ProfileOverviewPage } from "./User/Profile/Overview";
+export { default as ProfileEditPage } from "./User/Profile/Edit";
+export { default as ProfileIdentitiesPage } from "./User/Profile/Identities";

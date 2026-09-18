@@ -1,0 +1,373 @@
+.shell {
+  background: var(--color-background);
+  color: var(--gray-12);
+}
+.content {
+  position: relative;
+  background: var(--color-background);
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.contentInner {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sidebar {
+  font-family: Arial, "Noto Sans SC", sans-serif;
+  height: 100%;
+  min-height: 0;
+  background: var(--color-panel-solid);
+  border-right: 1px solid var(--gray-a4);
+  border-radius: 0;
+}
+.header {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 20px;
+  padding: 21px 0 22px;
+  border-bottom: 1px solid var(--gray-a4);
+}
+.toggle {
+  position: absolute !important;
+  right: -34px !important;
+  top: 30px !important;
+  width: 26px !important;
+  height: 26px !important;
+  border: 1px solid var(--gray-a5) !important;
+  border-radius: var(--radius-2) !important;
+  background: var(--color-panel-solid) !important;
+  color: var(--gray-11) !important;
+  z-index: 2;
+}
+.toggle:hover {
+  background: var(--gray-3) !important;
+  color: var(--gray-12) !important;
+}
+.accountCard {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border-radius: var(--radius-3);
+}
+.accountCard:focus-visible {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 5px;
+}
+.accountCard:hover .accountName {
+  color: var(--accent-11);
+}
+.accountInfo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+.accountRole {
+  color: var(--gray-11);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.accountName {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.avatar {
+  flex-shrink: 0;
+}
+.menuArea {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 8px 20px 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-a5) transparent;
+}
+.menuAreaCollapsed {
+  overflow-y: auto;
+}
+.sectionTitle {
+  margin: 19px 0 9px;
+  padding: 20px 10px 0;
+  border-top: 1px solid var(--gray-a4);
+  color: var(--gray-11);
+  text-transform: uppercase;
+}
+.sectionTitle :global(.rt-Text) {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+.sectionTitleIcon {
+  display: none;
+}
+.sectionDivider {
+  height: 1px;
+  margin: 22px 0 16px;
+  background: var(--gray-a4);
+}
+.menuArea :global(.ps-menu-label .rt-Text),
+.footer :global(.ps-menu-label .rt-Text) {
+  font: inherit;
+}
+.menuArea :global(.ps-menu-button.ps-active .ps-menu-label) {
+  font-weight: 500;
+}
+.menuArea :global(.ps-submenu-root.ps-open > .ps-menu-button) {
+  background: var(--gray-a3);
+  color: var(--gray-12);
+}
+.menuArea :global(.ps-submenu-content) {
+  border: 0;
+}
+/* One continuous trunk. Only the final branch terminates the trunk before its bend.
+   Opaque tokens prevent overlapping segments from becoming a darker double stroke. */
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root)::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: -3px;
+  bottom: -3px;
+  width: 1px;
+  background: var(--gray-5);
+  pointer-events: none;
+}
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root)::after {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: calc(50% - 8px);
+  width: 11px;
+  height: 8px;
+  border-left: 1px solid var(--gray-5);
+  border-bottom: 1px solid var(--gray-5);
+  border-bottom-left-radius: 8px;
+  pointer-events: none;
+}
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root:last-child)::before {
+  bottom: calc(50% + 8px);
+}
+.menuArea :global(.ps-submenu-content .ps-menu-button) {
+  position: relative;
+}
+.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
+  justify-content: center;
+  padding: 0;
+}
+.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
+  margin: 0;
+}
+.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-label),
+.menuAreaCollapsed :global(.ps-submenu-expand-icon) {
+  display: none;
+}
+.menuAreaCollapsed :global(.ps-submenu-content) {
+  border: 1px solid var(--gray-a5);
+}
+.menuAreaCollapsed :global(.ps-submenu-content .ps-menu-label) {
+  display: block;
+}
+.footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 10px 20px 20px;
+}
+.logout {
+  width: 100%;
+  height: 40px !important;
+  padding: 0 10px !important;
+  gap: 10px !important;
+  justify-content: flex-start !important;
+  background: transparent !important;
+  color: var(--red-11) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  border-radius: var(--radius-chip) !important;
+  box-shadow: none !important;
+}
+.logoutCollapsed {
+  padding: 0 !important;
+  justify-content: center !important;
+}
+.logout:hover:not(:disabled) {
+  background: var(--red-a3) !important;
+}
+.mobileToggle {
+  position: sticky;
+  top: var(--space-3);
+  z-index: 10;
+  margin: var(--space-3);
+  box-shadow: var(--shadow-3);
+  background: var(--color-panel-solid) !important;
+  color: var(--gray-12) !important;
+}
+.menuIconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.menuIconDot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--red-9);
+  border: 2px solid var(--color-panel-solid);
+  box-sizing: content-box;
+  pointer-events: none;
+}
+.menuBadge {
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  background: var(--accent-a3);
+  color: var(--accent-11);
+  font-size: 10px;
+}
+.menuDot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--red-9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar :global(*) {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+.footerCollapsed :global(.ps-menu-button) {
+  justify-content: center;
+  padding: 0;
+}
+.footerCollapsed :global(.ps-menu-icon) {
+  margin: 0;
+}
+.footerCollapsed :global(.ps-menu-label) {
+  display: none;
+}
+
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul) {
+  padding: 1px 0 7px;
+}
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
+  visibility: hidden;
+}
+
+.menuAreaCollapsed .sectionTitle {
+  padding: 16px 0 0;
+  margin: 17px -8px 9px;
+  text-align: center;
+  justify-content: center;
+}
+.menuAreaCollapsed .sectionTitle :global(.rt-Text) {
+  font-size: 9px;
+  line-height: 11px;
+  letter-spacing: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.collapsedSubmenuTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  margin: 6px 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-chip);
+  color: var(--gray-11);
+  background: transparent;
+  cursor: pointer;
+}
+.collapsedSubmenuTrigger:hover,
+.collapsedSubmenuActive {
+  background: var(--gray-a3);
+  color: var(--gray-12);
+}
+.collapsedSubmenuTrigger:focus-visible {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 2px;
+}
+.flyout {
+  width: max-content;
+  min-width: 156px;
+  max-width: min(260px, calc(100vw - 24px));
+  max-height: var(--radix-popover-content-available-height);
+  padding: 5px 0 !important;
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-4);
+  background: var(--color-panel-solid);
+  box-shadow: var(--shadow-5);
+  overflow-y: auto;
+}
+.flyout :global(.ps-menu-label .rt-Text) {
+  font: inherit;
+}
+.flyout :global(.ps-menu-button.ps-active .ps-menu-label) {
+  font-weight: 500;
+}
+
+.collapsedSubmenuCurrent,
+.collapsedSubmenuCurrent:hover {
+  background: var(--accent-a3);
+  color: var(--accent-11);
+}
+.menuArea :global(.ps-submenu-root > .ps-menu-button.ps-active) {
+  background: var(--accent-a3);
+  color: var(--accent-11);
+}
+
+/* Highlight only the route from the parent down to the current child. */
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(~ .ps-menuitem-root > .ps-menu-button.ps-active))::before {
+  background: var(--accent-9);
+}
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::before {
+  background: var(--accent-9);
+  bottom: calc(50% + 8px);
+}
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::after {
+  border-color: var(--accent-9);
+}
+/* Continue the neutral trunk below an active child when more siblings follow. */
+.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul > .ps-menuitem-root:not(:last-child) > .ps-menu-button.ps-active)::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  top: 50%;
+  bottom: -3px;
+  width: 1px;
+  background: var(--gray-5);
+  pointer-events: none;
+}

@@ -1,0 +1,23 @@
+{
+  "title": "个人资料",
+  "description": "在家族产品中共用的公开身份。",
+  "empty": {
+    "title": "暂无资料",
+    "description": "你的公开资料详情将显示在这里。"
+  },
+  "actions": {
+    "edit": "编辑"
+  },
+  "labels": {
+    "bio": "简介",
+    "city": "城市",
+    "country": "国家/地区",
+    "website": "网站",
+    "timezone": "时区",
+    "emails": "邮箱",
+    "notSpecified": "—",
+    "backgroundGallery": "背景图库",
+    "noBackgrounds": "暂无背景图。可在编辑资料中添加。"
+  },
+  "sections": {}
+}

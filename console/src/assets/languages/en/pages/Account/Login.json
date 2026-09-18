@@ -1,0 +1,51 @@
+{
+  "title": "Sign in",
+  "brand": {
+    "access": "{{name}} access",
+    "title": "Identity. Community. Link."
+  },
+  "heroFooter": "Sign in once. Carry the same Account into Near, Loop, and every Pulso product.",
+  "form": {
+    "welcomeBack": "Welcome back",
+    "title": "Sign in to {{name}}",
+    "subtitle": "Continue with your city-home Account — identity first, products next.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "rememberMe": "Remember me",
+    "submit": "Sign in"
+  },
+  "promo": {
+    "newTo": "New to {{name}}?",
+    "createAccount": "Create an account"
+  },
+  "selectProfile": {
+    "eyebrow": "Choose identity",
+    "title": "Which Profile continues?",
+    "subtitle": "Your Account can hold more than one city identity.",
+    "back": "Back to sign in",
+    "kind": {
+      "community": "Community",
+      "authority": "Authority"
+    },
+    "kindHint": {
+      "community": "Everyday city presence",
+      "authority": "Moderation & roles"
+    },
+    "roles": {
+      "pulser": "Pulser",
+      "tester": "Tester",
+      "creator": "Creator",
+      "reviewer": "Reviewer",
+      "moderator": "Moderator",
+      "inspector": "Inspector",
+      "supporter": "Supporter",
+      "auditor": "Auditor",
+      "administrator": "Administrator",
+      "owner": "Owner"
+    }
+  }
+}

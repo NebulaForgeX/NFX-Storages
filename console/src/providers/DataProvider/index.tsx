@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 
+import { DataProvider as NfxDataProvider } from "nfx-ui/providers";
+
 import { StorageRepositoriesContext, storageRepositories } from "@/apis/repositories";
 
-export interface DataProviderProps {
-  children: ReactNode;
+export function DataProvider({ children }: { children: ReactNode }) {
+  return (
+    <NfxDataProvider>
+      <StorageRepositoriesContext.Provider value={storageRepositories}>{children}</StorageRepositoriesContext.Provider>
+    </NfxDataProvider>
+  );
 }
-
-export function DataProvider({ children }: DataProviderProps) {
-  return <StorageRepositoriesContext.Provider value={storageRepositories}>{children}</StorageRepositoriesContext.Provider>;
-}
-
-export default DataProvider;

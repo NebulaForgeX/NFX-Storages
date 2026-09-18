@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
+import { Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
-
 import { ROUTES } from "@/navigations";
+import AuthShell from "@/pages/Account/shared/AuthShell";
 import { useHostConfigStore } from "@/stores/hostConfigStore";
-
-import AuthShell from "../LoginPage/AuthShell";
 
 export default function ConfigPage() {
   const { t } = useTranslation("common");
@@ -53,7 +51,14 @@ export default function ConfigPage() {
         ) : null}
         <Flex gap="2">
           <Button onClick={save}>{t("Save Configuration")}</Button>
-          <Button type="button" variant="outline" onClick={() => { resetServerHost(); setValue(""); }}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              resetServerHost();
+              setValue("");
+            }}
+          >
             {t("Reset")}
           </Button>
           <Button type="button" variant="ghost" onClick={() => navigate(ROUTES.LOGIN)}>

@@ -1,12 +1,6 @@
-export type { LucideIcon } from "nfx-ui/icons";
+export type { LucideIcon } from "lucide-react";
 
-export {
-  Bell,
-  FolderOpen,
-  Layers,
-  Settings,
-  Shield,
-} from "nfx-ui/icons";
+export { Bell, FolderOpen, Layers, Settings, Shield } from "lucide-react";
 
 export { default as Activity } from "lucide-react/icons/activity";
 export { default as Archive } from "lucide-react/icons/archive";
@@ -20,3 +14,4 @@ export { default as Repeat } from "lucide-react/icons/repeat";
 export { default as Settings2 } from "lucide-react/icons/settings-2";
 export { default as ShieldCheck } from "lucide-react/icons/shield-check";
 export { default as Users } from "lucide-react/icons/users";
+export { default as User } from "lucide-react/icons/user";

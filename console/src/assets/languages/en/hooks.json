@@ -1,0 +1,20 @@
+{
+  "contact": {
+    "sendSuccess": "Message sent. We will get back to you soon."
+  },
+  "account": {
+    "sendVerificationCodeSuccess": "If this address can receive email, a verification code has been sent.",
+    "createUserProfileSuccess": "Profile created.",
+    "deleteUserProfileSuccess": "Profile deleted.",
+    "createEmailSuccess": "Email added.",
+    "verifyEmailSuccess": "Email verified.",
+    "updateEmailSuccess": "Email updated.",
+    "setPrimaryEmailSuccess": "Primary email updated.",
+    "deleteEmailSuccess": "Email removed.",
+    "changePasswordSuccess": "Password updated."
+  },
+  "payments": {
+    "stripeLoadFailed": "Could not load Stripe.",
+    "receiptDownloadFailed": "Could not download receipt."
+  }
+}

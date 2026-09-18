@@ -1,0 +1,29 @@
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-11);
+}
+
+/* Card asChild button — only state/decoration Themes cannot express */
+.profileOption {
+  width: 100%;
+  text-align: left;
+  transition: transform 120ms ease-out;
+}
+
+.profileOption:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.profileOption:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.profileOptionCommunity {
+  border-left: 3px solid var(--accent-9);
+}
+
+.profileOptionAuthority {
+  border-left: 3px solid var(--amber-9);
+}

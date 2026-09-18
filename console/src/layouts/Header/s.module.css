@@ -1,0 +1,74 @@
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  pointer-events: none;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-background) 92%, transparent), transparent);
+}
+
+.header .bar {
+  pointer-events: auto;
+}
+
+/* Floating bar: width/centering + float shadow only — surface comes from Card */
+.bar {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  box-shadow: 0 8px 28px color-mix(in oklab, var(--gray-12) 6%, transparent);
+}
+
+.nav {
+  display: none;
+  gap: var(--space-1);
+}
+
+@media (min-width: 900px) {
+  .nav {
+    display: flex;
+  }
+}
+
+.nav :global(.rt-BaseButton) {
+  padding-inline: var(--space-4);
+  background: transparent;
+  color: var(--gray-12);
+  font-size: var(--font-size-3);
+  border-radius: var(--radius-chip) !important;
+}
+
+@media (hover: hover) {
+  .nav :global(.rt-BaseButton):hover {
+    background: var(--accent-a2);
+    color: var(--accent-11);
+  }
+}
+
+.navActive {
+  background: var(--accent-a3) !important;
+  color: var(--accent-11) !important;
+  font-weight: var(--font-weight-bold);
+}
+
+.mobileNav {
+  display: flex;
+}
+
+@media (min-width: 900px) {
+  .mobileNav {
+    display: none;
+  }
+}
+
+.brandWord {
+  font-family: var(--heading-font-family);
+  letter-spacing: -0.03em;
+}
+
+.accountMenu {
+  min-width: 200px;
+}

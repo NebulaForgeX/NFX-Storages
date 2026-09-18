@@ -11,9 +11,8 @@ ENV VITE_IDENTITY_API_URL=${VITE_IDENTITY_API_URL}
 ENV VITE_SERVER_HOST=${VITE_SERVER_HOST}
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 ENV VITE_S3_ENDPOINT=${VITE_S3_ENDPOINT}
-COPY package.json package-lock.json* ./
-COPY --from=nfx-ui . /NFX-UI
-RUN npm ci || npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 RUN npm run build
 

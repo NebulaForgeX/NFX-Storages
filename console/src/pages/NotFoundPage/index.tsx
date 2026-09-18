@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
 import { Button, Flex, Heading, Text } from "@radix-ui/themes";
-import { PageFrame } from "nfx-ui/layouts";
+import { PageFrame } from "@/layouts";
 
 import { ROUTES } from "@/navigations";
 

@@ -1,0 +1,142 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: var(--black-a6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+.overlayOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  width: min(280px, calc(100vw - 40px));
+  height: 100dvh;
+  padding: 20px !important;
+  gap: 22px !important;
+  border-left: 1px solid var(--gray-a4);
+  border-radius: 0;
+  background: var(--color-panel-solid);
+  box-shadow: var(--shadow-4);
+  transform: translateX(calc(100% + 24px));
+  transition: transform 180ms ease;
+  pointer-events: none;
+}
+.sidebarOpen {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.sidebarHeader {
+  position: relative;
+  min-height: 64px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--gray-a4);
+}
+.sidebarHeader > :global(.rt-IconButton) {
+  position: absolute;
+  left: -34px;
+  top: 10px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-2);
+  background: var(--color-panel-solid);
+  color: var(--gray-11);
+}
+.accountCard {
+  width: 100%;
+  padding: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.accountCard::before,
+.accountCard::after {
+  display: none;
+}
+.accountCard :global(.rt-Text) {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav {
+  min-height: 0;
+  overflow-y: auto;
+  gap: 6px !important;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--gray-a4);
+}
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--gray-11);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+.navLink :global(.rt-Text) {
+  font-size: 15px;
+  font-weight: 400;
+}
+.navLink:hover {
+  background: var(--gray-a3);
+  color: var(--gray-12);
+}
+.navLink:focus-visible {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 2px;
+}
+.actions {
+  margin-top: auto;
+  gap: 6px !important;
+}
+.wideButton {
+  width: 100%;
+  min-height: 40px;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 0 10px !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+}
+.wideButton:global(.rt-variant-soft) {
+  background: transparent;
+  color: var(--gray-11);
+}
+.wideButton:hover:global(.rt-variant-soft) {
+  background: var(--gray-a3);
+}
+.logout {
+  color: var(--red-11) !important;
+}
+.preferenceIcons {
+  justify-content: flex-start;
+}
+@media (min-width: 981px) {
+  .overlay,
+  .sidebar {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .sidebar,
+  .navLink {
+    transition: none;
+  }
+}

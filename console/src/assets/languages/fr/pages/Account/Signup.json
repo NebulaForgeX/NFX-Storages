@@ -1,0 +1,27 @@
+{
+  "title": "Créer un compte",
+  "brand": {
+    "access": "Accès {{name}}",
+    "title": "Créez l'identité qui relie tout."
+  },
+  "heroFooter": "Un Account devient l'accès produit pour Near, Loop et le reste de Pulso — jamais un second signup.",
+  "pageEyebrow": "Créer un compte",
+  "pageTitle": "Rejoindre {{name}}",
+  "pageSubtitle": "Vérifiez l'e-mail, choisissez un mot de passe, ouvrez la maison urbaine.",
+  "emailLabel": "E-mail",
+  "emailPlaceholder": "vous@exemple.com",
+  "emailHint": "Nous envoyons un code à 6 caractères à cette adresse.",
+  "codeLabel": "Code de vérification",
+  "codePlaceholder": "Code à 6 caractères",
+  "sendCode": "Envoyer",
+  "passwordLabel": "Mot de passe",
+  "passwordPlaceholder": "Choisissez un mot de passe",
+  "confirmLabel": "Confirmer",
+  "confirmPlaceholder": "Ressaisissez le mot de passe",
+  "showPassword": "Afficher",
+  "hidePassword": "Masquer",
+  "rememberMe": "Se souvenir de moi",
+  "submit": "Créer le compte",
+  "hasAccount": "Déjà un compte ?",
+  "signIn": "Se connecter"
+}

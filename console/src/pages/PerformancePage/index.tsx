@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Card, Flex, Text } from "@radix-ui/themes";
 import { Activity, HardDrive, Server } from "lucide-react";
-import { CardHeader, PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { CardHeader, PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 
 import { usePerformance } from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";

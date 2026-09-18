@@ -60,8 +60,8 @@ protectedClient.interceptors.response.use(
         return protectedClient.request(error.config);
       } catch (refreshError) {
         clearAuth();
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login";
+        if (window.location.pathname !== "/auth/login") {
+          window.location.href = "/auth/login";
         }
         return Promise.reject(refreshError);
       }

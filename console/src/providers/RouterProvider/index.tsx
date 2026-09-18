@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { BrowserRouter } from "react-router";
 
-import { useRouterEvents } from "./hooks/useRouterEvents";
+import { useRouterEvents } from "./useRouterEvents";
 
 export interface RouterProviderProps {
   children: ReactNode;
@@ -13,11 +13,9 @@ function RouterEventsHandler({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
-const basename = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") || "/";
-
 export function RouterProvider({ children }: RouterProviderProps) {
   return (
-    <BrowserRouter basename={basename}>
+    <BrowserRouter>
       <RouterEventsHandler>{children}</RouterEventsHandler>
     </BrowserRouter>
   );

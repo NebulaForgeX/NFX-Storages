@@ -1,0 +1,82 @@
+.controlFit {
+  width: max-content;
+  max-width: 100%;
+}
+
+.controlFit :global(.rt-SegmentedControlRoot) {
+  width: max-content;
+  max-width: 100%;
+}
+
+.swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-chip);
+  border: 1px solid var(--gray-a6);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swatchActive {
+  outline: 2px solid var(--gray-12);
+  outline-offset: 2px;
+}
+
+.previewTheme {
+  width: 100%;
+}
+
+.positionPreview {
+  position: relative;
+  width: 56px;
+  height: 40px;
+  border-radius: var(--radius-chip);
+  border: 1px solid var(--gray-a5);
+  background: var(--gray-3);
+}
+
+.positionDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent-9);
+}
+
+.preview_bottom_right .positionDot {
+  right: 6px;
+  bottom: 6px;
+}
+.preview_bottom_left .positionDot {
+  left: 6px;
+  bottom: 6px;
+}
+.preview_top_right .positionDot {
+  right: 6px;
+  top: 6px;
+}
+.preview_top_left .positionDot {
+  left: 6px;
+  top: 6px;
+}
+
+.colorRow {
+  border-bottom: 1px solid var(--gray-a3);
+  width: 100%;
+}
+
+.colorRow:last-child {
+  border-bottom: none;
+}
+
+.colorInput {
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-chip);
+  background: transparent;
+  cursor: pointer;
+}

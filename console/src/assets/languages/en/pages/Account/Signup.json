@@ -1,0 +1,27 @@
+{
+  "title": "Create account",
+  "brand": {
+    "access": "{{name}} access",
+    "title": "Create the identity that links everything."
+  },
+  "heroFooter": "One Account becomes Product Access for Near, Loop, and the rest of Pulso — never a second signup.",
+  "pageEyebrow": "Create Account",
+  "pageTitle": "Join {{name}}",
+  "pageSubtitle": "Verify your email, set a password, and open the city home.",
+  "emailLabel": "Email",
+  "emailPlaceholder": "you@example.com",
+  "emailHint": "We send a 6-character code to this address.",
+  "codeLabel": "Verification code",
+  "codePlaceholder": "6-character code",
+  "sendCode": "Send code",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Choose a password",
+  "confirmLabel": "Confirm password",
+  "confirmPlaceholder": "Re-enter your password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "rememberMe": "Remember me",
+  "submit": "Create Account",
+  "hasAccount": "Already have an account?",
+  "signIn": "Sign in"
+}

@@ -245,8 +245,6 @@ services:
     build:
       context: ./console
       dockerfile: Dockerfile
-      additional_contexts:
-        nfx-ui: ../NFX-UI
       target: prod
       args:
         VITE_API_URL: ${VITE_API_URL}

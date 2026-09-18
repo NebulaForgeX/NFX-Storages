@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Card, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { Settings, Shield, KeyRound, Lock, Tag } from "lucide-react";
-import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { CardHeader, EmptyState, PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 
 import {
   useBucketSettings,

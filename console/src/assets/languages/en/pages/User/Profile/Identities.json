@@ -1,0 +1,74 @@
+{
+  "title": "Identities",
+  "description": "Switch profiles, manage emails and password for this Account.",
+  "empty": {
+    "emails": {
+      "title": "No emails yet",
+      "description": "Add an email to secure this Account."
+    },
+    "profiles": {
+      "title": "No profiles yet",
+      "description": "Create a community identity or wait for an authority profile."
+    }
+  },
+  "actions": {
+    "sendCode": "Send code",
+    "setPrimary": "Set primary",
+    "remove": "Remove",
+    "verify": "Verify",
+    "addEmail": "Add email",
+    "updatePassword": "Update password",
+    "createProfile": "Create profile",
+    "editEmail": "Edit email",
+    "cancelEdit": "Cancel",
+    "saveEmail": "Save email",
+    "deleteProfile": "Delete",
+    "switch": "Switch"
+  },
+  "labels": {
+    "primary": "Primary",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "verificationCode": "Verification code",
+    "verificationCodePlaceholder": "6-digit code",
+    "passwordSendCodeHint": "We will send a code to your primary email {{email}}.",
+    "passwordSendCodeHintNoEmail": "Set and verify a primary email before sending a code.",
+    "emailPlaceholder": "name@example.com",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "displayName": "Display name",
+    "newCommunityProfile": "New community profile",
+    "loading": "Loading identities",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "actions": "Actions",
+    "newEmail": "New email address",
+    "current": "In use",
+    "emptyName": "Untitled identity",
+    "scopeCommunity": "Community",
+    "scopeAuthority": "Authority",
+    "cannotDeleteCurrent": "You cannot delete the identity currently in use.",
+    "cannotDeleteLast": "At least one identity must remain.",
+    "deleteConfirmBody": "Permanently delete \"{{name}}\" and its data? This cannot be undone.",
+    "profileLanguage": "Language"
+  },
+  "sections": {
+    "emails": {
+      "title": "Emails",
+      "description": "Verify and choose a primary address for this Account."
+    },
+    "password": {
+      "title": "Password",
+      "description": "Changing your password requires the current password and a code sent to your primary email."
+    },
+    "profiles": {
+      "title": "Profiles",
+      "description": "Switch between community and authority identities under this Account."
+    },
+    "communityProfiles": {
+      "title": "Community Profiles",
+      "description": "Create another city persona. Authority profiles are granted by review."
+    }
+  }
+}

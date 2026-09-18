@@ -1,0 +1,185 @@
+{
+  "title": "偏好设置",
+  "description": "主题、地图、活动、账单、社交隐私与系统通知——在 Pulso 家族产品间同步。",
+  "empty": {
+    "title": "尚未加载偏好",
+    "description": "主题与语言设置将显示在这里。"
+  },
+  "actions": {
+    "reset": "重置",
+    "saveTheme": "保存主题",
+    "cancel": "取消",
+    "save": "保存"
+  },
+  "labels": {
+    "appearance": "外观",
+    "accent": "强调色",
+    "gray": "灰色调",
+    "radius": "圆角",
+    "scaling": "缩放",
+    "panelBackground": "面板背景",
+    "font": "字体",
+    "livePreview": "实时预览",
+    "previewBadge": "预览",
+    "previewSolid": "实心",
+    "previewSoft": "柔和",
+    "previewOutline": "描边",
+    "sampleInput": "示例输入",
+    "notifications": "通知",
+    "unsavedChanges": "有未保存的更改",
+    "fontSystem": "系统",
+    "fontIbmPlex": "IBM Plex",
+    "fontNoto": "Noto Sans",
+    "fontSourceSans": "Source Sans 3",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "colorAndAppearance": "外观与色彩",
+    "layoutAndType": "圆角与字体"
+  },
+  "sections": {
+    "theme": {
+      "title": "主题设置",
+      "description": "自定义配色、字体、界面风格与显示语言。"
+    },
+    "language": {
+      "title": "语言",
+      "description": "PulsoLink 与家族产品共用的界面语言。"
+    },
+    "billingReceipt": {
+      "title": "账单回执",
+      "description": "回执详情在支付摘要中的位置。"
+    },
+    "map": {
+      "title": "地图设置",
+      "description": "配置地图样式与地图上的位置标记。"
+    },
+    "event": {
+      "title": "事件设置",
+      "description": "配置附近数据拉取数量、搜索半径上下限，以及活动页显示的模块。"
+    },
+    "billing": {
+      "title": "账单设置",
+      "description": "控制消费页支付收据弹窗的显示位置。"
+    },
+    "social": {
+      "title": "社交设置",
+      "description": "控制谁可以与你互动，以及列表可见性。"
+    },
+    "system": {
+      "title": "系统设置",
+      "description": "管理账号相关的系统通知与偏好。"
+    }
+  },
+  "socialPrivacy": {
+    "cardTitle": "社交隐私",
+    "cardDesc": "控制谁可以与你互动，以及他人可见的社交列表。",
+    "sectionPolicies": "互动权限",
+    "sectionPoliciesDesc": "设置谁可以向你发送好友请求、私信或群组邀请。",
+    "sectionVisibility": "列表可见性",
+    "sectionVisibilityDesc": "选择是否向他人展示你的好友、关注等列表。",
+    "friendRequestPolicy": "谁可以发送好友请求",
+    "directMessagePolicy": "谁可以发送私信",
+    "groupInvitePolicy": "谁可以邀请你加入群组",
+    "showFriendList": "向他人展示好友列表",
+    "showBlockList": "向他人展示黑名单",
+    "showFollowingList": "向他人展示关注列表",
+    "showFollowerList": "向他人展示粉丝列表",
+    "save": "保存社交设置",
+    "nobodyHint": "无人可以，勾选至少一项以允许。",
+    "policies": {
+      "everyone": "所有人",
+      "people_followed_by_me": "我关注的人",
+      "mutual_follows": "互相关注的人",
+      "nobody": "没有人",
+      "strangers": "陌生人",
+      "friends": "好友",
+      "people_following_me": "关注我的人"
+    }
+  },
+  "billingPreference": {
+    "title": "支付收据位置",
+    "desc": "选择消费页收据弹窗显示在屏幕的哪个角落。",
+    "positions": {
+      "bottom-right": "右下",
+      "bottom-left": "左下",
+      "top-right": "右上",
+      "top-left": "左上"
+    }
+  },
+  "mapStyle": {
+    "title": "地图样式",
+    "desc": "选择应用内地图的视觉风格",
+    "lightSection": "浅色模式样式",
+    "darkSection": "深色模式样式",
+    "enable3d": "启用 3D 建筑",
+    "enableFlat": "俯视平面地图",
+    "enableRich": "丰富化地图",
+    "enableNearbyRange": "显示附近查询范围",
+    "previewTop": "俯视图",
+    "preview3d": "3D 视图",
+    "positron": "Positron",
+    "bright": "Bright",
+    "liberty": "Liberty",
+    "dark": "Dark",
+    "fiord": "Fiord"
+  },
+  "locationMarker": {
+    "title": "定位标记",
+    "desc": "自定义地图上的定位点与上方徽章。清除某项颜色后将跟随当前主题。",
+    "ring": "外圈",
+    "dot": "圆点",
+    "border": "描边",
+    "badgeGroup": "徽章",
+    "useProfilePhoto": "使用资料头像",
+    "useProfilePhotoHint": "开启后优先显示资料头像；若无头像则自动显示字母徽章。",
+    "letter": "字母",
+    "letterActiveHint": "未使用资料头像时生效；留空则根据昵称自动显示单字，也可手动输入覆盖。",
+    "letterDisabledHint": "已开启资料头像，字母设置暂不生效；关闭后可自定义字母徽章。",
+    "badgeBg": "背景",
+    "badgeBorder": "描边",
+    "theme": "主题",
+    "auto": "自动",
+    "followingTheme": "跟随当前主题",
+    "derivedFromName": "根据昵称自动推导",
+    "saveChanges": "保存",
+    "discardChanges": "放弃修改",
+    "unsavedHint": "有未保存的修改",
+    "resetField": "将{{field}}恢复为主题默认",
+    "resetLetter": "恢复为自动字母",
+    "resetAll": "全部恢复为主题默认",
+    "on": "开",
+    "off": "关",
+    "preview": {
+      "followingTheme": "跟随主题",
+      "customColors": "自定义颜色",
+      "profilePhoto": "资料头像",
+      "customBadge": "自定义徽章",
+      "letterTheme": "字母 + 主题色"
+    }
+  },
+  "eventPreference": {
+    "cardTitle": "事件偏好",
+    "cardDesc": "自定义 Explore 与活动页如何根据地图视口拉取附近内容。",
+    "modulesLabel": "可见模块",
+    "modulesDesc": "控制活动页显示哪些类别；关闭的模块不会出现在列表与首页网格中。",
+    "fetchLabel": "附近拉取",
+    "fetchDesc": "每页条数用于 Explore 图钉与活动页列表；半径上下限用于约束视口推导的搜索范围。",
+    "pageSize": "每页条数",
+    "pageSizeHint": "{{min}}–{{max}} 条。控制 Explore 与活动页每次加载的附近事件数量。",
+    "radiusMin": "最小半径（米）",
+    "radiusMinHint": "{{min}}–{{max}} 米。视口推导的搜索半径不会低于此值。",
+    "radiusMax": "最大半径（米）",
+    "radiusMaxHint": "{{min}}–{{max}} 米。视口推导的搜索半径不会超过此值。",
+    "resetDefaults": "恢复默认",
+    "save": "保存事件设置"
+  },
+  "systemSettings": {
+    "cardTitle": "系统通知",
+    "cardDesc": "管理账号安全相关的系统邮件通知。",
+    "loginEmailNotification": "登录邮箱通知",
+    "loginEmailNotificationDesc": "开启后，每次成功登录会向你的邮箱发送通知邮件。",
+    "save": "保存系统设置",
+    "saveSuccess": "系统设置已更新"
+  }
+}

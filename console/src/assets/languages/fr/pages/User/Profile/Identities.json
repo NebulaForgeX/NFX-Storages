@@ -1,0 +1,74 @@
+{
+  "title": "Identités",
+  "description": "Changez de profil, gérez les e-mails et le mot de passe de ce compte.",
+  "empty": {
+    "emails": {
+      "title": "Aucun e-mail",
+      "description": "Ajoutez un e-mail pour sécuriser ce compte."
+    },
+    "profiles": {
+      "title": "Aucun profil",
+      "description": "Créez une identité communautaire ou attendez un profil d'autorité."
+    }
+  },
+  "actions": {
+    "sendCode": "Envoyer le code",
+    "setPrimary": "Définir comme principal",
+    "remove": "Supprimer",
+    "verify": "Vérifier",
+    "addEmail": "Ajouter un e-mail",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "createProfile": "Créer un profil",
+    "editEmail": "Modifier l'e-mail",
+    "cancelEdit": "Annuler",
+    "saveEmail": "Enregistrer",
+    "deleteProfile": "Supprimer",
+    "switch": "Changer"
+  },
+  "labels": {
+    "primary": "Principal",
+    "verified": "Vérifié",
+    "unverified": "Non vérifié",
+    "verificationCode": "Code de vérification",
+    "verificationCodePlaceholder": "Code à 6 caractères",
+    "passwordSendCodeHint": "Nous enverrons un code à l'e-mail principal {{email}}.",
+    "passwordSendCodeHintNoEmail": "Définissez et vérifiez un e-mail principal avant d'envoyer un code.",
+    "emailPlaceholder": "name@example.com",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "displayName": "Nom d'affichage",
+    "newCommunityProfile": "Nouveau profil communautaire",
+    "loading": "Chargement des identités",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "actions": "Actions",
+    "newEmail": "Nouvelle adresse e-mail",
+    "current": "En cours",
+    "emptyName": "Identité sans nom",
+    "scopeCommunity": "Communauté",
+    "scopeAuthority": "Autorité",
+    "cannotDeleteCurrent": "Vous ne pouvez pas supprimer l'identité en cours d'utilisation.",
+    "cannotDeleteLast": "Au moins une identité doit rester.",
+    "deleteConfirmBody": "Supprimer définitivement « {{name}} » et ses données ? Irréversible.",
+    "profileLanguage": "Langue"
+  },
+  "sections": {
+    "emails": {
+      "title": "E-mails",
+      "description": "Vérifiez et choisissez une adresse principale pour ce compte."
+    },
+    "password": {
+      "title": "Mot de passe",
+      "description": "Changer le mot de passe nécessite le mot de passe actuel et un code envoyé à l'e-mail principal."
+    },
+    "profiles": {
+      "title": "Profils",
+      "description": "Passez d'une identité communautaire à une identité d'autorité sous ce compte."
+    },
+    "communityProfiles": {
+      "title": "Profils communautaires",
+      "description": "Créez une autre persona urbaine. Les profils d'autorité sont accordés après examen."
+    }
+  }
+}

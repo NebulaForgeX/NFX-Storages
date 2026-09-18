@@ -1,0 +1,51 @@
+{
+  "title": "Connexion",
+  "brand": {
+    "access": "Accès {{name}}",
+    "title": "Identity. Community. Link."
+  },
+  "heroFooter": "Connectez-vous une fois. Portez le même Account dans Near, Loop et toute la famille Pulso.",
+  "form": {
+    "welcomeBack": "Bon retour",
+    "title": "Connexion à {{name}}",
+    "subtitle": "Continuez avec votre Account maison urbaine — l'identité d'abord.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "showPassword": "Afficher",
+    "hidePassword": "Masquer",
+    "rememberMe": "Se souvenir de moi",
+    "submit": "Se connecter"
+  },
+  "promo": {
+    "newTo": "Nouveau sur {{name}} ?",
+    "createAccount": "Créer un compte"
+  },
+  "selectProfile": {
+    "eyebrow": "Choisir l'identité",
+    "title": "Quel Profile continuer ?",
+    "subtitle": "Votre Account peut porter plusieurs identités urbaines.",
+    "back": "Retour à la connexion",
+    "kind": {
+      "community": "Community",
+      "authority": "Authority"
+    },
+    "kindHint": {
+      "community": "Présence urbaine quotidienne",
+      "authority": "Modération et rôles"
+    },
+    "roles": {
+      "pulser": "Pulser",
+      "tester": "Testeur",
+      "creator": "Créateur",
+      "reviewer": "Réviseur",
+      "moderator": "Modérateur",
+      "inspector": "Inspecteur",
+      "supporter": "Support",
+      "auditor": "Auditeur",
+      "administrator": "Administrateur",
+      "owner": "Propriétaire"
+    }
+  }
+}

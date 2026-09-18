@@ -1,0 +1,64 @@
+{
+  "title": "Edit profile",
+  "description": "Changes sync to every Family Product that reads this Profile.",
+  "empty": {
+    "title": "Profile unavailable",
+    "description": "Load your profile to edit public details."
+  },
+  "actions": {
+    "saveChanges": "Save changes"
+  },
+  "labels": {
+    "displayName": "Display name",
+    "bio": "Bio",
+    "city": "City",
+    "website": "Website"
+  },
+  "sections": {
+    "basics": {
+      "title": "Basics",
+      "description": "Display name and public details."
+    }
+  },
+  "edit": {
+    "saveSuccess": "Profile updated"
+  },
+  "avatar": {
+    "title": "Avatar",
+    "hint": "Upload a square image for this Profile.",
+    "pickHint": "Choose an image, then confirm.",
+    "choose": "Choose image",
+    "confirm": "Confirm upload",
+    "uploading": "Uploading…",
+    "confirming": "Confirming…",
+    "invalidType": "File must be an image.",
+    "uploadFailed": "Upload failed.",
+    "confirmFailed": "Confirm failed.",
+    "noImage": "Choose an image first.",
+    "success": "Avatar updated."
+  },
+  "backgroundUpload": {
+    "label": "Background gallery",
+    "queueSummary": "Completed {{done}} / {{total}}",
+    "add": "Add photos",
+    "full": "Full",
+    "confirm": "Confirm",
+    "confirming": "Confirming…",
+    "dropTitle": "Choose background photos",
+    "hint": "Upload up to 6 images. Confirm to save the gallery.",
+    "remove": "Remove background photo",
+    "moveLeft": "Move left",
+    "moveRight": "Move right",
+    "reorderHint": "Use the arrows to reorder before confirming.",
+    "invalidType": "Please choose image files",
+    "limitReached": "Maximum {{max}} background images",
+    "uploadFailed": "Could not upload background image",
+    "saveFailed": "Could not save background gallery",
+    "success": "Background gallery updated",
+    "waitForUploads": "Wait until all images finish uploading.",
+    "status": {
+      "failed": "Failed",
+      "uploading": "Uploading"
+    }
+  }
+}

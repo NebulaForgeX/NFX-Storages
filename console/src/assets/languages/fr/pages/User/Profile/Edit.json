@@ -1,0 +1,64 @@
+{
+  "title": "Modifier le profil",
+  "description": "Les changements se synchronisent avec tous les produits de la famille qui lisent ce profil.",
+  "empty": {
+    "title": "Profil indisponible",
+    "description": "Chargez votre profil pour modifier les détails publics."
+  },
+  "actions": {
+    "saveChanges": "Enregistrer"
+  },
+  "labels": {
+    "displayName": "Nom d'affichage",
+    "bio": "Bio",
+    "city": "Ville",
+    "website": "Site web"
+  },
+  "sections": {
+    "basics": {
+      "title": "Essentiel",
+      "description": "Nom d'affichage et détails publics."
+    }
+  },
+  "edit": {
+    "saveSuccess": "Profil mis à jour"
+  },
+  "avatar": {
+    "title": "Avatar",
+    "hint": "Téléversez une image carrée pour ce profil.",
+    "pickHint": "Choisissez une image, puis confirmez.",
+    "choose": "Choisir",
+    "confirm": "Confirmer",
+    "uploading": "Téléversement…",
+    "confirming": "Confirmation…",
+    "invalidType": "Le fichier doit être une image.",
+    "uploadFailed": "Échec du téléversement.",
+    "confirmFailed": "Échec de confirmation.",
+    "noImage": "Choisissez d'abord une image.",
+    "success": "Avatar mis à jour."
+  },
+  "backgroundUpload": {
+    "label": "Galerie d'arrière-plan",
+    "queueSummary": "Terminés {{done}} / {{total}}",
+    "add": "Ajouter",
+    "full": "Complet",
+    "confirm": "Confirmer",
+    "confirming": "Confirmation…",
+    "dropTitle": "Choisir des photos d'arrière-plan",
+    "hint": "Jusqu'à 6 images. Confirmez pour enregistrer.",
+    "remove": "Supprimer la photo",
+    "moveLeft": "Déplacer à gauche",
+    "moveRight": "Déplacer à droite",
+    "reorderHint": "Utilisez les flèches pour réordonner avant de confirmer.",
+    "invalidType": "Choisissez des fichiers image",
+    "limitReached": "Maximum {{max}} images d'arrière-plan",
+    "uploadFailed": "Échec du téléversement de l'arrière-plan",
+    "saveFailed": "Échec de l'enregistrement de la galerie",
+    "success": "Galerie d'arrière-plan mise à jour",
+    "waitForUploads": "Attendez la fin de tous les téléversements.",
+    "status": {
+      "failed": "Échec",
+      "uploading": "Téléversement"
+    }
+  }
+}

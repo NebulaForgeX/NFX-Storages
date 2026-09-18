@@ -1,0 +1,185 @@
+{
+  "title": "Préférences",
+  "description": "Thème, carte, événements, facturation, confidentialité sociale et notifications système — synchronisés dans la famille Pulso.",
+  "empty": {
+    "title": "Aucune préférence chargée",
+    "description": "Les réglages de thème et de langue apparaîtront ici."
+  },
+  "actions": {
+    "reset": "Réinitialiser",
+    "saveTheme": "Enregistrer le thème",
+    "cancel": "Annuler",
+    "save": "Enregistrer"
+  },
+  "labels": {
+    "appearance": "Apparence",
+    "accent": "Accent",
+    "gray": "Gris",
+    "radius": "Rayon",
+    "scaling": "Échelle",
+    "panelBackground": "Fond du panneau",
+    "font": "Police",
+    "livePreview": "Aperçu en direct",
+    "previewBadge": "Aperçu",
+    "previewSolid": "Plein",
+    "previewSoft": "Doux",
+    "previewOutline": "Contour",
+    "sampleInput": "Champ d'exemple",
+    "notifications": "Notifications",
+    "unsavedChanges": "Modifications non enregistrées",
+    "fontSystem": "Système",
+    "fontIbmPlex": "IBM Plex",
+    "fontNoto": "Noto Sans",
+    "fontSourceSans": "Source Sans 3",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "colorAndAppearance": "Apparence et couleurs",
+    "layoutAndType": "Rayon et typographie"
+  },
+  "sections": {
+    "theme": {
+      "title": "Paramètres du thème",
+      "description": "Personnalisez les couleurs, la police, le style d'interface et la langue."
+    },
+    "language": {
+      "title": "Langue",
+      "description": "Langue d'interface pour PulsoLink et les produits de la famille."
+    },
+    "billingReceipt": {
+      "title": "Reçu de facturation",
+      "description": "Emplacement des détails du reçu dans les résumés de paiement."
+    },
+    "map": {
+      "title": "Paramètres de carte",
+      "description": "Configurez le style de carte et le marqueur de position."
+    },
+    "event": {
+      "title": "Paramètres d'événements",
+      "description": "Contrôlez la taille des pages à proximité, les limites de rayon et les modules visibles sur la page Événements."
+    },
+    "billing": {
+      "title": "Paramètres de facturation",
+      "description": "Contrôlez l'emplacement du reçu de paiement sur la page Dépenses."
+    },
+    "social": {
+      "title": "Paramètres sociaux",
+      "description": "Contrôlez qui peut interagir avec vous et la visibilité des listes."
+    },
+    "system": {
+      "title": "Paramètres système",
+      "description": "Gérez les notifications système liées à votre compte."
+    }
+  },
+  "socialPrivacy": {
+    "cardTitle": "Confidentialité sociale",
+    "cardDesc": "Contrôlez qui peut interagir avec vous et quelles listes sont visibles par les autres.",
+    "sectionPolicies": "Interactions",
+    "sectionPoliciesDesc": "Choisissez qui peut envoyer des demandes d'ami, des messages ou des invitations de groupe.",
+    "sectionVisibility": "Visibilité des listes",
+    "sectionVisibilityDesc": "Choisissez quelles listes sociales apparaissent sur votre profil.",
+    "friendRequestPolicy": "Qui peut envoyer des demandes d'ami",
+    "directMessagePolicy": "Qui peut envoyer des messages",
+    "groupInvitePolicy": "Qui peut vous inviter dans des groupes",
+    "showFriendList": "Afficher la liste d'amis",
+    "showBlockList": "Afficher la liste de blocage",
+    "showFollowingList": "Afficher la liste d'abonnements",
+    "showFollowerList": "Afficher la liste d'abonnés",
+    "save": "Enregistrer",
+    "nobodyHint": "Personne ne peut ; sélectionnez au moins une option pour autoriser.",
+    "policies": {
+      "everyone": "Tout le monde",
+      "people_followed_by_me": "Personnes que je suis",
+      "mutual_follows": "Abonnements mutuels",
+      "nobody": "Personne",
+      "strangers": "Inconnus",
+      "friends": "Amis",
+      "people_following_me": "Personnes qui me suivent"
+    }
+  },
+  "billingPreference": {
+    "title": "Position du reçu",
+    "desc": "Choisissez où le panneau de reçu apparaît sur la page Dépenses.",
+    "positions": {
+      "bottom-right": "Bas droite",
+      "bottom-left": "Bas gauche",
+      "top-right": "Haut droite",
+      "top-left": "Haut gauche"
+    }
+  },
+  "mapStyle": {
+    "title": "Style de carte",
+    "desc": "Choisissez le style visuel des cartes dans l'application",
+    "lightSection": "Style en mode clair",
+    "darkSection": "Style en mode sombre",
+    "enable3d": "Activer les bâtiments 3D",
+    "enableFlat": "Vue carte à plat (vue de dessus)",
+    "enableRich": "Carte enrichie",
+    "enableNearbyRange": "Afficher la zone de recherche à proximité",
+    "previewTop": "Vue de dessus",
+    "preview3d": "Vue 3D",
+    "positron": "Positron",
+    "bright": "Bright",
+    "liberty": "Liberty",
+    "dark": "Dark",
+    "fiord": "Fiord"
+  },
+  "locationMarker": {
+    "title": "Marqueur de position",
+    "desc": "Personnalisez le point de position et le badge sur la carte. Effacez une couleur pour suivre le thème actuel.",
+    "ring": "Anneau",
+    "dot": "Point",
+    "border": "Bordure",
+    "badgeGroup": "Badge",
+    "useProfilePhoto": "Utiliser la photo de profil",
+    "useProfilePhotoHint": "Si activé, la photo de profil s'affiche lorsqu'elle est disponible ; sinon, le badge lettre est utilisé.",
+    "letter": "Lettre",
+    "letterActiveHint": "Actif sans photo de profil. Laissez vide pour déduire une lettre du nom, ou saisissez-en une.",
+    "letterDisabledHint": "Photo de profil activée : la lettre est désactivée. Désactivez la photo pour personnaliser le badge.",
+    "badgeBg": "Arrière-plan",
+    "badgeBorder": "Bordure",
+    "theme": "Thème",
+    "auto": "Auto",
+    "followingTheme": "Suit le thème actuel",
+    "derivedFromName": "Dérivé de votre nom",
+    "saveChanges": "Enregistrer",
+    "discardChanges": "Annuler",
+    "unsavedHint": "Modifications non enregistrées",
+    "resetField": "Réinitialiser {{field}} au thème par défaut",
+    "resetLetter": "Réinitialiser la lettre en auto",
+    "resetAll": "Tout réinitialiser au thème",
+    "on": "Activé",
+    "off": "Désactivé",
+    "preview": {
+      "followingTheme": "Suit le thème",
+      "customColors": "Couleurs personnalisées",
+      "profilePhoto": "Photo de profil",
+      "customBadge": "Badge personnalisé",
+      "letterTheme": "Lettre + couleurs du thème"
+    }
+  },
+  "eventPreference": {
+    "cardTitle": "Préférences d'événements",
+    "cardDesc": "Personnalisez la récupération du contenu à proximité sur Explore et la page Événements.",
+    "modulesLabel": "Modules visibles",
+    "modulesDesc": "Activez ou désactivez les catégories sur la page Événements.",
+    "fetchLabel": "Récupération à proximité",
+    "fetchDesc": "La taille de page s'applique aux repères Explore et aux listes Événements. Les rayons limitent la zone dérivée du viewport.",
+    "pageSize": "Éléments par page",
+    "pageSizeHint": "{{min}}–{{max}} éléments. Définit le nombre d'événements à proximité chargés par page sur Explore et Événements.",
+    "radiusMin": "Rayon minimum (m)",
+    "radiusMinHint": "{{min}}–{{max}} m. Le rayon de recherche dérivé du viewport ne descendra pas en dessous.",
+    "radiusMax": "Rayon maximum (m)",
+    "radiusMaxHint": "{{min}}–{{max}} m. Le rayon de recherche dérivé du viewport ne dépassera pas cette valeur.",
+    "resetDefaults": "Réinitialiser",
+    "save": "Enregistrer les paramètres d'événements"
+  },
+  "systemSettings": {
+    "cardTitle": "Notifications système",
+    "cardDesc": "Gérez les e-mails système liés à la sécurité de votre compte.",
+    "loginEmailNotification": "Notification de connexion par e-mail",
+    "loginEmailNotificationDesc": "Lorsqu'elle est activée, vous recevrez un e-mail à chaque connexion réussie.",
+    "save": "Enregistrer les paramètres système",
+    "saveSuccess": "Paramètres système mis à jour"
+  }
+}

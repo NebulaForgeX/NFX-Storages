@@ -1,0 +1,8 @@
+.textarea {
+  min-height: 18rem;
+  resize: vertical;
+}
+
+.textarea :global(textarea) {
+  min-height: 18rem;
+}

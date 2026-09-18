@@ -1,0 +1,27 @@
+{
+  "title": "创建账号",
+  "brand": {
+    "access": "{{name}} 通行",
+    "title": "创建连接一切的身份。"
+  },
+  "heroFooter": "一个 Account 即 Near、Loop 与整个 Pulso 的产品通行——无需二次注册。",
+  "pageEyebrow": "创建账号",
+  "pageTitle": "加入 {{name}}",
+  "pageSubtitle": "验证邮箱、设置密码，打开城市之家。",
+  "emailLabel": "邮箱",
+  "emailPlaceholder": "you@example.com",
+  "emailHint": "我们会向此地址发送 6 位验证码。",
+  "codeLabel": "验证码",
+  "codePlaceholder": "6 位验证码",
+  "sendCode": "发送验证码",
+  "passwordLabel": "密码",
+  "passwordPlaceholder": "设置密码",
+  "confirmLabel": "确认密码",
+  "confirmPlaceholder": "再次输入密码",
+  "showPassword": "显示密码",
+  "hidePassword": "隐藏密码",
+  "rememberMe": "记住我",
+  "submit": "创建账号",
+  "hasAccount": "已有账号？",
+  "signIn": "登录"
+}

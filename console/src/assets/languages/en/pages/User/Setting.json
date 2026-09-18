@@ -1,0 +1,185 @@
+{
+  "title": "Preferences",
+  "description": "Theme, map, events, billing, social privacy, and system notifications — synced across Pulso family products.",
+  "empty": {
+    "title": "No preferences loaded",
+    "description": "Theme and language settings will appear here."
+  },
+  "actions": {
+    "reset": "Reset",
+    "saveTheme": "Save theme",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "labels": {
+    "appearance": "Appearance",
+    "accent": "Accent",
+    "gray": "Gray",
+    "radius": "Radius",
+    "scaling": "Scaling",
+    "panelBackground": "Panel background",
+    "font": "Font",
+    "livePreview": "Live preview",
+    "previewBadge": "Preview",
+    "previewSolid": "Solid",
+    "previewSoft": "Soft",
+    "previewOutline": "Outline",
+    "sampleInput": "Sample input",
+    "notifications": "Notifications",
+    "unsavedChanges": "Unsaved changes",
+    "fontSystem": "System",
+    "fontIbmPlex": "IBM Plex",
+    "fontNoto": "Noto Sans",
+    "fontSourceSans": "Source Sans 3",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "colorAndAppearance": "Appearance & color",
+    "layoutAndType": "Radius & type"
+  },
+  "sections": {
+    "theme": {
+      "title": "Theme settings",
+      "description": "Customize colors, font, interface style, and display language."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Interface language for PulsoLink and shared family products."
+    },
+    "billingReceipt": {
+      "title": "Billing receipt",
+      "description": "Where receipt details sit in payment summaries."
+    },
+    "map": {
+      "title": "Map settings",
+      "description": "Configure map style and your location marker on the map."
+    },
+    "event": {
+      "title": "Event settings",
+      "description": "Control nearby fetch size, search radius limits, and which event modules appear on the Events page."
+    },
+    "billing": {
+      "title": "Billing settings",
+      "description": "Control how payment receipts appear on the Spending page."
+    },
+    "social": {
+      "title": "Social settings",
+      "description": "Control who can interact with you and list visibility."
+    },
+    "system": {
+      "title": "System settings",
+      "description": "Manage account-related system notifications and preferences."
+    }
+  },
+  "socialPrivacy": {
+    "cardTitle": "Social privacy",
+    "cardDesc": "Control who can interact with you and which connection lists others can see.",
+    "sectionPolicies": "Interaction",
+    "sectionPoliciesDesc": "Choose who can send friend requests, messages, or group invites.",
+    "sectionVisibility": "List visibility",
+    "sectionVisibilityDesc": "Choose which social lists appear on your profile for others.",
+    "friendRequestPolicy": "Who can send friend requests",
+    "directMessagePolicy": "Who can send direct messages",
+    "groupInvitePolicy": "Who can invite you to groups",
+    "showFriendList": "Show friend list to others",
+    "showBlockList": "Show block list to others",
+    "showFollowingList": "Show following list to others",
+    "showFollowerList": "Show follower list to others",
+    "save": "Save social settings",
+    "nobodyHint": "No one can — select at least one option to allow.",
+    "policies": {
+      "everyone": "Everyone",
+      "people_followed_by_me": "People I follow",
+      "mutual_follows": "Mutual follows",
+      "nobody": "Nobody",
+      "strangers": "Strangers",
+      "friends": "Friends",
+      "people_following_me": "People who follow me"
+    }
+  },
+  "billingPreference": {
+    "title": "Payment receipt position",
+    "desc": "Choose where the receipt panel appears on the Spending page.",
+    "positions": {
+      "bottom-right": "Bottom right",
+      "bottom-left": "Bottom left",
+      "top-right": "Top right",
+      "top-left": "Top left"
+    }
+  },
+  "mapStyle": {
+    "title": "Map Style",
+    "desc": "Choose the visual style for maps throughout the app",
+    "lightSection": "Light mode style",
+    "darkSection": "Dark mode style",
+    "enable3d": "Enable 3D buildings",
+    "enableFlat": "Flat top-down map view",
+    "enableRich": "Rich map details",
+    "enableNearbyRange": "Show nearby fetch range on map",
+    "previewTop": "Top view",
+    "preview3d": "3D view",
+    "positron": "Positron",
+    "bright": "Bright",
+    "liberty": "Liberty",
+    "dark": "Dark",
+    "fiord": "Fiord"
+  },
+  "locationMarker": {
+    "title": "Location Marker",
+    "desc": "Customize the position dot and badge on the map. Clear a value to follow the current theme.",
+    "ring": "Ring",
+    "dot": "Dot",
+    "border": "Border",
+    "badgeGroup": "Badge",
+    "useProfilePhoto": "Use profile photo",
+    "useProfilePhotoHint": "When enabled, your profile photo is shown when available; otherwise the letter badge is used.",
+    "letter": "Letter",
+    "letterActiveHint": "Applies when profile photo is off. Leave empty to derive one letter from your name, or type to override.",
+    "letterDisabledHint": "Profile photo is on, so letter settings are inactive. Turn photo off to customize the letter badge.",
+    "badgeBg": "Background",
+    "badgeBorder": "Border",
+    "theme": "Theme",
+    "auto": "Auto",
+    "followingTheme": "Following current theme",
+    "derivedFromName": "Derived from your name",
+    "saveChanges": "Save",
+    "discardChanges": "Discard",
+    "unsavedHint": "Unsaved changes",
+    "resetField": "Reset {{field}} to theme default",
+    "resetLetter": "Reset letter to auto",
+    "resetAll": "Reset all to theme",
+    "on": "On",
+    "off": "Off",
+    "preview": {
+      "followingTheme": "Following theme",
+      "customColors": "Custom colors",
+      "profilePhoto": "Profile photo",
+      "customBadge": "Custom badge",
+      "letterTheme": "Letter + theme colors"
+    }
+  },
+  "eventPreference": {
+    "cardTitle": "Event preferences",
+    "cardDesc": "Customize how Explore and Events fetch nearby content from the map viewport.",
+    "modulesLabel": "Visible modules",
+    "modulesDesc": "Turn categories on or off on the Events page. Off modules are hidden from lists and the home grid.",
+    "fetchLabel": "Nearby fetch",
+    "fetchDesc": "Page size applies to Explore pins and Event Home lists. Radius limits clamp the viewport-derived search area.",
+    "pageSize": "Items per page",
+    "pageSizeHint": "{{min}}–{{max}} items. Controls how many nearby events load per page on Explore and Event Home.",
+    "radiusMin": "Minimum radius (m)",
+    "radiusMinHint": "{{min}}–{{max}} m. Viewport-derived search radius will not go below this value.",
+    "radiusMax": "Maximum radius (m)",
+    "radiusMaxHint": "{{min}}–{{max}} m. Viewport-derived search radius will not exceed this value.",
+    "resetDefaults": "Reset to defaults",
+    "save": "Save event settings"
+  },
+  "systemSettings": {
+    "cardTitle": "System notifications",
+    "cardDesc": "Manage system email notifications related to your account security.",
+    "loginEmailNotification": "Login email notification",
+    "loginEmailNotificationDesc": "When enabled, you will receive an email each time you sign in successfully.",
+    "save": "Save system settings",
+    "saveSuccess": "System settings updated"
+  }
+}

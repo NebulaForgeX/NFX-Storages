@@ -1,0 +1,94 @@
+/* From Uiverse.io by SelfMadeSystem — theme-adapted.
+   Scale via --goo-unit (not font-size): typography stays on Text/Heading. */
+.root {
+  --goo-unit: 0.55rem;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.filterSvg {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.loader {
+  width: calc(12 * var(--goo-unit));
+  /* Tall enough for rising blobs; overflow clips only below the ground line. */
+  height: calc(10 * var(--goo-unit));
+  position: relative;
+  overflow: hidden;
+  border-bottom: 8px solid var(--gray-12);
+  filter: var(--goo-filter);
+}
+
+.loader::before {
+  content: "";
+  width: calc(22 * var(--goo-unit));
+  height: calc(18 * var(--goo-unit));
+  background: var(--accent-9);
+  position: absolute;
+  border-radius: 50%;
+  left: calc(-2 * var(--goo-unit));
+  bottom: calc(-18 * var(--goo-unit));
+  animation: wee1 2s linear infinite;
+}
+
+.loader::after {
+  content: "";
+  width: calc(16 * var(--goo-unit));
+  height: calc(12 * var(--goo-unit));
+  background: color-mix(in oklab, var(--cyan-9) 70%, var(--accent-9));
+  position: absolute;
+  border-radius: 50%;
+  left: calc(-4 * var(--goo-unit));
+  bottom: calc(-12 * var(--goo-unit));
+  animation: wee2 2s linear infinite 0.75s;
+}
+
+.sizeSmall {
+  --goo-unit: 0.4rem;
+}
+
+.sizeSmall .loader {
+  border-bottom-width: 6px;
+}
+
+.sizeMedium {
+  --goo-unit: 0.55rem;
+}
+
+.sizeLarge {
+  --goo-unit: 0.7rem;
+}
+
+.sizeLarge .loader {
+  border-bottom-width: 10px;
+}
+
+@keyframes wee1 {
+  0% {
+    transform: translateX(calc(-10 * var(--goo-unit))) rotate(0deg);
+  }
+  100% {
+    transform: translateX(calc(7 * var(--goo-unit))) rotate(180deg);
+  }
+}
+
+@keyframes wee2 {
+  0% {
+    transform: translateX(calc(-8 * var(--goo-unit))) rotate(0deg);
+  }
+  100% {
+    transform: translateX(calc(8 * var(--goo-unit))) rotate(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader::before,
+  .loader::after {
+    animation: none;
+    transform: translateX(0) rotate(40deg);
+  }
+}

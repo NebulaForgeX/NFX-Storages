@@ -1,0 +1,23 @@
+{
+  "title": "Profil",
+  "description": "Identité publique utilisée dans les produits de la famille.",
+  "empty": {
+    "title": "Aucune donnée de profil",
+    "description": "Les détails de votre profil public apparaîtront ici."
+  },
+  "actions": {
+    "edit": "Modifier"
+  },
+  "labels": {
+    "bio": "Bio",
+    "city": "Ville",
+    "country": "Pays",
+    "website": "Site web",
+    "timezone": "Fuseau horaire",
+    "emails": "E-mails",
+    "notSpecified": "—",
+    "backgroundGallery": "Galerie d'arrière-plan",
+    "noBackgrounds": "Aucune photo d'arrière-plan. Ajoutez-en dans Modifier le profil."
+  },
+  "sections": {}
+}

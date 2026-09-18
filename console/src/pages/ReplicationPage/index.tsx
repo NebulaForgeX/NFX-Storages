@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { Repeat } from "@/assets/icons/lucide";
-import { PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 
 import { useDeleteRemoteTarget, useRemoteTargets, useReplication, useSaveReplication, useSetRemoteTarget } from "@/hooks";
 import { BucketSelect } from "@/components/BucketSelect";

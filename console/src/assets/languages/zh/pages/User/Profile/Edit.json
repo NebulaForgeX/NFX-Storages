@@ -1,0 +1,64 @@
+{
+  "title": "编辑资料",
+  "description": "修改会同步到所有读取此资料的家族产品。",
+  "empty": {
+    "title": "无法加载资料",
+    "description": "请先加载资料后再编辑公开信息。"
+  },
+  "actions": {
+    "saveChanges": "保存更改"
+  },
+  "labels": {
+    "displayName": "显示名称",
+    "bio": "简介",
+    "city": "城市",
+    "website": "网站"
+  },
+  "sections": {
+    "basics": {
+      "title": "基本信息",
+      "description": "显示名称与公开详情。"
+    }
+  },
+  "edit": {
+    "saveSuccess": "资料已更新"
+  },
+  "avatar": {
+    "title": "头像",
+    "hint": "为本身份上传一张方形图片。",
+    "pickHint": "选择图片后确认上传。",
+    "choose": "选择图片",
+    "confirm": "确认上传",
+    "uploading": "上传中…",
+    "confirming": "确认中…",
+    "invalidType": "文件必须是图片。",
+    "uploadFailed": "上传失败。",
+    "confirmFailed": "确认失败。",
+    "noImage": "请先选择图片。",
+    "success": "头像已更新。"
+  },
+  "backgroundUpload": {
+    "label": "背景图库",
+    "queueSummary": "已完成 {{done}} / {{total}}",
+    "add": "添加图片",
+    "full": "已满",
+    "confirm": "确认保存",
+    "confirming": "保存中…",
+    "dropTitle": "选择背景图片",
+    "hint": "最多 6 张图片。确认后写入资料。",
+    "remove": "移除背景图",
+    "moveLeft": "左移",
+    "moveRight": "右移",
+    "reorderHint": "用箭头调整顺序后再确认。",
+    "invalidType": "请选择图片文件",
+    "limitReached": "最多 {{max}} 张背景图",
+    "uploadFailed": "背景图上传失败",
+    "saveFailed": "背景图库保存失败",
+    "success": "背景图库已更新",
+    "waitForUploads": "请等待全部图片上传完成。",
+    "status": {
+      "failed": "失败",
+      "uploading": "上传中"
+    }
+  }
+}

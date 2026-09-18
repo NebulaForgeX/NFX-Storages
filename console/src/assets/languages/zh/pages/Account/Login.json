@@ -1,0 +1,51 @@
+{
+  "title": "登录",
+  "brand": {
+    "access": "{{name}} 通行",
+    "title": "Identity. Community. Link."
+  },
+  "heroFooter": "登录一次。用同一个 Account 进入 Near、Loop 与整个 Pulso。",
+  "form": {
+    "welcomeBack": "欢迎回来",
+    "title": "登录 {{name}}",
+    "subtitle": "继续你的城市之家 Account——先身份，再产品。",
+    "emailLabel": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "密码",
+    "passwordPlaceholder": "输入密码",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码",
+    "rememberMe": "记住我",
+    "submit": "登录"
+  },
+  "promo": {
+    "newTo": "还没有 {{name}}？",
+    "createAccount": "创建账号"
+  },
+  "selectProfile": {
+    "eyebrow": "选择身份",
+    "title": "用哪个 Profile 继续？",
+    "subtitle": "一个 Account 可以持有多个城市身份。",
+    "back": "返回登录",
+    "kind": {
+      "community": "Community",
+      "authority": "Authority"
+    },
+    "kindHint": {
+      "community": "日常城市在场",
+      "authority": "审核与角色"
+    },
+    "roles": {
+      "pulser": "脉搏者",
+      "tester": "测试者",
+      "creator": "创作者",
+      "reviewer": "审核员",
+      "moderator": "治理员",
+      "inspector": "巡查员",
+      "supporter": "支持员",
+      "auditor": "审计员",
+      "administrator": "管理员",
+      "owner": "所有者"
+    }
+  }
+}

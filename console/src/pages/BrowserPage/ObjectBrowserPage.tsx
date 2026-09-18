@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router";
 
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { FolderOpen } from "@/assets/icons/lucide";
-import { PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 
 import { useDeleteObject, useObjectInfo, useObjects, usePutObject, useSignedObjectUrl } from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";

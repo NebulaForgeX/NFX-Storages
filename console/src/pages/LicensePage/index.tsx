@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Card } from "@radix-ui/themes";
 import { LifeBuoy } from "@/assets/icons/lucide";
 import { FileText } from "lucide-react";
-import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { CardHeader, EmptyState, PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 
 import { useLicense } from "@/hooks";
 

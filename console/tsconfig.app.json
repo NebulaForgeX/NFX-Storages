@@ -16,7 +16,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*", "../../NFX-UI/src/*", "../../NFX-UI/src/*/index.ts"],
+      "nfx-ui/*": ["../../NFX-UI/src/*", "../../NFX-UI/src/*/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

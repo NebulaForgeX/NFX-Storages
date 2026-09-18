@@ -1,0 +1,7 @@
+/* Sticky bar chrome — Themes cannot express z-index/blur/hairline */
+.bar {
+  z-index: 10;
+  border-bottom: 1px solid var(--gray-a4);
+  background: color-mix(in oklab, var(--color-background) 92%, transparent);
+  backdrop-filter: blur(10px);
+}

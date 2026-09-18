@@ -3,21 +3,23 @@ import { createRoot } from "react-dom/client";
 
 import "@radix-ui/themes/styles.css";
 import "nfx-ui/themes/fonts";
-import "nfx-ui/themes/styles.css";
+import "nfx-ui/themes/index.css";
 
 import { LanguageEnum } from "nfx-ui/enums";
-import { LanguageProvider, ThemeProvider, ModalProvider, DataProvider } from "nfx-ui/providers";
-import { LayoutProvider } from "nfx-ui/layouts";
+import { LanguageProvider, ThemeProvider } from "nfx-ui/providers";
+import { ensureDeviceIdStorage } from "nfx-ui/stores";
+
+import { loadSiteConfig } from "@/apis/clients";
+import { storageRepositories } from "@/apis/repositories";
+import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
+import { syncDocumentLogo } from "@/constants";
+import { DataProvider, ModalProvider, QueryProvider, RouterProvider } from "@/providers";
+
+import App from "./App";
 
 import "./index.css";
 
-import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
-import { storageRepositories } from "@/apis/repositories";
-import { DataProvider as StorageDataProvider, QueryProvider, RouterProvider } from "@/providers";
-import { loadSiteConfig } from "@/apis/clients";
-
-import App from "./App.tsx";
-
+void ensureDeviceIdStorage();
 void loadSiteConfig();
 
 async function onLoadExtraBundles(lng: LanguageEnum) {
@@ -29,24 +31,24 @@ async function onLoadExtraBundles(lng: LanguageEnum) {
   }
 }
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryProvider>
-      <LanguageProvider getBuiltinBundles={getBuiltinI18nBundles} fallbackLng={LanguageEnum.ZH} onLoadExtraBundles={onLoadExtraBundles}>
-        <ThemeProvider>
-          <LayoutProvider>
+function bootstrap() {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <QueryProvider>
+        <LanguageProvider fallbackLng={LanguageEnum.ZH} getBuiltinBundles={getBuiltinI18nBundles} onLoadExtraBundles={onLoadExtraBundles}>
+          <ThemeProvider onAppearanceChange={syncDocumentLogo}>
             <DataProvider>
-              <StorageDataProvider>
-                <RouterProvider>
-                  <ModalProvider>
-                    <App />
-                  </ModalProvider>
-                </RouterProvider>
-              </StorageDataProvider>
+              <RouterProvider>
+                <ModalProvider>
+                  <App />
+                </ModalProvider>
+              </RouterProvider>
             </DataProvider>
-          </LayoutProvider>
-        </ThemeProvider>
-      </LanguageProvider>
-    </QueryProvider>
-  </StrictMode>,
-);
+          </ThemeProvider>
+        </LanguageProvider>
+      </QueryProvider>
+    </StrictMode>,
+  );
+}
+
+void bootstrap();
