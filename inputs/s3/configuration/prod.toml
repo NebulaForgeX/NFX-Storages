@@ -1,4 +1,4 @@
-# NFX-News System Service (prod)
+# NFX-Storages Service (prod)
 
 [server]
     name = "S3 Service"
@@ -106,12 +106,11 @@
 
 [grpc_client]
     auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
-    source_addr = "${GRPC_HOST_SOURCE}:${GRPC_PORT_SOURCE}"
-    news_addr = "${GRPC_HOST_NEWS}:${GRPC_PORT_NEWS}"
-    crawl_addr = "${GRPC_HOST_CRAWL}:${GRPC_PORT_CRAWL}"
-    report_addr = "${GRPC_HOST_REPORT}:${GRPC_PORT_REPORT}"
+    s3_addr = "${GRPC_HOST_S3}:${GRPC_PORT_S3}"
+    object_addr = "${GRPC_HOST_OBJECT}:${GRPC_PORT_OBJECT}"
+    iam_addr = "${GRPC_HOST_IAM}:${GRPC_PORT_IAM}"
+    admin_addr = "${GRPC_HOST_ADMIN}:${GRPC_PORT_ADMIN}"
     notify_addr = "${GRPC_HOST_NOTIFY}:${GRPC_PORT_NOTIFY}"
-    mcp_addr = "${GRPC_HOST_MCP}:${GRPC_PORT_MCP}"
     system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
 
 [otel]

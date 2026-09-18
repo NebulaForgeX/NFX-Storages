@@ -25,7 +25,6 @@ import {
   PutBucketVersioningCommand,
   PutObjectLockConfigurationCommand,
   BucketVersioningStatus,
-  MFADelete,
 } from "@aws-sdk/client-s3";
 
 import { createAdminApiClient, createS3Client } from "@/apis/clients";
@@ -45,7 +44,6 @@ export const bucketRepository = {
         Bucket: bucket,
         VersioningConfiguration: {
           Status: status === "Enabled" ? BucketVersioningStatus.Enabled : BucketVersioningStatus.Suspended,
-          MFADelete: MFADelete.Enabled,
         },
       }),
     ),

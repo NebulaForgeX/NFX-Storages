@@ -1,4 +1,7 @@
 # https://taskfile.dev
+# NFX-Storages — align Taskfile with CityPulso PulsoLoop-API + NFX-News/Identity.
+# HTTP 入口只有 NFX-Edge：先启动 Edge（nfx-edge 网络），本栈不跑 Traefik。
+# 交互：task start    直接：task go:up / task atlas:pipeline:run:sh
 
 version: "3"
 
@@ -6,25 +9,336 @@ dotenv:
   - ".env"
 
 vars:
-  POSTGRES_HOST: "172.18.0.6"
-  POSTGRES_PORT: "5432"
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "Lucas127."
-  POSTGRES_DB_DEV: "nfxstorages_dev"
-  POSTGRES_DB_PROD: "nfxstorages"
-  POSTGRES_DB_SHADOW: "nfxstorages_diff"
+  PROTO_SRC_DIR: protos
+  PROTO_OUT_DIR: protos/gen
+  GO_VERSION: "1.26.0"
+  MODULE: "nfxstorages"
+  ERRORS_DIR: errors
+  POSTGRES_HOST: '{{.POSTGRESQL_HOST | default "172.18.0.6"}}'
+  POSTGRES_PORT: '{{.POSTGRESQL_PORT | default "5432"}}'
+  POSTGRES_USER: '{{.POSTGRESQL_USER | default "postgres"}}'
+  POSTGRES_PASSWORD: "{{.POSTGRESQL_PASSWORD}}"
+  POSTGRES_DB_DEV: '{{.POSTGRESQL_NAME_DEV | default "nfxstorages_dev"}}'
+  POSTGRES_DB_PROD: '{{.POSTGRESQL_NAME_PROD | default "nfxstorages"}}'
+  POSTGRES_DB_SHADOW: '{{.POSTGRESQL_NAME_SHADOW | default "nfxstorages_diff"}}'
+  POSTGRES_CONTAINER_NAME: "NFX-Stack-PostgreSQL"
+  ATLAS_ENV: '{{default "dev" .ATLAS_ENV}}'
   ATLAS_CONFIG_PATH: "file://databases/atlas.hcl"
+  ATLAS_MIGRATIONS_DIR_DEV: "file://databases/migrations/development"
+  ATLAS_MIGRATIONS_DIR_PROD: "file://databases/migrations/production"
+  RESOURCES_DOCKER_COMPOSE: "../NFX-Stack/Infrastructure/docker-compose.postgresql.yml"
+  ENV: '{{.ENV | default "dev"}}'
+  APP_COMPOSE: '{{if eq .ENV "prod"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
 
 tasks:
-  atlas:status:
-    desc: "Show Atlas migrate status (dev)"
+  start:
+    desc: "Interactive task menu (↑/↓ or w/s, Enter to run)"
+    cmds:
+      - ./task.sh
+    interactive: true
+
+  install:
+    desc: "Install required Go dev tools"
+    cmds:
+      - |
+        if [ -f /volume1/Environments/use-menv.sh ]; then . /volume1/Environments/use-menv.sh >/dev/null 2>&1 || true; fi
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        go install github.com/air-verse/air@latest
+        go install golang.org/x/tools/cmd/goimports@latest
+        go install github.com/segmentio/golines@latest
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+    silent: false
+
+  proto:gen:
+    desc: "Generate gRPC & Protobuf code using buf"
+    dir: "{{.PROTO_SRC_DIR}}"
+    cmds:
+      - buf dep update
+      - buf generate
+    sources:
+      - "{{.PROTO_SRC_DIR}}/**/*.proto"
+    generates:
+      - "{{.PROTO_OUT_DIR}}/**/*.pb.go"
+
+  lint:
+    desc: "Run golangci-lint"
+    cmds:
+      - golangci-lint run --timeout=5m
+
+  fmt:
+    desc: "Format Go code (goimports + golines)"
+    cmds:
+      - goimports -w .
+      - golines -m 160 -w .
+    silent: true
+
+  ci:
+    desc: "Run all CI tasks (format, lint)"
+    cmds:
+      - task: fmt
+      - task: lint
+
+  errors:add-templates:
+    desc: "Add i18n comment blocks to errors/src files that lack them"
+    cmds:
+      - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
+
+  errors:gen-langs:
+    desc: "Generate errors/langs/*.json from translation blocks in errors/src"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{.CLI_ARGS}}
+
+  errors:gen-langs:prod:
+    desc: "Generate errors/langs/*.json for production (*p* overrides)"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} --prod
+
+  errors:
+    desc: "Errors: add missing i18n blocks then generate langs"
+    cmds:
+      - task: errors:add-templates
+      - task: errors:gen-langs
+
+  clean:
+    desc: "Clean build artifacts"
+    cmds:
+      - rm -rf bin/
+
+  run:
+    desc: "Generate error langs then start the stack (NFX-Edge must already be running)"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "prod"}}--prod{{end}}
+      - |
+        echo "==> ensure docker network nfx-edge"
+        if sudo docker network inspect nfx-edge >/dev/null 2>&1; then
+          echo "  network nfx-edge already exists"
+        else
+          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first:"
+          echo "  cd ../NFX-Edge && ./start.sh"
+          exit 1
+        fi
+        sudo docker compose --env-file .env -f {{.APP_COMPOSE}} up --build {{if eq .ENV "prod"}}-d{{end}}
+
+  run:rebuild:
+    desc: "Force-rebuild (--no-cache) then start (NFX-Edge must already be running)"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "prod"}}--prod{{end}}
+      - |
+        echo "==> ensure docker network nfx-edge"
+        if ! sudo docker network inspect nfx-edge >/dev/null 2>&1; then
+          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first."
+          exit 1
+        fi
+        sudo docker compose --env-file .env -f {{.APP_COMPOSE}} build --no-cache
+        sudo docker compose --env-file .env -f {{.APP_COMPOSE}} up {{if eq .ENV "prod"}}-d{{end}}
+
+  run:down:
+    desc: "Stop the app stack (ENV=dev|prod)"
+    cmds:
+      - sudo docker compose --env-file .env -f {{.APP_COMPOSE}} down
+
+  atlas:gen-models:
+    desc: "Generate Go models from the PostgreSQL schema"
     cmds:
       - |
         POSTGRES_USER="{{.POSTGRES_USER}}" \
         POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
         POSTGRES_HOST="{{.POSTGRES_HOST}}" \
         POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
-        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
+        POSTGRES_DB="{{if eq .ATLAS_ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}" \
         POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
+        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
+        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        bash databases/scripts/gen_models.sh
+
+  atlas:gen-views:
+    desc: "Generate Go views from the PostgreSQL schema"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}" \
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
+        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
+        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
+        POSTGRES_DB="{{if eq .ATLAS_ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}" \
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
+        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
+        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        bash databases/scripts/gen_views.sh
+
+  atlas:gen-enums:
+    desc: "Generate Go enums from the PostgreSQL schema"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}" \
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
+        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
+        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
+        POSTGRES_DB="{{if eq .ATLAS_ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}" \
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
+        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        bash databases/scripts/gen_enums.sh
+
+  atlas:gen:
+    desc: "Generate Go models, enums and views from the database schema"
+    cmds:
+      - task: atlas:gen-enums
+      - task: atlas:gen-models
+      - task: atlas:gen-views
+
+  atlas:pipeline:run:sh:
+    desc: "Run Atlas pipeline using bash (interactive environment selection)"
+    env:
+      POSTGRES_USER: "{{.POSTGRES_USER}}"
+      POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
+      POSTGRES_HOST: "{{.POSTGRES_HOST}}"
+      POSTGRES_PORT: "{{.POSTGRES_PORT}}"
+      POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
+      POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
+      POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
+      POSTGRES_CONTAINER_NAME: "{{.POSTGRES_CONTAINER_NAME}}"
+      RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
+      ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
+    cmds:
+      - bash run_atlas_pipeline.sh
+
+  atlas:pipeline:run:
+    desc: "Run Atlas pipeline (ENV=dev|prod; extra flags after --)"
+    cmds:
+      - |
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_DB="{{if eq .ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}"
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}"
+        export ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
+        bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
+
+  atlas:pipeline:run:ps1:
+    desc: "Run Atlas pipeline using PowerShell"
+    cmds:
+      - pwsh run_atlas_pipeline.ps1
+
+  atlas:status:
+    desc: "Show Atlas migrate status (dev)"
+    cmds:
+      - |
         atlas migrate status --env dev --config {{.ATLAS_CONFIG_PATH}} --dir file://databases/migrations/development
+
+  databases:gen:
+    desc: "Generate Go enums+models+views from the schema, no Atlas. KIND=enums|models|views|all"
+    cmds:
+      - |
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        bash databases/scripts/db_gen.sh "{{.KIND | default "all"}}"
+
+  databases:migrate-diff:
+    desc: "Show schema delta (pgdump review by default). Extra flags after --."
+    cmds:
+      - |
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        bash databases/scripts/db_migrate_diff.sh {{.CLI_ARGS}}
+
+  databases:migrate-apply:
+    desc: "Apply versioned goose migrations to the target DB. Extra goose args after --."
+    cmds:
+      - |
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        bash databases/scripts/db_migrate_apply.sh {{.CLI_ARGS}}
+
+  databases:baseline:
+    desc: "Bootstrap goose versioning from the current schema"
+    cmds:
+      - |
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        bash databases/scripts/db_goose_baseline.sh
+
+  databases:pipeline:run:
+    desc: "Run the license-free DB pipeline (diff -> apply -> generate). Extra flags after --."
+    cmds:
+      - |
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        bash run_db_pipeline.sh {{.CLI_ARGS}}
+
+  db:create:
+    desc: "Create nfxstorages_dev / nfxstorages / nfxstorages_diff on Stack Postgres"
+    cmds:
+      - bash scripts/create_databases.sh
+
+  scripts:test-db:
+    desc: "Probe PostgreSQL (+ Redis) using s3 TOML + .env. Pass -- --skip-redis / -- -timeout=5s."
+    cmds:
+      - ENV={{.ENV}} go run ./scripts/testdb/ {{.CLI_ARGS}}
+
+  scripts:clear-data:
+    desc: "Truncate all table data in storages/system (dev only). Pass -- --yes to skip prompt."
+    cmds:
+      - go run ./scripts/cleardata/ {{.CLI_ARGS}}
+
+  console:
+    desc: "Run console dev server"
+    dir: console
+    cmds:
+      - npm run dev
+
+  console:i:
+    desc: "Install console dependencies"
+    dir: console
+    cmds:
+      - npm install
+
+  go:ub:
+    desc: "Up go dev server and build (NFX-Edge must already be running)"
+    cmds:
+      - |
+        if ! sudo docker network inspect nfx-edge >/dev/null 2>&1; then
+          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first."
+          exit 1
+        fi
+        sudo docker compose -f docker-compose.dev.yml up --build
+
+  go:up:
+    desc: "Up go dev server (NFX-Edge must already be running)"
+    cmds:
+      - |
+        if ! sudo docker network inspect nfx-edge >/dev/null 2>&1; then
+          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first."
+          exit 1
+        fi
+        sudo docker compose -f docker-compose.dev.yml up
+
+  go:down:
+    desc: "Stop the app stack"
+    cmds:
+      - sudo docker compose -f {{.APP_COMPOSE}} down

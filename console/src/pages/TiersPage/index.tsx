@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { HardDrive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useCreateTier, useDeleteTier, useTiers } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
 interface TierRow {
@@ -21,26 +20,18 @@ function getConfig(row: TierRow): { name?: string } | undefined {
 }
 
 export default function TiersPage() {
-  const { tiers: tiersRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
+  const { data = [], isLoading } = useTiers();
+  const createTier = useCreateTier();
+  const deleteTier = useDeleteTier();
   const [name, setName] = useState("");
   const [endpoint, setEndpoint] = useState("");
   const [error, setError] = useState("");
 
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["tiers"],
-    queryFn: async () => ((await tiersRepository.listTiers()) ?? []) as TierRow[],
-  });
-
   const create = async () => {
     try {
-      await tiersRepository.addTiers({
-        type: "s3",
-        s3: { name, endpoint, bucket: name, prefix: "", region: "us-east-1", accesskey: "", secretkey: "" },
-      });
+      await createTier.mutateAsync({ name, endpoint });
       setName("");
-      await queryClient.invalidateQueries({ queryKey: ["tiers"] });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Add Failed"));
     }
@@ -50,8 +41,7 @@ export default function TiersPage() {
     const tierName = getConfig(row)?.name;
     if (!tierName || !window.confirm(t("Are you sure you want to delete this tier?"))) return;
     try {
-      await tiersRepository.removeTiers(tierName);
-      await queryClient.invalidateQueries({ queryKey: ["tiers"] });
+      await deleteTier.mutateAsync(tierName);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Delete Failed"));
     }

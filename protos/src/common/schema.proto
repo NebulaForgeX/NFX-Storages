@@ -1,0 +1,27 @@
+syntax = "proto3";
+package common.schema;
+
+option go_package = "nfxstorages/protos/gen/common/schema;schemapb";
+
+// ClearSchemaRequest 清空 schema 请求
+message ClearSchemaRequest {
+  // 空请求
+}
+
+// ClearSchemaResponse 清空 schema 响应
+message ClearSchemaResponse {
+  // 是否成功
+  bool success = 1;
+  
+  // 错误消息（如果失败）
+  optional string error_message = 2;
+  
+  // 清空的表数量
+  int32 tables_cleared = 3;
+}
+
+// SchemaService 清空 schema 服务 - 清空所有表的数据（不删除表）
+service SchemaService {
+  // 清空 schema（清空所有表的数据，但保留表结构）
+  rpc ClearSchema (ClearSchemaRequest) returns (ClearSchemaResponse);
+}

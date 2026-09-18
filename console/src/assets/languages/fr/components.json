@@ -1,0 +1,25 @@
+{
+  "header": {
+    "user": "User",
+    "logout": "Logout",
+    "settings": "Settings"
+  },
+  "sidebar": {
+    "browser": "Browser",
+    "accessKeys": "Access Keys",
+    "policies": "Policies",
+    "users": "Users",
+    "userGroups": "User Groups",
+    "importExport": "Import/Export",
+    "performance": "Performance",
+    "bucketSetting": "Bucket Setting",
+    "events": "Bucket Events",
+    "replication": "Bucket Replication",
+    "lifecycle": "Lifecycle",
+    "tiers": "Tiered Storage",
+    "eventsTarget": "Event Destinations",
+    "sse": "SSE Settings",
+    "license": "License",
+    "settings": "Settings"
+  }
+}

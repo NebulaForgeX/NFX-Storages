@@ -10,5 +10,5 @@ export function buildRoute(path: string): string {
 }
 
 export function getLoginRoute(): string {
-  return buildRoute("/auth/login");
+  return buildRoute("/login");
 }

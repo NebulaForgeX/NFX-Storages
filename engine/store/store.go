@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -15,10 +14,17 @@ import (
 	"sync"
 	"time"
 
+	storageserr "nfxstorages/errors/src/storages"
+
 	"github.com/klauspost/reedsolomon"
 )
 
-var ErrNotFound = errors.New("not found")
+var (
+	ErrNotFound       = storageserr.ErrNotFound
+	ErrForbidden      = storageserr.ErrForbidden
+	ErrBucketExists   = storageserr.ErrBucketExists
+	ErrBucketNotEmpty = storageserr.ErrBucketNotEmpty
+)
 
 type ObjectInfo struct {
 	Key          string            `json:"key"`
@@ -34,6 +40,7 @@ type ObjectInfo struct {
 
 type BucketInfo struct {
 	Name         string            `json:"name"`
+	AccountID    string            `json:"account_id,omitempty"`
 	Created      time.Time         `json:"created"`
 	Tags         map[string]string `json:"tags,omitempty"`
 	Versioning   string            `json:"versioning,omitempty"`
@@ -55,7 +62,7 @@ type Engine struct {
 
 func New(disks []string, dataShards, parityShards int) (*Engine, error) {
 	if len(disks) == 0 {
-		disks = []string{"./data/disk0"}
+		return nil, storageserr.ErrVolumeMissing
 	}
 	if dataShards <= 0 {
 		dataShards = 1
@@ -99,13 +106,27 @@ func (e *Engine) objectDir(disk, bucket, key string) string {
 	return filepath.Join(disk, "objects", bucket, hex.EncodeToString(sum[:]))
 }
 
-func (e *Engine) CreateBucket(name string) error {
+func (e *Engine) assertOwnedLocked(name, accountID string) (BucketInfo, error) {
+	info, err := e.getBucketLocked(name)
+	if err != nil {
+		return BucketInfo{}, err
+	}
+	if accountID == "" || info.AccountID == "" || info.AccountID != accountID {
+		return BucketInfo{}, ErrForbidden
+	}
+	return info, nil
+}
+
+func (e *Engine) CreateBucket(name, accountID string) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
-	if _, err := e.getBucketLocked(name); err == nil {
-		return errors.New("bucket already exists")
+	if accountID == "" {
+		return ErrForbidden
 	}
-	info := BucketInfo{Name: name, Created: time.Now().UTC()}
+	if _, err := e.getBucketLocked(name); err == nil {
+		return ErrBucketExists
+	}
+	info := BucketInfo{Name: name, AccountID: accountID, Created: time.Now().UTC()}
 	return e.writeBucketLocked(info)
 }
 
@@ -138,18 +159,21 @@ func (e *Engine) getBucketLocked(name string) (BucketInfo, error) {
 	return BucketInfo{}, ErrNotFound
 }
 
-func (e *Engine) GetBucket(name string) (BucketInfo, error) {
+func (e *Engine) GetBucket(name, accountID string) (BucketInfo, error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
-	return e.getBucketLocked(name)
+	return e.assertOwnedLocked(name, accountID)
 }
 
-func (e *Engine) DeleteBucket(name string) error {
+func (e *Engine) DeleteBucket(name, accountID string) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
+	if _, err := e.assertOwnedLocked(name, accountID); err != nil {
+		return err
+	}
 	objs, _ := e.listObjectsLocked(name, "", 1)
 	if len(objs) > 0 {
-		return errors.New("bucket not empty")
+		return ErrBucketNotEmpty
 	}
 	for _, d := range e.disks {
 		_ = os.RemoveAll(filepath.Join(d, "buckets", name))
@@ -158,9 +182,12 @@ func (e *Engine) DeleteBucket(name string) error {
 	return nil
 }
 
-func (e *Engine) ListBuckets() []BucketInfo {
+func (e *Engine) ListBuckets(accountID string) []BucketInfo {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
+	if accountID == "" {
+		return nil
+	}
 	seen := map[string]BucketInfo{}
 	for _, d := range e.disks {
 		entries, err := os.ReadDir(filepath.Join(d, "buckets"))
@@ -171,9 +198,11 @@ func (e *Engine) ListBuckets() []BucketInfo {
 			if !ent.IsDir() {
 				continue
 			}
-			if info, err := e.getBucketLocked(ent.Name()); err == nil {
-				seen[ent.Name()] = info
+			info, err := e.getBucketLocked(ent.Name())
+			if err != nil || info.AccountID != accountID {
+				continue
 			}
+			seen[ent.Name()] = info
 		}
 	}
 	out := make([]BucketInfo, 0, len(seen))
@@ -184,21 +213,24 @@ func (e *Engine) ListBuckets() []BucketInfo {
 	return out
 }
 
-func (e *Engine) PutBucketMeta(name string, mutate func(*BucketInfo)) error {
+func (e *Engine) PutBucketMeta(name, accountID string, mutate func(*BucketInfo)) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
-	info, err := e.getBucketLocked(name)
+	info, err := e.assertOwnedLocked(name, accountID)
 	if err != nil {
 		return err
 	}
+	owner, bname := info.AccountID, info.Name
 	mutate(&info)
+	info.AccountID = owner
+	info.Name = bname
 	return e.writeBucketLocked(info)
 }
 
-func (e *Engine) PutObject(bucket, key, contentType string, body []byte) (ObjectInfo, error) {
+func (e *Engine) PutObject(bucket, key, contentType string, body []byte, accountID string) (ObjectInfo, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
-	if _, err := e.getBucketLocked(bucket); err != nil {
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
 		return ObjectInfo{}, err
 	}
 	sum := md5.Sum(body)
@@ -246,9 +278,12 @@ func (e *Engine) split(body []byte) ([][]byte, error) {
 	return shards, nil
 }
 
-func (e *Engine) GetObject(bucket, key string) (ObjectInfo, []byte, error) {
+func (e *Engine) GetObject(bucket, key, accountID string) (ObjectInfo, []byte, error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
+		return ObjectInfo{}, nil, err
+	}
 	info, shards, err := e.readShardsLocked(bucket, key)
 	if err != nil {
 		return ObjectInfo{}, nil, err
@@ -260,9 +295,12 @@ func (e *Engine) GetObject(bucket, key string) (ObjectInfo, []byte, error) {
 	return info, body, nil
 }
 
-func (e *Engine) HeadObject(bucket, key string) (ObjectInfo, error) {
+func (e *Engine) HeadObject(bucket, key, accountID string) (ObjectInfo, error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
+		return ObjectInfo{}, err
+	}
 	info, _, err := e.readShardsLocked(bucket, key)
 	return info, err
 }
@@ -320,9 +358,12 @@ func (e *Engine) join(shards [][]byte, size int64) ([]byte, error) {
 	return buf, nil
 }
 
-func (e *Engine) DeleteObject(bucket, key string) error {
+func (e *Engine) DeleteObject(bucket, key, accountID string) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
+		return err
+	}
 	deleted := false
 	for _, d := range e.disks {
 		dir := e.objectDir(d, bucket, key)
@@ -336,9 +377,12 @@ func (e *Engine) DeleteObject(bucket, key string) error {
 	return nil
 }
 
-func (e *Engine) UpdateObjectMeta(bucket, key string, mutate func(*ObjectInfo)) error {
+func (e *Engine) UpdateObjectMeta(bucket, key, accountID string, mutate func(*ObjectInfo)) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
+		return err
+	}
 	info, _, err := e.readShardsLocked(bucket, key)
 	if err != nil {
 		return err
@@ -352,15 +396,21 @@ func (e *Engine) UpdateObjectMeta(bucket, key string, mutate func(*ObjectInfo)) 
 	return nil
 }
 
-func (e *Engine) ListObjects(bucket, prefix string, maxKeys int) ([]ObjectInfo, error) {
+func (e *Engine) ListObjects(bucket, prefix, accountID string, maxKeys int) ([]ObjectInfo, error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
+		return nil, err
+	}
 	return e.listObjectsLocked(bucket, prefix, maxKeys)
 }
 
-func (e *Engine) ListObjectsPage(bucket, prefix, marker string, maxKeys int) (objs []ObjectInfo, next string, truncated bool, err error) {
+func (e *Engine) ListObjectsPage(bucket, prefix, marker, accountID string, maxKeys int) (objs []ObjectInfo, next string, truncated bool, err error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
+	if _, err := e.assertOwnedLocked(bucket, accountID); err != nil {
+		return nil, "", false, err
+	}
 	all, err := e.listObjectsLocked(bucket, prefix, 0)
 	if err != nil {
 		return nil, "", false, err
@@ -433,11 +483,13 @@ func (e *Engine) listObjectsLocked(bucket, prefix string, maxKeys int) ([]Object
 	return out, nil
 }
 
-func (e *Engine) Usage() (buckets int, objects int, bytes int64) {
-	bs := e.ListBuckets()
+func (e *Engine) Usage(accountID string) (buckets int, objects int, bytes int64) {
+	bs := e.ListBuckets(accountID)
 	buckets = len(bs)
+	e.mu.RLock()
+	defer e.mu.RUnlock()
 	for _, b := range bs {
-		objs, _ := e.ListObjects(b.Name, "", 100000)
+		objs, _ := e.listObjectsLocked(b.Name, "", 100000)
 		objects += len(objs)
 		for _, o := range objs {
 			bytes += o.Size

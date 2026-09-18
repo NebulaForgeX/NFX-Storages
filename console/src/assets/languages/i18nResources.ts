@@ -6,6 +6,10 @@ import zh_common from "./zh/common.json";
 import zh_components from "./zh/components.json";
 import zh_EditPreferencePage from "./zh/EditPreferencePage.json";
 import zh_LoginPage from "./zh/LoginPage.json";
+import fr_common from "./fr/common.json";
+import fr_components from "./fr/components.json";
+import fr_EditPreferencePage from "./fr/EditPreferencePage.json";
+import fr_LoginPage from "./fr/LoginPage.json";
 
 export const RESOURCES = {
   en: {
@@ -19,6 +23,12 @@ export const RESOURCES = {
     LoginPage: zh_LoginPage,
     EditPreferencePage: zh_EditPreferencePage,
     components: zh_components,
+  },
+  fr: {
+    common: fr_common,
+    LoginPage: fr_LoginPage,
+    EditPreferencePage: fr_EditPreferencePage,
+    components: fr_components,
   },
 };
 

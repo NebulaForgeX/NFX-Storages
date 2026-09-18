@@ -30,12 +30,11 @@ type I18nConfig struct {
 
 type GRPCClientConfig struct {
 	AuthAddr   string `koanf:"auth_addr"`
-	SourceAddr string `koanf:"source_addr"`
-	NewsAddr   string `koanf:"news_addr"`
-	CrawlAddr  string `koanf:"crawl_addr"`
-	ReportAddr string `koanf:"report_addr"`
+	S3Addr     string `koanf:"s3_addr"`
+	ObjectAddr string `koanf:"object_addr"`
+	IAMAddr    string `koanf:"iam_addr"`
+	AdminAddr  string `koanf:"admin_addr"`
 	NotifyAddr string `koanf:"notify_addr"`
-	MCPAddr    string `koanf:"mcp_addr"`
 	SystemAddr string `koanf:"system_addr"`
 }
 

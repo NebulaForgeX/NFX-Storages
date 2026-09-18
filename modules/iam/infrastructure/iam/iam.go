@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	storageserr "nfxstorages/errors/src/storages"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -147,7 +149,7 @@ func (s *Service) EnsureProfileKey(accountID, profileID string) (AccessKey, erro
 
 func (s *Service) IssueSession(parent AccessKey, ttl time.Duration) (AccessKey, error) {
 	if parent.Status != "enabled" {
-		return AccessKey{}, errors.New("key disabled")
+		return AccessKey{}, storageserr.ErrAccessKeyDisabled
 	}
 	token := randomHex(24)
 	exp := time.Now().UTC().Add(ttl)
@@ -175,13 +177,16 @@ func (s *Service) MintSession(accessKey string, ttl time.Duration) (AccessKey, e
 func (s *Service) Lookup(accessKey string) (AccessKey, error) {
 	var row AccessKey
 	if err := s.db.First(&row, "access_key = ?", accessKey).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return AccessKey{}, storageserr.ErrInvalidAccessKey
+		}
 		return AccessKey{}, err
 	}
 	if row.Status != "enabled" {
-		return AccessKey{}, errors.New("key disabled")
+		return AccessKey{}, storageserr.ErrAccessKeyDisabled
 	}
 	if row.ExpiresAt != nil && time.Now().UTC().After(*row.ExpiresAt) {
-		return AccessKey{}, errors.New("key expired")
+		return AccessKey{}, storageserr.ErrAccessKeyExpired
 	}
 	return row, nil
 }
@@ -193,9 +198,12 @@ func (s *Service) MatchSession(row AccessKey, token string) bool {
 	return token == "" || token == *row.SessionToken
 }
 
-func (s *Service) ListUsers() map[string]any {
+func (s *Service) ListUsers(accountID string) map[string]any {
+	if accountID == "" {
+		return map[string]any{}
+	}
 	var rows []AccessKey
-	_ = s.db.Where("parent_key IS NULL").Find(&rows).Error
+	_ = s.db.Where("parent_key IS NULL AND account_id = ?", accountID).Find(&rows).Error
 	out := map[string]any{}
 	for _, r := range rows {
 		out[r.AccessKey] = map[string]any{
@@ -205,9 +213,12 @@ func (s *Service) ListUsers() map[string]any {
 	return out
 }
 
-func (s *Service) ListServiceAccounts() map[string]any {
+func (s *Service) ListServiceAccounts(accountID string) map[string]any {
+	if accountID == "" {
+		return map[string]any{"accounts": []map[string]any{}}
+	}
 	var rows []AccessKey
-	_ = s.db.Find(&rows).Error
+	_ = s.db.Where("account_id = ?", accountID).Find(&rows).Error
 	accounts := make([]map[string]any, 0, len(rows))
 	for _, r := range rows {
 		accounts = append(accounts, map[string]any{
@@ -268,6 +279,9 @@ func (s *Service) GetUser(access string) (map[string]any, error) {
 	if err != nil {
 		var disabled AccessKey
 		if e := s.db.First(&disabled, "access_key = ?", access).Error; e != nil {
+			if errors.Is(e, gorm.ErrRecordNotFound) {
+				return nil, storageserr.ErrIAMUserNotFound
+			}
 			return nil, err
 		}
 		row = disabled
@@ -317,6 +331,9 @@ func (s *Service) ListPolicies() map[string]any {
 func (s *Service) GetPolicy(name string) (Policy, error) {
 	var row Policy
 	err := s.db.First(&row, "name = ?", name).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return row, storageserr.ErrPolicyNotFound
+	}
 	return row, err
 }
 
@@ -346,7 +363,7 @@ func (s *Service) SetPolicyMultiple(policy string, users, groups []string) error
 
 func (s *Service) UpsertGroup(name, status string, members []string, policy *string) error {
 	if name == "" {
-		return errors.New("group name required")
+		return storageserr.ErrGroupNameRequired
 	}
 	var existing Group
 	err := s.db.First(&existing, "name = ?", name).Error
@@ -423,12 +440,14 @@ func (s *Service) GroupsForUser(access string) []string {
 	return out
 }
 
-func (s *Service) ListGroups() []string {
+func (s *Service) ListGroups() []map[string]any {
 	var rows []Group
 	_ = s.db.Find(&rows).Error
-	out := make([]string, 0, len(rows))
+	out := make([]map[string]any, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, r.Name)
+		var members []string
+		_ = json.Unmarshal([]byte(r.Members), &members)
+		out = append(out, map[string]any{"name": r.Name, "status": r.Status, "members": members, "policy": r.Policy})
 	}
 	return out
 }
@@ -436,6 +455,9 @@ func (s *Service) ListGroups() []string {
 func (s *Service) GetGroup(name string) (map[string]any, error) {
 	var row Group
 	if err := s.db.First(&row, "name = ?", name).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, storageserr.ErrGroupNotFound
+		}
 		return nil, err
 	}
 	var members []string
@@ -531,6 +553,9 @@ func (s *Service) ListKMSKeys() []KMSKey {
 func (s *Service) GetKMSKey(id string) (KMSKey, error) {
 	var row KMSKey
 	err := s.db.First(&row, "key_id = ?", id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return row, storageserr.ErrKMSKeyNotFound
+	}
 	return row, err
 }
 

@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
 
 import { Card } from "@radix-ui/themes";
 import { LifeBuoy } from "@/assets/icons/lucide";
@@ -7,15 +6,11 @@ import { FileText } from "lucide-react";
 import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useLicense } from "@/hooks/storages";
 
 export default function LicensePage() {
-  const { system: systemRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
-  const { data, isLoading } = useQuery({
-    queryKey: ["license"],
-    queryFn: () => systemRepository.getLicense(),
-  });
+  const { data, isLoading } = useLicense();
 
   return (
     <PageFrame>

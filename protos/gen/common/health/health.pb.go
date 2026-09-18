@@ -21,11 +21,15 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// ResourceHealth 单个资源的健康状态
 type ResourceHealth struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Healthy       bool                   `protobuf:"varint,1,opt,name=healthy,proto3" json:"healthy,omitempty"`
-	ErrorMessage  *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	CheckedAt     int64                  `protobuf:"varint,3,opt,name=checked_at,json=checkedAt,proto3" json:"checked_at,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 资源是否健康
+	Healthy bool `protobuf:"varint,1,opt,name=healthy,proto3" json:"healthy,omitempty"`
+	// 错误消息（如果不健康）
+	ErrorMessage *string `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	// 检查时间戳（Unix 时间戳，秒）
+	CheckedAt     int64 `protobuf:"varint,3,opt,name=checked_at,json=checkedAt,proto3" json:"checked_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -81,10 +85,14 @@ func (x *ResourceHealth) GetCheckedAt() int64 {
 	return 0
 }
 
+// InfrastructureHealth 基础设施健康状态
 type InfrastructureHealth struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Database      *ResourceHealth            `protobuf:"bytes,1,opt,name=database,proto3" json:"database,omitempty"`
-	Redis         *ResourceHealth            `protobuf:"bytes,2,opt,name=redis,proto3" json:"redis,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 数据库健康状态
+	Database *ResourceHealth `protobuf:"bytes,1,opt,name=database,proto3" json:"database,omitempty"`
+	// Redis 健康状态
+	Redis *ResourceHealth `protobuf:"bytes,2,opt,name=redis,proto3" json:"redis,omitempty"`
+	// 其他基础设施（可选）
 	Others        map[string]*ResourceHealth `protobuf:"bytes,3,rep,name=others,proto3" json:"others,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -141,6 +149,7 @@ func (x *InfrastructureHealth) GetOthers() map[string]*ResourceHealth {
 	return nil
 }
 
+// GetHealthRequest 获取健康状态请求
 type GetHealthRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -177,14 +186,19 @@ func (*GetHealthRequest) Descriptor() ([]byte, []int) {
 	return file_common_health_proto_rawDescGZIP(), []int{2}
 }
 
+// GetHealthResponse 获取健康状态响应
 type GetHealthResponse struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Healthy        bool                   `protobuf:"varint,1,opt,name=healthy,proto3" json:"healthy,omitempty"`
-	Infrastructure *InfrastructureHealth  `protobuf:"bytes,2,opt,name=infrastructure,proto3" json:"infrastructure,omitempty"`
-	ServiceName    string                 `protobuf:"bytes,3,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
-	CheckedAt      int64                  `protobuf:"varint,4,opt,name=checked_at,json=checkedAt,proto3" json:"checked_at,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 服务整体健康状态
+	Healthy bool `protobuf:"varint,1,opt,name=healthy,proto3" json:"healthy,omitempty"`
+	// 基础设施健康状态
+	Infrastructure *InfrastructureHealth `protobuf:"bytes,2,opt,name=infrastructure,proto3" json:"infrastructure,omitempty"`
+	// 服务名称
+	ServiceName string `protobuf:"bytes,3,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
+	// 检查时间戳（Unix 时间戳，秒）
+	CheckedAt     int64 `protobuf:"varint,4,opt,name=checked_at,json=checkedAt,proto3" json:"checked_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHealthResponse) Reset() {
@@ -271,7 +285,7 @@ const file_common_health_proto_rawDesc = "" +
 	"\n" +
 	"checked_at\x18\x04 \x01(\x03R\tcheckedAt2_\n" +
 	"\rHealthService\x12N\n" +
-	"\tGetHealth\x12\x1f.common.health.GetHealthRequest\x1a .common.health.GetHealthResponseB+Z)nfxstorages/protos/gen/common/health;healthpbb\x06proto3"
+	"\tGetHealth\x12\x1f.common.health.GetHealthRequest\x1a .common.health.GetHealthResponseB/Z-nfxstorages/protos/gen/common/health;healthpbb\x06proto3"
 
 var (
 	file_common_health_proto_rawDescOnce sync.Once

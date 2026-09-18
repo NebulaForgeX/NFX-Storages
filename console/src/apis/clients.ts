@@ -6,7 +6,6 @@ import { AwsClient } from "@/lib/aws4fetch";
 import { ApiErrorHandler } from "@/lib/utils/api-error-handler";
 import { AuthStore } from "@/stores/authStore";
 import { configManager } from "@/utils/config";
-import { getLoginRoute } from "@/utils/routes";
 import type { SiteConfig } from "@/types/config";
 
 let cachedSiteConfig: SiteConfig | null = null;
@@ -40,7 +39,7 @@ export function createAdminApiClient(): ApiClient {
     errorHandler: new ApiErrorHandler({
       onUnauthorized: async () => {
         AuthStore.getState().clearAuth();
-        window.location.href = getLoginRoute();
+        window.location.reload();
       },
     }),
   });
@@ -89,7 +88,7 @@ export function createS3Client(): S3Client {
           const err = error as { $metadata?: { httpStatusCode?: number }; Code?: string };
           if (err?.$metadata?.httpStatusCode === 401) {
             AuthStore.getState().clearAuth();
-            window.location.href = getLoginRoute();
+            window.location.reload();
             return { response: { statusCode: 401, headers: {} } } as DeserializeHandlerOutput<object>;
           }
           if (err?.Code) throw new Error(err.Code);

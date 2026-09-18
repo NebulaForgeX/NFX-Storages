@@ -25,7 +25,10 @@ const (
 // HealthServiceClient is the client API for HealthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// HealthService 健康检查服务 - 返回服务及其基础设施的健康状态
 type HealthServiceClient interface {
+	// 获取健康状态（包括数据库、Redis等基础设施）
 	GetHealth(ctx context.Context, in *GetHealthRequest, opts ...grpc.CallOption) (*GetHealthResponse, error)
 }
 
@@ -50,7 +53,10 @@ func (c *healthServiceClient) GetHealth(ctx context.Context, in *GetHealthReques
 // HealthServiceServer is the server API for HealthService service.
 // All implementations must embed UnimplementedHealthServiceServer
 // for forward compatibility.
+//
+// HealthService 健康检查服务 - 返回服务及其基础设施的健康状态
 type HealthServiceServer interface {
+	// 获取健康状态（包括数据库、Redis等基础设施）
 	GetHealth(context.Context, *GetHealthRequest) (*GetHealthResponse, error)
 	mustEmbedUnimplementedHealthServiceServer()
 }

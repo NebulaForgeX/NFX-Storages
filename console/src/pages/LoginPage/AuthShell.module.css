@@ -1,155 +1,104 @@
 .page {
   position: relative;
   z-index: 1;
-  width: 100%;
   min-height: 100dvh;
+  background: #1c1914;
+  color: #ece6d6;
 }
 
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: var(--color-background);
+.tape {
+  height: 28px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #111 0 14px,
+    #e0b400 14px 28px
+  );
 }
 
-@media (min-width: 961px) {
-  .backdrop {
-    background: linear-gradient(90deg, var(--accent-10) 0%, var(--accent-10) 48%, var(--color-background) 48%);
-  }
+.dock {
+  min-height: calc(100dvh - 56px);
+  display: grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(320px, 1fr);
 }
 
-.glow {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  opacity: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 14% 18%, color-mix(in oklab, var(--accent-9) 22%, transparent), transparent 38%),
-    radial-gradient(circle at 88% 72%, color-mix(in oklab, var(--accent-10) 14%, transparent), transparent 40%);
+.bay {
+  padding: 36px 28px;
+  border-right: 8px solid #e0b400;
+  background: #16130f;
 }
 
-.heroPanel,
-.formPanel {
+.stencil {
+  font-family: "Arial Narrow", "DIN Alternate", "Helvetica Neue", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #e0b400;
+  margin-bottom: 18px;
+}
+
+.title {
+  font-family: "Arial Narrow", "DIN Alternate", Impact, sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 16px;
+}
+
+.lede {
+  max-width: 28ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: color-mix(in oklab, #ece6d6 78%, transparent);
+}
+
+.manifest {
   position: relative;
-  z-index: 2;
-}
-
-.heroPanel {
-  /* Accent plane always uses light ink — gray-1 flips black in dark appearance. */
-  --gray-1: #ffffff;
-  --gray-11: color-mix(in oklab, white 86%, transparent);
-  --gray-12: #ffffff;
-  min-height: 100dvh;
-  color: #ffffff;
+  padding: 40px 32px;
   background:
-    radial-gradient(circle at 16% 12%, color-mix(in oklab, white 18%, transparent), transparent 48%),
-    radial-gradient(circle at 84% 78%, color-mix(in oklab, black 14%, transparent), transparent 46%), linear-gradient(155deg, var(--accent-9) 0%, var(--accent-10) 100%);
-  overflow: hidden;
+    repeating-linear-gradient(90deg, transparent, transparent 31px, color-mix(in oklab, #ece6d6 8%, transparent) 32px);
 }
 
-.heroPanel::before {
-  content: "";
+.toolbar {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.42;
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, white 14%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, white 12%, transparent) 1px, transparent 1px);
-  background-size: 56px 72px;
-  mask-image: radial-gradient(ellipse 78% 68% at 40% 55%, #000 48%, transparent 100%);
+  top: 16px;
+  right: 16px;
 }
 
-.heroPanel > * {
-  position: relative;
-  z-index: 1;
+.waybill {
+  width: min(480px, 100%);
+  background: #efe8d4;
+  color: #16130f;
+  border: 2px solid #111;
+  box-shadow: 10px 10px 0 #111;
+  padding: 22px 20px 18px;
 }
 
-.brandEyebrow {
+.waybill :global(.rt-Heading),
+.waybill :global(.rt-Text) {
+  color: #16130f;
+}
+
+.waybillHead {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Arial Narrow", Impact, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  opacity: 0.82;
+  font-size: 12px;
+  border-bottom: 2px solid #111;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
 }
 
-.brandTitle {
-  font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.045em;
-  max-width: 14ch;
-  line-height: 0.98;
-}
-
-.districtRail {
-  width: min(420px, 92%);
-  margin: 0 auto;
-}
-
-/* White glass chrome on accent hero — Card panel tokens cannot express this */
-.districtBlock {
-  border-radius: var(--radius-4);
-  border: 1px solid color-mix(in oklab, white 28%, transparent);
-  background: linear-gradient(160deg, color-mix(in oklab, white 14%, transparent), color-mix(in oklab, white 4%, transparent)), color-mix(in oklab, white 6%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, white 18%, transparent);
-}
-
-.districtLabel {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.92;
-}
-
-.pillar {
-  border-radius: var(--radius-4);
-  border: 1px solid color-mix(in oklab, white 22%, transparent);
-  background: color-mix(in oklab, white 8%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, white 16%, transparent);
-}
-
-.pillarIcon {
-  border-radius: var(--radius-3);
-  background: color-mix(in oklab, white 14%, transparent);
-  color: var(--gray-1);
-}
-
-.pillarTitle {
-  font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.pillarBody {
-  opacity: 0.86;
-}
-
-.heroFooter {
-  max-width: 42ch;
-  opacity: 0.88;
-}
-
-.formPanel {
-  min-height: 100dvh;
-  background: var(--color-background);
-}
-
-.formToolbar {
-  z-index: 3;
-}
-
-.card {
-  width: min(100%, 440px);
-}
-
-@media (max-width: 960px) {
-  .heroPanel {
-    min-height: auto;
-    padding-bottom: var(--space-6);
+@media (max-width: 860px) {
+  .dock {
+    grid-template-columns: 1fr;
   }
 
-  .formPanel {
-    min-height: auto;
-  }
-
-  .districtRail {
-    display: none;
+  .bay {
+    border-right: 0;
+    border-bottom: 8px solid #e0b400;
   }
 }

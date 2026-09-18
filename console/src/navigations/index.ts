@@ -3,7 +3,8 @@ import type { RouteKey as RouteKeyGeneric, RoutePath as RoutePathGeneric } from 
 
 const routeMap = defineRouter({
   HOME: "/",
-  LOGIN: "/auth/login",
+  LOGIN: "/login",
+  LOGIN_GITHUB_CALLBACK: "/login/github/callback",
   SELECT_PROFILE: "/select-profile",
   CONFIG: "/config",
   BROWSER: "/browser",

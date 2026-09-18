@@ -2,8 +2,6 @@
   "title": "Welcome Back",
   "subtitle": "Sign in with NFX Identity, then use issued S3 keys",
   "login": "Sign In",
-  "keyLogin": "Key Login",
-  "stsLogin": "STS Login",
   "loggingIn": "Signing in...",
   "loginFailed": "Login failed",
   "loginSuccess": "Login Success",
@@ -16,5 +14,9 @@
   "noAccount": "No account?",
   "registerNow": "Register now",
   "hasAccount": "Have an account?",
-  "signInNow": "Sign in"
+  "signInNow": "Sign in",
+  "githubCallback": "GitHub sign-in",
+  "githubCallbackHint": "Completing GitHub authorization…",
+  "githubCallbackFailed": "GitHub sign-in failed",
+  "githubMissingCode": "GitHub did not return an authorization code"
 }

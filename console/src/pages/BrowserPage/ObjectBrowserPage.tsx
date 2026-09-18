@@ -1,29 +1,21 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { FolderOpen } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useDeleteObject, useObjectInfo, useObjects, usePutObject, useSignedObjectUrl } from "@/hooks/storages";
+import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { DataTable } from "@/components/DataTable";
 import { niceBytes } from "@/utils/functions";
-
-interface ObjectRow {
-  Key: string;
-  type: "prefix" | "object";
-  Size: number;
-  LastModified: string;
-}
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 export default function ObjectBrowserPage() {
-  const { objects: objectRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const params = useParams();
   const bucket = decodeURIComponent(params.bucket ?? "");
   const key = decodeURIComponent(params.key ?? "");
@@ -32,36 +24,11 @@ export default function ObjectBrowserPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
-  const objects = objectRepository(bucket);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["objects", bucket, prefix],
-    enabled: Boolean(bucket) && isList,
-    queryFn: async () => {
-      const response = await objects.listObject(prefix || undefined, 100);
-      const prefixes: ObjectRow[] = (response.CommonPrefixes ?? []).map((item) => ({
-        Key: item.Prefix ?? "",
-        type: "prefix",
-        Size: 0,
-        LastModified: "",
-      }));
-      const files: ObjectRow[] = (response.Contents ?? [])
-        .filter((item) => item.Key && item.Key !== prefix)
-        .map((item) => ({
-          Key: item.Key ?? "",
-          type: "object",
-          Size: item.Size ?? 0,
-          LastModified: item.LastModified ? item.LastModified.toISOString() : "",
-        }));
-      return [...prefixes, ...files];
-    },
-  });
-
-  const { data: objectInfo } = useQuery({
-    queryKey: ["object-info", bucket, key],
-    enabled: Boolean(bucket) && !isList,
-    queryFn: () => objects.getObjectInfo(key),
-  });
+  const { data, isLoading } = useObjects(bucket, prefix, isList);
+  const { data: objectInfo } = useObjectInfo(bucket, key, Boolean(bucket) && !isList);
+  const putObject = usePutObject();
+  const deleteObject = useDeleteObject();
+  const signedUrl = useSignedObjectUrl();
 
   const rows = useMemo(
     () => (data ?? []).filter((row) => row.Key.toLowerCase().includes(search.toLowerCase())),
@@ -76,26 +43,25 @@ export default function ObjectBrowserPage() {
     if (!files?.length) return;
     try {
       for (const file of Array.from(files)) {
-        await objects.putObject(`${prefix}${file.name}`, file);
+        await putObject.mutateAsync({ bucket, key: `${prefix}${file.name}`, file });
       }
-      await queryClient.invalidateQueries({ queryKey: ["objects", bucket, prefix] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Upload Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Upload Failed")));
     }
   };
 
   const removeObject = async (objectKey: string) => {
     if (!window.confirm(t("Are you sure you want to delete this object?"))) return;
     try {
-      await objects.deleteObject(objectKey);
-      await queryClient.invalidateQueries({ queryKey: ["objects", bucket, prefix] });
+      await deleteObject.mutateAsync({ bucket, key: objectKey });
+      if (!isList) navigate(`/browser/${encodeURIComponent(bucket)}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Delete Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
     }
   };
 
   const download = async (objectKey: string) => {
-    const url = await objects.getSignedUrl(objectKey);
+    const url = await signedUrl.mutateAsync({ bucket, key: objectKey });
     window.open(url, "_blank");
   };
 
@@ -115,7 +81,7 @@ export default function ObjectBrowserPage() {
                 <TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
                 <input ref={fileRef} type="file" multiple hidden onChange={(e) => void uploadFiles(e.target.files)} />
                 <Button onClick={() => fileRef.current?.click()}>{t("Upload File")}</Button>
-                <Button variant="outline" onClick={() => void queryClient.invalidateQueries({ queryKey: ["objects", bucket, prefix] })}>
+                <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.OBJECTS)}>
                   {t("Refresh")}
                 </Button>
               </>

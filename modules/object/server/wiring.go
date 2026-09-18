@@ -96,7 +96,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		identityAuth: identityClient,
 	}
 	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
-	eng, err := store.New(nil, 1, 0)
+	eng, err := store.New(cfg.Storage.Disks(), cfg.Storage.DataShards, cfg.Storage.ParityShards)
 	if err != nil {
 		return nil, fmt.Errorf("init object store: %w", err)
 	}

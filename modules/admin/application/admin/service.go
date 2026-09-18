@@ -1,10 +1,9 @@
 package adminapp
 
 import (
-	"errors"
-
 	authconn "nfxstorages/connections/auth"
 	"nfxstorages/engine/sigv4"
+	storageserr "nfxstorages/errors/src/storages"
 	iamapp "nfxstorages/modules/iam/application/iam"
 	objectapp "nfxstorages/modules/object/application/object"
 	"nfxstorages/pkgs/security/token"
@@ -26,17 +25,17 @@ type HeaderBag = sigv4.HeaderBag
 func (s *Service) AuthorizeSigV4(h HeaderBag, body []byte, authorization, sessionToken string) (string, error) {
 	ak, sig, signed, region, dateScope, ok := sigv4.ParseAuthorization(authorization)
 	if !ok {
-		return "", errors.New("AccessDenied")
+		return "", storageserr.ErrAccessDenied
 	}
 	row, err := s.IAM.Lookup(ak)
 	if err != nil {
-		return "", errors.New("InvalidAccessKeyId")
+		return "", storageserr.ErrInvalidAccessKey
 	}
 	if !s.IAM.MatchSession(row, sessionToken) {
-		return "", errors.New("InvalidToken")
+		return "", storageserr.ErrInvalidToken
 	}
 	if !sigv4.Verify(h, body, row.SecretKey, signed, dateScope, sig, region) {
-		return "", errors.New("SignatureDoesNotMatch")
+		return "", storageserr.ErrSignatureMismatch
 	}
 	return ak, nil
 }

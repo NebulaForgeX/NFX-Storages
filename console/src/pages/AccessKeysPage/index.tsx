@@ -1,38 +1,22 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { KeyRound } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useCreateAccessKey, useDeleteAccessKey, useAccessKeys } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
 
-interface AccessKeyRow {
-  accessKey: string;
-  expiration?: string | null;
-  name?: string;
-  description?: string;
-  accountStatus?: string;
-}
-
 export default function AccessKeysPage() {
-  const { accessKeys: accessKeysRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
+  const { data = [], isLoading } = useAccessKeys();
+  const createAccessKey = useCreateAccessKey();
+  const deleteAccessKey = useDeleteAccessKey();
   const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["access-keys"],
-    queryFn: async () => {
-      const res = (await accessKeysRepository.listUserServiceAccounts({})) as { accounts?: AccessKeyRow[] };
-      return res.accounts ?? [];
-    },
-  });
 
   const rows = useMemo(
     () => data.filter((row) => row.accessKey.toLowerCase().includes(search.toLowerCase())),
@@ -41,9 +25,8 @@ export default function AccessKeysPage() {
 
   const create = async () => {
     try {
-      await accessKeysRepository.createServiceAccount({ name });
+      await createAccessKey.mutateAsync(name);
       setName("");
-      await queryClient.invalidateQueries({ queryKey: ["access-keys"] });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Add Failed"));
     }
@@ -52,8 +35,7 @@ export default function AccessKeysPage() {
   const remove = async (accessKey: string) => {
     if (!window.confirm(t("Are you sure you want to delete this key?"))) return;
     try {
-      await accessKeysRepository.deleteServiceAccount(accessKey);
-      await queryClient.invalidateQueries({ queryKey: ["access-keys"] });
+      await deleteAccessKey.mutateAsync(accessKey);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Delete Failed"));
     }

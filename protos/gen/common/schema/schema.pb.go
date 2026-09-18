@@ -21,6 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// ClearSchemaRequest 清空 schema 请求
 type ClearSchemaRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -57,11 +58,15 @@ func (*ClearSchemaRequest) Descriptor() ([]byte, []int) {
 	return file_common_schema_proto_rawDescGZIP(), []int{0}
 }
 
+// ClearSchemaResponse 清空 schema 响应
 type ClearSchemaResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	ErrorMessage  *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	TablesCleared int32                  `protobuf:"varint,3,opt,name=tables_cleared,json=tablesCleared,proto3" json:"tables_cleared,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 是否成功
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	// 错误消息（如果失败）
+	ErrorMessage *string `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	// 清空的表数量
+	TablesCleared int32 `protobuf:"varint,3,opt,name=tables_cleared,json=tablesCleared,proto3" json:"tables_cleared,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -129,7 +134,7 @@ const file_common_schema_proto_rawDesc = "" +
 	"\x0etables_cleared\x18\x03 \x01(\x05R\rtablesClearedB\x10\n" +
 	"\x0e_error_message2e\n" +
 	"\rSchemaService\x12T\n" +
-	"\vClearSchema\x12!.common.schema.ClearSchemaRequest\x1a\".common.schema.ClearSchemaResponseB+Z)nfxstorages/protos/gen/common/schema;schemapbb\x06proto3"
+	"\vClearSchema\x12!.common.schema.ClearSchemaRequest\x1a\".common.schema.ClearSchemaResponseB/Z-nfxstorages/protos/gen/common/schema;schemapbb\x06proto3"
 
 var (
 	file_common_schema_proto_rawDescOnce sync.Once

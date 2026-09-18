@@ -1,6 +1,9 @@
 package config
 
 import (
+	"os"
+	"strings"
+
 	"nfxstorages/pkgs/cachex"
 	"nfxstorages/pkgs/connections/otelx"
 	"nfxstorages/pkgs/env"
@@ -22,6 +25,34 @@ type Config struct {
 	Token       tokenx.Config      `koanf:"token"`
 	I18n        I18nConfig         `koanf:"i18n"`
 	OTEL        otelx.Config       `koanf:"otel"`
+	Storage     StorageConfig      `koanf:"storage"`
+}
+
+type StorageConfig struct {
+	Volumes      []string `koanf:"volumes"`
+	DataShards   int      `koanf:"data_shards"`
+	ParityShards int      `koanf:"parity_shards"`
+}
+
+func (s StorageConfig) Disks() []string {
+	if len(s.Volumes) > 0 {
+		return s.Volumes
+	}
+	raw := os.Getenv("STORAGES_VOLUMES")
+	if raw != "" {
+		parts := strings.Split(raw, ",")
+		out := make([]string, 0, len(parts))
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p != "" {
+				out = append(out, p)
+			}
+		}
+		if len(out) > 0 {
+			return out
+		}
+	}
+	return []string{"./data/disk0", "./data/disk1", "./data/disk2", "./data/disk3"}
 }
 
 type I18nConfig struct {
@@ -30,12 +61,11 @@ type I18nConfig struct {
 
 type GRPCClientConfig struct {
 	AuthAddr   string `koanf:"auth_addr"`
-	SourceAddr string `koanf:"source_addr"`
-	NewsAddr   string `koanf:"news_addr"`
-	CrawlAddr  string `koanf:"crawl_addr"`
-	ReportAddr string `koanf:"report_addr"`
+	S3Addr     string `koanf:"s3_addr"`
+	ObjectAddr string `koanf:"object_addr"`
+	IAMAddr    string `koanf:"iam_addr"`
+	AdminAddr  string `koanf:"admin_addr"`
 	NotifyAddr string `koanf:"notify_addr"`
-	MCPAddr    string `koanf:"mcp_addr"`
 	SystemAddr string `koanf:"system_addr"`
 }
 

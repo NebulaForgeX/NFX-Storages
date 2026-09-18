@@ -1,9 +1,11 @@
-import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthRepository } from "nfx-ui/apis";
 import { AuthStore, ensureDeviceIdStorage } from "nfx-ui/stores";
-import { ProfileKind, ProfileKindEnum } from "nfx-ui/enums";
+import { LanguageEnum, ProfileKind, ProfileKindEnum } from "nfx-ui/enums";
 import type { Login, Profile } from "nfx-ui/types";
+
+import AuthShell from "@/pages/LoginPage/AuthShell";
 
 export default function SelectProfilePage() {
   const auth = useAuthRepository();
@@ -49,22 +51,43 @@ export default function SelectProfilePage() {
     },
   });
 
+  const create = useMutation({
+    mutationFn: async () => {
+      const created = await auth.CreateForgerProfile({ displayName: "Forger", profileLanguage: LanguageEnum.ZH });
+      const deviceId = await ensureDeviceIdStorage();
+      const out = await auth.SelectProfile({ profileId: created.profileId, kind: ProfileKind(ProfileKindEnum.FORGER), deviceId });
+      AuthStore.getState().setTokens({ accessToken: out.accessToken, refreshToken: out.refreshToken });
+      AuthStore.getState().setCurrentAccountId(out.accountId);
+      AuthStore.getState().setCurrentProfileId(out.profileId);
+      AuthStore.getState().setCurrentProfileKind(ProfileKind(ProfileKindEnum.FORGER));
+      AuthStore.getState().setIsAuthValid(true);
+    },
+  });
+
+  const error = (select.error || create.error) as Error | null;
+
   return (
-    <Flex align="center" justify="center" style={{ minHeight: "100vh" }}>
-      <Card size="3" style={{ width: 420 }}>
-        <Flex direction="column" gap="4">
-          <Heading size="5">Select profile</Heading>
-          <Text size="2" color="gray">
-            Choose a Forger or Authority profile to continue.
+    <AuthShell brandEyebrow="NFX Storages" brandTitle="Name the dock clerk" heroFooter="Session keys are minted per Identity profile. Empty accounts create a Forger before the bay opens.">
+      <Flex direction="column" gap="4">
+        <Heading as="h2" size="5">
+          Profiles
+        </Heading>
+        {profiles.map((profile) => (
+          <Button key={profile.profileId} variant="soft" onClick={() => select.mutate(profile)} loading={select.isPending}>
+            {profile.displayName || profile.profileId} ({profile.kind})
+          </Button>
+        ))}
+        {profiles.length === 0 ? (
+          <Button onClick={() => create.mutate()} loading={create.isPending}>
+            Create Forger profile
+          </Button>
+        ) : null}
+        {error ? (
+          <Text size="2" color="red">
+            {error.message}
           </Text>
-          {profiles.map((profile) => (
-            <Button key={profile.profileId} variant="soft" onClick={() => select.mutate(profile)} loading={select.isPending}>
-              {profile.displayName || profile.profileId} ({profile.kind})
-            </Button>
-          ))}
-          {profiles.length === 0 ? <Text color="gray">No profiles on this account.</Text> : null}
-        </Flex>
-      </Card>
-    </Flex>
+        ) : null}
+      </Flex>
+    </AuthShell>
   );
 }

@@ -1,34 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Card, Flex, Text } from "@radix-ui/themes";
 import { Activity, HardDrive, Server } from "lucide-react";
 import { CardHeader, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { usePerformance } from "@/hooks/storages";
+import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { niceBytes } from "@/utils/functions";
 
 export default function PerformancePage() {
-  const { system: systemRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
-  const { data } = useQuery({
-    queryKey: ["performance"],
-    queryFn: async () => {
-      const [info, storage, usage] = await Promise.allSettled([
-        systemRepository.getSystemInfo(),
-        systemRepository.getStorageInfo(),
-        systemRepository.getDataUsageInfo(),
-      ]);
-      return {
-        info: info.status === "fulfilled" ? info.value : null,
-        storage: storage.status === "fulfilled" ? storage.value : null,
-        usage: usage.status === "fulfilled" ? usage.value : null,
-      };
-    },
-  });
-
+  const { data } = usePerformance();
   const used = Number((data?.usage as { total_used_capacity?: number } | null)?.total_used_capacity ?? 0);
 
   return (
@@ -37,7 +20,7 @@ export default function PerformancePage() {
         icon={Activity}
         title={t("Server Information")}
         actions={
-          <Button variant="outline" onClick={() => void queryClient.invalidateQueries({ queryKey: ["performance"] })}>
+          <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.PERFORMANCE)}>
             {t("Sync")}
           </Button>
         }

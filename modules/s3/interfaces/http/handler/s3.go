@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/xml"
+	"errors"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -9,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"nfxstorages/engine/store"
+	storageserr "nfxstorages/errors/src/storages"
 	s3app "nfxstorages/modules/s3/application/s3"
 
 	"github.com/gofiber/fiber/v3"
@@ -34,10 +37,74 @@ func (h fiberHdr) Query() string         { return string(h.c.Request().URI().Que
 func (h *S3Handler) authorize(c fiber.Ctx, body []byte) error {
 	ak, err := h.svc.AuthorizeSigV4(fiberHdr{c}, body, c.Get("Authorization"), c.Get("X-Amz-Security-Token"))
 	if err != nil {
-		return fiber.NewError(fiber.StatusForbidden, err.Error())
+		return s3authErr(err)
 	}
 	c.Locals("access_key", ak)
 	return nil
+}
+
+func (h *S3Handler) callerAccount(c fiber.Ctx) string {
+	ak, _ := c.Locals("access_key").(string)
+	if ak == "" {
+		return ""
+	}
+	row, err := h.svc.Lookup(ak)
+	if err != nil || row.AccountID == nil {
+		return ""
+	}
+	return *row.AccountID
+}
+
+func s3authErr(err error) error {
+	if err == nil {
+		return nil
+	}
+	switch {
+	case errors.Is(err, storageserr.ErrInvalidAccessKey):
+		return fiber.NewError(fiber.StatusForbidden, "InvalidAccessKeyId")
+	case errors.Is(err, storageserr.ErrSignatureMismatch):
+		return fiber.NewError(fiber.StatusForbidden, "SignatureDoesNotMatch")
+	case errors.Is(err, storageserr.ErrInvalidToken), errors.Is(err, storageserr.ErrAccessKeyExpired):
+		return fiber.NewError(fiber.StatusForbidden, "InvalidToken")
+	case errors.Is(err, storageserr.ErrAccessKeyDisabled), errors.Is(err, storageserr.ErrAccessDenied), errors.Is(err, store.ErrForbidden):
+		return fiber.NewError(fiber.StatusForbidden, "AccessDenied")
+	default:
+		return fiber.NewError(fiber.StatusForbidden, "AccessDenied")
+	}
+}
+
+func s3err(err error) error {
+	if err == nil {
+		return nil
+	}
+	switch {
+	case errors.Is(err, store.ErrForbidden), errors.Is(err, storageserr.ErrAccessDenied):
+		return fiber.NewError(fiber.StatusForbidden, "AccessDenied")
+	case errors.Is(err, storageserr.ErrObjectNotFound):
+		return fiber.NewError(fiber.StatusNotFound, "NoSuchKey")
+	case errors.Is(err, store.ErrNotFound), errors.Is(err, storageserr.ErrBucketNotFound):
+		return fiber.NewError(fiber.StatusNotFound, "NoSuchBucket")
+	case errors.Is(err, store.ErrBucketExists), errors.Is(err, storageserr.ErrBucketExists):
+		return fiber.NewError(fiber.StatusConflict, "BucketAlreadyExists")
+	case errors.Is(err, store.ErrBucketNotEmpty), errors.Is(err, storageserr.ErrBucketNotEmpty):
+		return fiber.NewError(fiber.StatusConflict, "BucketNotEmpty")
+	case errors.Is(err, storageserr.ErrNoSuchUpload):
+		return fiber.NewError(fiber.StatusNotFound, "NoSuchUpload")
+	case errors.Is(err, storageserr.ErrNoSuchBucketPolicy):
+		return fiber.NewError(fiber.StatusNotFound, "NoSuchBucketPolicy")
+	case errors.Is(err, storageserr.ErrNoSuchLifecycle):
+		return fiber.NewError(fiber.StatusNotFound, "NoSuchLifecycleConfiguration")
+	case errors.Is(err, storageserr.ErrNoSuchEncryption):
+		return fiber.NewError(fiber.StatusNotFound, "ServerSideEncryptionConfigurationNotFoundError")
+	case errors.Is(err, storageserr.ErrNoSuchReplication):
+		return fiber.NewError(fiber.StatusNotFound, "ReplicationConfigurationNotFoundError")
+	case errors.Is(err, storageserr.ErrNoSuchObjectLock):
+		return fiber.NewError(fiber.StatusNotFound, "ObjectLockConfigurationNotFoundError")
+	case errors.Is(err, storageserr.ErrMethodNotAllowed):
+		return fiber.NewError(fiber.StatusMethodNotAllowed, "MethodNotAllowed")
+	default:
+		return err
+	}
 }
 
 func xmlOut(c fiber.Ctx, status int, v any) error {
@@ -139,7 +206,7 @@ func (h *S3Handler) Handle(c fiber.Ctx) error {
 
 	bucket, key := splitPath(path)
 	if bucket == "" {
-		return fiber.NewError(404, "NoSuchBucket")
+		return s3err(storageserr.ErrBucketNotFound)
 	}
 
 	if key == "" {
@@ -160,14 +227,14 @@ func splitPath(path string) (bucket, key string) {
 func (h *S3Handler) assumeRole(c fiber.Ctx, body []byte) error {
 	ak, sig, signed, region, dateScope, ok := h.svc.ParseAuthorization(c.Get("Authorization"))
 	if !ok {
-		return fiber.NewError(403, "AccessDenied")
+		return s3authErr(storageserr.ErrAccessDenied)
 	}
 	row, err := h.svc.Lookup(ak)
 	if err != nil {
-		return fiber.NewError(403, "InvalidAccessKeyId")
+		return s3authErr(storageserr.ErrInvalidAccessKey)
 	}
 	if !h.svc.VerifySig(fiberHdr{c}, body, row.SecretKey, signed, dateScope, sig, region) {
-		return fiber.NewError(403, "SignatureDoesNotMatch")
+		return s3authErr(storageserr.ErrSignatureMismatch)
 	}
 	sess, err := h.svc.IssueSession(row, 12*time.Hour)
 	if err != nil {
@@ -190,7 +257,7 @@ func (h *S3Handler) listBuckets(c fiber.Ctx) error {
 	var out listAllMyBuckets
 	out.Owner.ID = "nfxstorages"
 	out.Owner.DisplayName = "nfxstorages"
-	for _, b := range h.svc.Objects.ListBuckets() {
+	for _, b := range h.svc.Objects.ListBuckets(h.callerAccount(c)) {
 		out.Buckets.Bucket = append(out.Buckets.Bucket, struct {
 			Name         string `xml:"Name"`
 			CreationDate string `xml:"CreationDate"`
@@ -200,66 +267,67 @@ func (h *S3Handler) listBuckets(c fiber.Ctx) error {
 }
 
 func (h *S3Handler) handleBucket(c fiber.Ctx, bucket string, q url.Values, body []byte) error {
+	aid := h.callerAccount(c)
 	switch c.Method() {
 	case fiber.MethodPut:
 		if q.Has("tagging") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Tags = parseTagXML(body) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Tags = parseTagXML(body) }))
 		}
 		if q.Has("versioning") {
 			status := "Enabled"
 			if strings.Contains(string(body), "Suspended") {
 				status = "Suspended"
 			}
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Versioning = status })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Versioning = status }))
 		}
 		if q.Has("policy") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Policy = string(body) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Policy = string(body) }))
 		}
 		if q.Has("lifecycle") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Lifecycle = append([]byte{}, body...) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Lifecycle = append([]byte{}, body...) }))
 		}
 		if q.Has("replication") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Replication = append([]byte{}, body...) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Replication = append([]byte{}, body...) }))
 		}
 		if q.Has("encryption") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Encryption = append([]byte{}, body...) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Encryption = append([]byte{}, body...) }))
 		}
 		if q.Has("notification") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Notification = append([]byte{}, body...) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Notification = append([]byte{}, body...) }))
 		}
 		if q.Has("object-lock") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.ObjectLock = append([]byte{}, body...) })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.ObjectLock = append([]byte{}, body...) }))
 		}
-		if err := h.svc.Objects.CreateBucket(bucket); err != nil {
-			return fiber.NewError(409, err.Error())
+		if err := h.svc.Objects.CreateBucket(bucket, aid); err != nil {
+			return s3err(err)
 		}
 		return c.SendStatus(200)
 	case fiber.MethodHead:
-		if _, err := h.svc.Objects.GetBucket(bucket); err != nil {
-			return fiber.NewError(404, "NoSuchBucket")
+		if _, err := h.svc.Objects.GetBucket(bucket, aid); err != nil {
+			return s3err(err)
 		}
 		return c.SendStatus(200)
 	case fiber.MethodDelete:
 		if q.Has("tagging") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Tags = nil })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Tags = nil }))
 		}
 		if q.Has("lifecycle") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Lifecycle = nil })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Lifecycle = nil }))
 		}
 		if q.Has("encryption") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Encryption = nil })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Encryption = nil }))
 		}
 		if q.Has("replication") {
-			return h.svc.Objects.PutBucketMeta(bucket, func(b *s3app.BucketInfo) { b.Replication = nil })
+			return s3err(h.svc.Objects.PutBucketMeta(bucket, aid, func(b *s3app.BucketInfo) { b.Replication = nil }))
 		}
-		if err := h.svc.Objects.DeleteBucket(bucket); err != nil {
-			return fiber.NewError(409, err.Error())
+		if err := h.svc.Objects.DeleteBucket(bucket, aid); err != nil {
+			return s3err(err)
 		}
 		return c.SendStatus(204)
 	case fiber.MethodGet:
-		info, err := h.svc.Objects.GetBucket(bucket)
+		info, err := h.svc.Objects.GetBucket(bucket, aid)
 		if err != nil {
-			return fiber.NewError(404, "NoSuchBucket")
+			return s3err(err)
 		}
 		if q.Has("tagging") {
 			return xmlTags(c, info.Tags)
@@ -277,25 +345,25 @@ func (h *S3Handler) handleBucket(c fiber.Ctx, bucket string, q url.Values, body 
 		}
 		if q.Has("policy") {
 			if info.Policy == "" {
-				return fiber.NewError(404, "NoSuchBucketPolicy")
+				return s3err(storageserr.ErrNoSuchBucketPolicy)
 			}
 			return c.Type("json").SendString(info.Policy)
 		}
 		if q.Has("lifecycle") {
 			if len(info.Lifecycle) == 0 {
-				return fiber.NewError(404, "NoSuchLifecycleConfiguration")
+				return s3err(storageserr.ErrNoSuchLifecycle)
 			}
 			return c.Type("xml").Send(info.Lifecycle)
 		}
 		if q.Has("encryption") {
 			if len(info.Encryption) == 0 {
-				return fiber.NewError(404, "ServerSideEncryptionConfigurationNotFoundError")
+				return s3err(storageserr.ErrNoSuchEncryption)
 			}
 			return c.Type("xml").Send(info.Encryption)
 		}
 		if q.Has("replication") {
 			if len(info.Replication) == 0 {
-				return fiber.NewError(404, "ReplicationConfigurationNotFoundError")
+				return s3err(storageserr.ErrNoSuchReplication)
 			}
 			return c.Type("xml").Send(info.Replication)
 		}
@@ -307,19 +375,19 @@ func (h *S3Handler) handleBucket(c fiber.Ctx, bucket string, q url.Values, body 
 		}
 		if q.Has("object-lock") {
 			if len(info.ObjectLock) == 0 {
-				return fiber.NewError(404, "ObjectLockConfigurationNotFoundError")
+				return s3err(storageserr.ErrNoSuchObjectLock)
 			}
 			return c.Type("xml").Send(info.ObjectLock)
 		}
 		if q.Has("versions") {
-			return h.listObjectVersions(c, bucket, q)
+			return h.listObjectVersions(c, bucket, q, aid)
 		}
-		return h.listObjects(c, bucket, q)
+		return h.listObjects(c, bucket, q, aid)
 	}
-	return fiber.NewError(405, "MethodNotAllowed")
+	return s3err(storageserr.ErrMethodNotAllowed)
 }
 
-func (h *S3Handler) listObjects(c fiber.Ctx, bucket string, q url.Values) error {
+func (h *S3Handler) listObjects(c fiber.Ctx, bucket string, q url.Values, aid string) error {
 	prefix := q.Get("prefix")
 	maxKeys, _ := strconv.Atoi(q.Get("max-keys"))
 	delim := q.Get("delimiter")
@@ -330,9 +398,9 @@ func (h *S3Handler) listObjects(c fiber.Ctx, bucket string, q url.Values) error 
 	if marker == "" {
 		marker = q.Get("marker")
 	}
-	objs, next, truncated, err := h.svc.Objects.ListObjectsPage(bucket, prefix, marker, maxKeys)
+	objs, next, truncated, err := h.svc.Objects.ListObjectsPage(bucket, prefix, marker, aid, maxKeys)
 	if err != nil {
-		return err
+		return s3err(err)
 	}
 	out := listBucketResult{
 		Name: bucket, Prefix: prefix, Delimiter: delim, MaxKeys: maxKeys,
@@ -363,12 +431,12 @@ func (h *S3Handler) listObjects(c fiber.Ctx, bucket string, q url.Values) error 
 	return xmlOut(c, 200, out)
 }
 
-func (h *S3Handler) listObjectVersions(c fiber.Ctx, bucket string, q url.Values) error {
+func (h *S3Handler) listObjectVersions(c fiber.Ctx, bucket string, q url.Values, aid string) error {
 	prefix := q.Get("prefix")
 	maxKeys, _ := strconv.Atoi(q.Get("max-keys"))
-	objs, _, _, err := h.svc.Objects.ListObjectsPage(bucket, prefix, q.Get("key-marker"), maxKeys)
+	objs, _, _, err := h.svc.Objects.ListObjectsPage(bucket, prefix, q.Get("key-marker"), aid, maxKeys)
 	if err != nil {
-		return err
+		return s3err(err)
 	}
 	var b strings.Builder
 	b.WriteString(`<ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">`)
@@ -399,45 +467,49 @@ func (h *S3Handler) listObjectVersions(c fiber.Ctx, bucket string, q url.Values)
 
 func (h *S3Handler) handleObject(c fiber.Ctx, bucket, key string, q url.Values, body []byte) error {
 	key, _ = url.PathUnescape(key)
+	aid := h.callerAccount(c)
 	switch c.Method() {
 	case fiber.MethodPut:
 		if q.Has("tagging") {
-			return h.svc.Objects.UpdateObjectMeta(bucket, key, func(o *s3app.ObjectInfo) { o.Tags = parseTagXML(body) })
+			return s3err(h.svc.Objects.UpdateObjectMeta(bucket, key, aid, func(o *s3app.ObjectInfo) { o.Tags = parseTagXML(body) }))
 		}
 		if q.Has("retention") {
-			return h.svc.Objects.UpdateObjectMeta(bucket, key, func(o *s3app.ObjectInfo) {
+			return s3err(h.svc.Objects.UpdateObjectMeta(bucket, key, aid, func(o *s3app.ObjectInfo) {
 				o.Retention = map[string]any{"raw": string(body)}
-			})
+			}))
 		}
 		if q.Has("legal-hold") {
 			status := "OFF"
 			if strings.Contains(string(body), "ON") {
 				status = "ON"
 			}
-			return h.svc.Objects.UpdateObjectMeta(bucket, key, func(o *s3app.ObjectInfo) { o.LegalHold = status })
+			return s3err(h.svc.Objects.UpdateObjectMeta(bucket, key, aid, func(o *s3app.ObjectInfo) { o.LegalHold = status }))
 		}
 		if q.Get("uploadId") != "" && q.Get("partNumber") != "" {
+			if _, err := h.svc.Objects.GetBucket(bucket, aid); err != nil {
+				return s3err(err)
+			}
 			return h.uploadPart(c, bucket, key, q.Get("uploadId"), q.Get("partNumber"), body)
 		}
 		ct := c.Get("Content-Type")
-		info, err := h.svc.Objects.PutObject(bucket, key, ct, body)
+		info, err := h.svc.Objects.PutObject(bucket, key, ct, body, aid)
 		if err != nil {
-			return err
+			return s3err(err)
 		}
 		c.Set("ETag", s3app.FormatETag(info.ETag))
 		return c.SendStatus(200)
 	case fiber.MethodGet:
 		if q.Has("tagging") {
-			info, err := h.svc.Objects.HeadObject(bucket, key)
+			info, err := h.svc.Objects.HeadObject(bucket, key, aid)
 			if err != nil {
-				return fiber.NewError(404, "NoSuchKey")
+				return s3err(err)
 			}
 			return xmlTags(c, info.Tags)
 		}
 		if q.Has("retention") {
-			info, err := h.svc.Objects.HeadObject(bucket, key)
+			info, err := h.svc.Objects.HeadObject(bucket, key, aid)
 			if err != nil {
-				return fiber.NewError(404, "NoSuchKey")
+				return s3err(err)
 			}
 			mode := "GOVERNANCE"
 			until := ""
@@ -452,9 +524,9 @@ func (h *S3Handler) handleObject(c fiber.Ctx, bucket, key string, q url.Values, 
 			return c.Type("xml").SendString(`<Retention><Mode>` + mode + `</Mode><RetainUntilDate>` + until + `</RetainUntilDate></Retention>`)
 		}
 		if q.Has("legal-hold") {
-			info, err := h.svc.Objects.HeadObject(bucket, key)
+			info, err := h.svc.Objects.HeadObject(bucket, key, aid)
 			if err != nil {
-				return fiber.NewError(404, "NoSuchKey")
+				return s3err(err)
 			}
 			st := info.LegalHold
 			if st == "" {
@@ -462,9 +534,12 @@ func (h *S3Handler) handleObject(c fiber.Ctx, bucket, key string, q url.Values, 
 			}
 			return c.Type("xml").SendString(`<LegalHold><Status>` + st + `</Status></LegalHold>`)
 		}
-		info, data, err := h.svc.Objects.GetObject(bucket, key)
+		info, data, err := h.svc.Objects.GetObject(bucket, key, aid)
 		if err != nil {
-			return fiber.NewError(404, "NoSuchKey")
+			if errors.Is(err, store.ErrForbidden) {
+				return s3err(err)
+			}
+			return s3err(storageserr.ErrObjectNotFound)
 		}
 		c.Set("ETag", s3app.FormatETag(info.ETag))
 		c.Set("Last-Modified", info.LastModified.UTC().Format(httpDate))
@@ -473,9 +548,12 @@ func (h *S3Handler) handleObject(c fiber.Ctx, bucket, key string, q url.Values, 
 		}
 		return c.Send(data)
 	case fiber.MethodHead:
-		info, err := h.svc.Objects.HeadObject(bucket, key)
+		info, err := h.svc.Objects.HeadObject(bucket, key, aid)
 		if err != nil {
-			return fiber.NewError(404, "NoSuchKey")
+			if errors.Is(err, store.ErrForbidden) {
+				return s3err(err)
+			}
+			return s3err(storageserr.ErrObjectNotFound)
 		}
 		c.Set("ETag", s3app.FormatETag(info.ETag))
 		c.Set("Content-Length", strconv.FormatInt(info.Size, 10))
@@ -486,27 +564,36 @@ func (h *S3Handler) handleObject(c fiber.Ctx, bucket, key string, q url.Values, 
 		return c.SendStatus(200)
 	case fiber.MethodDelete:
 		if q.Has("tagging") {
-			return h.svc.Objects.UpdateObjectMeta(bucket, key, func(o *s3app.ObjectInfo) { o.Tags = map[string]string{} })
+			return s3err(h.svc.Objects.UpdateObjectMeta(bucket, key, aid, func(o *s3app.ObjectInfo) { o.Tags = map[string]string{} }))
 		}
 		if q.Get("uploadId") != "" {
+			if _, err := h.svc.Objects.GetBucket(bucket, aid); err != nil {
+				return s3err(err)
+			}
 			_ = os.RemoveAll(h.mpDir(q.Get("uploadId")))
 			return c.SendStatus(204)
 		}
-		if err := h.svc.Objects.DeleteObject(bucket, key); err != nil {
-			return fiber.NewError(404, "NoSuchKey")
+		if err := h.svc.Objects.DeleteObject(bucket, key, aid); err != nil {
+			if errors.Is(err, store.ErrForbidden) {
+				return s3err(err)
+			}
+			return s3err(storageserr.ErrObjectNotFound)
 		}
 		return c.SendStatus(204)
 	case fiber.MethodPost:
+		if _, err := h.svc.Objects.GetBucket(bucket, aid); err != nil {
+			return s3err(err)
+		}
 		if q.Has("uploads") {
 			id := uuid.NewString()
 			_ = os.MkdirAll(h.mpDir(id), 0o755)
 			return xmlOut(c, 200, initiateMultipart{Bucket: bucket, Key: key, UploadID: id})
 		}
 		if q.Get("uploadId") != "" {
-			return h.completeMultipart(c, bucket, key, q.Get("uploadId"))
+			return h.completeMultipart(c, bucket, key, q.Get("uploadId"), aid)
 		}
 	}
-	return fiber.NewError(405, "MethodNotAllowed")
+	return s3err(storageserr.ErrMethodNotAllowed)
 }
 
 const httpDate = "Mon, 02 Jan 2006 15:04:05 GMT"
@@ -533,11 +620,11 @@ func (h *S3Handler) uploadPart(c fiber.Ctx, bucket, key, uploadID, partNumber st
 	return c.SendStatus(200)
 }
 
-func (h *S3Handler) completeMultipart(c fiber.Ctx, bucket, key, uploadID string) error {
+func (h *S3Handler) completeMultipart(c fiber.Ctx, bucket, key, uploadID, aid string) error {
 	dir := h.mpDir(uploadID)
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		return fiber.NewError(404, "NoSuchUpload")
+		return s3err(storageserr.ErrNoSuchUpload)
 	}
 	var buf []byte
 	for i := 1; i <= len(entries)+8; i++ {
@@ -548,9 +635,9 @@ func (h *S3Handler) completeMultipart(c fiber.Ctx, bucket, key, uploadID string)
 		}
 		buf = append(buf, b...)
 	}
-	info, err := h.svc.Objects.PutObject(bucket, key, c.Get("Content-Type"), buf)
+	info, err := h.svc.Objects.PutObject(bucket, key, c.Get("Content-Type"), buf, aid)
 	if err != nil {
-		return err
+		return s3err(err)
 	}
 	_ = os.RemoveAll(dir)
 	return xmlOut(c, 200, completeMultipart{

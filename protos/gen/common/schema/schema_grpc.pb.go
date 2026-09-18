@@ -25,7 +25,10 @@ const (
 // SchemaServiceClient is the client API for SchemaService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// SchemaService 清空 schema 服务 - 清空所有表的数据（不删除表）
 type SchemaServiceClient interface {
+	// 清空 schema（清空所有表的数据，但保留表结构）
 	ClearSchema(ctx context.Context, in *ClearSchemaRequest, opts ...grpc.CallOption) (*ClearSchemaResponse, error)
 }
 
@@ -50,7 +53,10 @@ func (c *schemaServiceClient) ClearSchema(ctx context.Context, in *ClearSchemaRe
 // SchemaServiceServer is the server API for SchemaService service.
 // All implementations must embed UnimplementedSchemaServiceServer
 // for forward compatibility.
+//
+// SchemaService 清空 schema 服务 - 清空所有表的数据（不删除表）
 type SchemaServiceServer interface {
+	// 清空 schema（清空所有表的数据，但保留表结构）
 	ClearSchema(context.Context, *ClearSchemaRequest) (*ClearSchemaResponse, error)
 	mustEmbedUnimplementedSchemaServiceServer()
 }

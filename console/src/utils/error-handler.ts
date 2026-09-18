@@ -1,3 +1,6 @@
+import axios from "axios";
+import i18n from "i18next";
+
 export interface ApiError {
   message: string
   code?: string
@@ -17,26 +20,42 @@ export class ConfigLoadError extends Error {
   }
 }
 
+function translateErrCode(code?: string): string | undefined {
+  if (!code) return undefined
+  const out = i18n.t(`errors:${code}`)
+  if (out && out !== `errors:${code}`) return out
+  return undefined
+}
+
+export function getStoragesApiErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { message?: string; err_code?: string; errCode?: string } | undefined
+    const translated = translateErrCode(data?.err_code || data?.errCode)
+    if (translated) return translated
+    if (data?.message) return data.message
+    if (error.message) return error.message
+  }
+  if (error instanceof Error && error.message) return error.message
+  return fallback
+}
+
 export const parseApiError = async (response: Response): Promise<string> => {
   try {
-    // 优先尝试解析为 JSON
-    const errorData = await response.clone().json()
-    return errorData.message || JSON.stringify(errorData) || response.statusText
-  } catch (e) {
+    const errorData = await response.clone().json() as { message?: string; err_code?: string; errCode?: string }
+    const code = errorData.err_code || errorData.errCode
+    return translateErrCode(code) || errorData.message || code || JSON.stringify(errorData) || response.statusText
+  } catch {
     try {
-      // 如果不是 JSON，尝试解析为文本
       const text = await response.clone().text()
       if (text) {
-        // 检查是否为 XML
         if (text.trim().startsWith('<')) {
-          // 简单提取 <Message> 或 <Error> 标签内容
           const match = text.match(/<Message>(.*?)<\/Message>/i) || text.match(/<Error>(.*?)<\/Error>/i)
           return match?.[1] ?? text
         }
         return text
       }
-    } catch (e2) {
-      // 保持原有 statusText
+    } catch {
+      // keep statusText
     }
   }
   return response.statusText

@@ -1,11 +1,11 @@
 package s3app
 
 import (
-	"errors"
 	"time"
 
 	"nfxstorages/engine/sigv4"
 	"nfxstorages/engine/store"
+	storageserr "nfxstorages/errors/src/storages"
 	iamapp "nfxstorages/modules/iam/application/iam"
 	objectapp "nfxstorages/modules/object/application/object"
 )
@@ -27,17 +27,17 @@ type AccessKey = iamapp.AccessKey
 func (s *Service) AuthorizeSigV4(h HeaderBag, body []byte, authorization, sessionToken string) (string, error) {
 	ak, sig, signed, region, dateScope, ok := sigv4.ParseAuthorization(authorization)
 	if !ok {
-		return "", errors.New("AccessDenied")
+		return "", storageserr.ErrAccessDenied
 	}
 	row, err := s.IAM.Lookup(ak)
 	if err != nil {
-		return "", errors.New("InvalidAccessKeyId")
+		return "", storageserr.ErrInvalidAccessKey
 	}
 	if !sigv4.Verify(h, body, row.SecretKey, signed, dateScope, sig, region) {
-		return "", errors.New("SignatureDoesNotMatch")
+		return "", storageserr.ErrSignatureMismatch
 	}
 	if !s.IAM.MatchSession(row, sessionToken) {
-		return "", errors.New("InvalidToken")
+		return "", storageserr.ErrInvalidToken
 	}
 	return ak, nil
 }

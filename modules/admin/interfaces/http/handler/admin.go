@@ -12,7 +12,9 @@ import (
 	"strings"
 	"time"
 
+	storageserr "nfxstorages/errors/src/storages"
 	adminapp "nfxstorages/modules/admin/application/admin"
+	"nfxstorages/pkgs/security/token"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
@@ -31,14 +33,14 @@ func (h *AdminHandler) authorize(c fiber.Ctx) error {
 	if strings.HasPrefix(authz, "Bearer ") && h.svc.UserToken != nil {
 		claims, err := h.svc.UserToken.Verify(c.Context(), strings.TrimPrefix(authz, "Bearer "))
 		if err != nil {
-			return fiber.NewError(401, "unauthorized")
+			return storageserr.ErrUnauthorized
 		}
 		c.Locals("claims", claims)
 		return nil
 	}
 	ak, err := h.svc.AuthorizeSigV4(fiberHdr{c}, append([]byte{}, c.Body()...), authz, c.Get("X-Amz-Security-Token"))
 	if err != nil {
-		return fiber.NewError(403, err.Error())
+		return err
 	}
 	c.Locals("access_key", ak)
 	return nil
@@ -52,6 +54,24 @@ func (h fiberHdr) Method() string        { return h.c.Method() }
 func (h fiberHdr) Path() string          { return h.c.Path() }
 func (h fiberHdr) Query() string         { return string(h.c.Request().URI().QueryString()) }
 
+func (h *AdminHandler) callerAccount(c fiber.Ctx) string {
+	if claims, ok := c.Locals("claims").(*token.Claims); ok && claims != nil {
+		if aid, _ := claims.Raw["account_id"].(string); aid != "" {
+			return aid
+		}
+		if claims.Registered.Subject != "" {
+			return claims.Registered.Subject
+		}
+	}
+	if ak, ok := c.Locals("access_key").(string); ok && ak != "" {
+		row, err := h.svc.IAM.Lookup(ak)
+		if err == nil && row.AccountID != nil {
+			return *row.AccountID
+		}
+	}
+	return ""
+}
+
 func (h *AdminHandler) Register(g fiber.Router) {
 	g.Use(func(c fiber.Ctx) error {
 		if strings.HasSuffix(c.Path(), "/session/credentials") {
@@ -63,7 +83,7 @@ func (h *AdminHandler) Register(g fiber.Router) {
 		return c.Next()
 	})
 	g.Post("/session/credentials", h.sessionCredentials)
-	g.Get("/list-users", func(c fiber.Ctx) error { return c.JSON(h.svc.IAM.ListUsers()) })
+	g.Get("/list-users", func(c fiber.Ctx) error { return c.JSON(h.svc.IAM.ListUsers(h.callerAccount(c))) })
 	g.Put("/add-user", h.addUser)
 	g.Get("/user-info", h.userInfo)
 	g.Put("/user/:name", h.updateUser)
@@ -84,7 +104,9 @@ func (h *AdminHandler) Register(g fiber.Router) {
 	g.Get("/group", h.getGroup)
 	g.Post("/groups", h.createGroup)
 	g.Delete("/group/:name", func(c fiber.Ctx) error {
-		_ = h.svc.IAM.DeleteGroup(c.Params("name"))
+		if err := h.svc.IAM.DeleteGroup(c.Params("name")); err != nil {
+			return err
+		}
 		return c.JSON(map[string]any{"status": "ok"})
 	})
 	g.Put("/group/:name", h.updateGroup)
@@ -95,7 +117,7 @@ func (h *AdminHandler) Register(g fiber.Router) {
 	g.Get("/info-canned-policy", h.infoPolicy)
 	g.Delete("/remove-canned-policy", h.removePolicy)
 	g.Get("/policy/:name/users", func(c fiber.Ctx) error { return c.JSON(h.svc.IAM.UsersForPolicy(c.Params("name"))) })
-	g.Get("/list-service-accounts", func(c fiber.Ctx) error { return c.JSON(h.svc.IAM.ListServiceAccounts()) })
+	g.Get("/list-service-accounts", func(c fiber.Ctx) error { return c.JSON(h.svc.IAM.ListServiceAccounts(h.callerAccount(c))) })
 	g.Put("/add-service-accounts", h.addUser)
 	g.Get("/info-service-account", h.userInfo)
 	g.Post("/update-service-account", h.updateServiceAccount)
@@ -145,7 +167,7 @@ func (h *AdminHandler) Register(g fiber.Router) {
 	g.Get("/kms/keys/:id", func(c fiber.Ctx) error {
 		row, err := h.svc.IAM.GetKMSKey(c.Params("id"))
 		if err != nil {
-			return fiber.NewError(404, "NoSuchKey")
+			return err
 		}
 		return c.JSON(row)
 	})
@@ -181,11 +203,11 @@ func (h *AdminHandler) Register(g fiber.Router) {
 func (h *AdminHandler) sessionCredentials(c fiber.Ctx) error {
 	authz := c.Get("Authorization")
 	if !strings.HasPrefix(authz, "Bearer ") || h.svc.UserToken == nil {
-		return fiber.NewError(401, "unauthorized")
+		return storageserr.ErrUnauthorized
 	}
 	claims, err := h.svc.UserToken.Verify(c.Context(), strings.TrimPrefix(authz, "Bearer "))
 	if err != nil {
-		return fiber.NewError(401, "unauthorized")
+		return storageserr.ErrUnauthorized
 	}
 	accountID, _ := claims.Raw["account_id"].(string)
 	profileID, _ := claims.Raw["profile_id"].(string)
@@ -199,17 +221,17 @@ func (h *AdminHandler) sessionCredentials(c fiber.Ctx) error {
 		if err1 == nil && err2 == nil {
 			ok, err := h.svc.Identity.Account.EnsureOwnedProfile(c.Context(), aid, pid, scope)
 			if err != nil || !ok {
-				return fiber.NewError(403, "profile not owned")
+				return storageserr.ErrProfileNotOwned
 			}
 		}
 	}
 	row, err := h.svc.IAM.EnsureProfileKey(accountID, profileID)
 	if err != nil {
-		return err
+		return storageserr.ErrSessionFailed
 	}
 	sess, err := h.svc.IAM.IssueSession(row, 12*time.Hour)
 	if err != nil {
-		return err
+		return storageserr.ErrSessionFailed
 	}
 	exp := time.Now().UTC().Add(12 * time.Hour).Format(time.RFC3339)
 	if sess.ExpiresAt != nil {
@@ -273,7 +295,7 @@ func (h *AdminHandler) createUserServiceAccount(c fiber.Ctx) error {
 func (h *AdminHandler) userInfo(c fiber.Ctx) error {
 	info, err := h.svc.IAM.GetUser(c.Query("accessKey"))
 	if err != nil {
-		return fiber.NewError(404, err.Error())
+		return err
 	}
 	return c.JSON(info)
 }
@@ -297,7 +319,9 @@ func (h *AdminHandler) updateUserGroups(c fiber.Ctx) error {
 	if len(groups) == 0 {
 		groups = body.Members
 	}
-	_ = h.svc.IAM.SetUserGroups(c.Params("name"), groups)
+	if err := h.svc.IAM.SetUserGroups(c.Params("name"), groups); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -307,12 +331,16 @@ func (h *AdminHandler) currentUserPolicy(c fiber.Ctx) error {
 }
 
 func (h *AdminHandler) removeUser(c fiber.Ctx) error {
-	_ = h.svc.IAM.DeleteUser(c.Query("accessKey"))
+	if err := h.svc.IAM.DeleteUser(c.Query("accessKey")); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
 func (h *AdminHandler) setUserStatus(c fiber.Ctx) error {
-	_ = h.svc.IAM.SetUserStatus(c.Query("accessKey"), c.Query("status"))
+	if err := h.svc.IAM.SetUserStatus(c.Query("accessKey"), c.Query("status")); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -372,9 +400,13 @@ func (h *AdminHandler) setUserOrGroupPolicy(c fiber.Ctx) error {
 	policy := c.Query("policyName")
 	isGroup := c.Query("isGroup")
 	if isGroup == "true" {
-		_ = h.svc.IAM.UpsertGroup(user, "enabled", nil, &policy)
+		if err := h.svc.IAM.UpsertGroup(user, "enabled", nil, &policy); err != nil {
+			return err
+		}
 	} else {
-		_ = h.svc.IAM.SetPolicyOnUser(user, policy)
+		if err := h.svc.IAM.SetPolicyOnUser(user, policy); err != nil {
+			return err
+		}
 	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
@@ -382,7 +414,7 @@ func (h *AdminHandler) setUserOrGroupPolicy(c fiber.Ctx) error {
 func (h *AdminHandler) getGroup(c fiber.Ctx) error {
 	g, err := h.svc.IAM.GetGroup(c.Query("group"))
 	if err != nil {
-		return fiber.NewError(404, err.Error())
+		return err
 	}
 	return c.JSON(g)
 }
@@ -393,7 +425,9 @@ func (h *AdminHandler) createGroup(c fiber.Ctx) error {
 		Members []string `json:"members"`
 	}
 	_ = c.Bind().Body(&body)
-	_ = h.svc.IAM.UpsertGroup(body.Group, "enabled", body.Members, nil)
+	if err := h.svc.IAM.UpsertGroup(body.Group, "enabled", body.Members, nil); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -408,12 +442,16 @@ func (h *AdminHandler) updateGroup(c fiber.Ctx) error {
 			}
 		}
 	}
-	_ = h.svc.IAM.UpsertGroup(c.Params("name"), "enabled", members, nil)
+	if err := h.svc.IAM.UpsertGroup(c.Params("name"), "enabled", members, nil); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
 func (h *AdminHandler) setGroupStatus(c fiber.Ctx) error {
-	_ = h.svc.IAM.SetGroupStatus(c.Query("group"), c.Query("status"))
+	if err := h.svc.IAM.SetGroupStatus(c.Query("group"), c.Query("status")); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -423,7 +461,9 @@ func (h *AdminHandler) updateGroupMembers(c fiber.Ctx) error {
 		Members []string `json:"members"`
 	}
 	_ = c.Bind().Body(&body)
-	_ = h.svc.IAM.UpsertGroup(body.Group, "enabled", body.Members, nil)
+	if err := h.svc.IAM.UpsertGroup(body.Group, "enabled", body.Members, nil); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -437,14 +477,16 @@ func (h *AdminHandler) addPolicy(c fiber.Ctx) error {
 	if s, ok := body.Policy.(string); ok {
 		raw = []byte(s)
 	}
-	_ = h.svc.IAM.AddPolicy(body.Name, string(raw))
+	if err := h.svc.IAM.AddPolicy(body.Name, string(raw)); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
 func (h *AdminHandler) infoPolicy(c fiber.Ctx) error {
 	row, err := h.svc.IAM.GetPolicy(c.Query("name"))
 	if err != nil {
-		return fiber.NewError(404, err.Error())
+		return err
 	}
 	var doc any
 	_ = json.Unmarshal([]byte(row.Document), &doc)
@@ -452,7 +494,9 @@ func (h *AdminHandler) infoPolicy(c fiber.Ctx) error {
 }
 
 func (h *AdminHandler) removePolicy(c fiber.Ctx) error {
-	_ = h.svc.IAM.DeletePolicy(c.Query("name"))
+	if err := h.svc.IAM.DeletePolicy(c.Query("name")); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -472,14 +516,14 @@ func (h *AdminHandler) storageInfo(c fiber.Ctx) error {
 }
 
 func (h *AdminHandler) dataUsage(c fiber.Ctx) error {
-	b, o, bytes := h.svc.Objects.Usage()
+	b, o, bytes := h.svc.Objects.Usage(h.callerAccount(c))
 	return c.JSON(map[string]any{
 		"bucketsCount": b, "objectsCount": o, "objectsTotalSize": bytes, "total_used_capacity": bytes,
 	})
 }
 
 func (h *AdminHandler) metrics(c fiber.Ctx) error {
-	b, o, bytes := h.svc.Objects.Usage()
+	b, o, bytes := h.svc.Objects.Usage(h.callerAccount(c))
 	return c.JSON(map[string]any{"buckets": b, "objects": o, "bytes": bytes})
 }
 
@@ -490,12 +534,16 @@ func (h *AdminHandler) listTargets(c fiber.Ctx) error {
 func (h *AdminHandler) putTarget(c fiber.Ctx) error {
 	var body any
 	_ = c.Bind().Body(&body)
-	_ = h.svc.IAM.SaveTarget(c.Params("type"), c.Params("name"), body)
+	if err := h.svc.IAM.SaveTarget(c.Params("type"), c.Params("name"), body); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
 func (h *AdminHandler) deleteTarget(c fiber.Ctx) error {
-	_ = h.svc.IAM.DeleteTarget(c.Params("type"), c.Params("name"))
+	if err := h.svc.IAM.DeleteTarget(c.Params("type"), c.Params("name")); err != nil {
+		return err
+	}
 	return c.JSON(map[string]any{"status": "ok"})
 }
 
@@ -515,8 +563,12 @@ func (h *AdminHandler) putTier(c fiber.Ctx) error {
 func (h *AdminHandler) configureKMS(c fiber.Ctx) error {
 	var body any
 	_ = c.Bind().Body(&body)
-	_ = h.svc.IAM.SetKMSConfig(body)
-	_ = h.svc.IAM.SetKMSStatus("configured")
+	if err := h.svc.IAM.SetKMSConfig(body); err != nil {
+		return err
+	}
+	if err := h.svc.IAM.SetKMSStatus("configured"); err != nil {
+		return err
+	}
 	return c.JSON(h.svc.IAM.KMSStatus())
 }
 
@@ -571,7 +623,7 @@ func (h *AdminHandler) importIAM(c fiber.Ctx) error {
 			_ = h.svc.IAM.ImportIAM(dump)
 			return c.JSON(map[string]any{"status": "ok"})
 		}
-		return fiber.NewError(400, "invalid iam archive")
+		return storageserr.ErrInvalidIAMArchive
 	}
 	for _, f := range zr.File {
 		if !strings.HasSuffix(strings.ToLower(f.Name), ".json") {

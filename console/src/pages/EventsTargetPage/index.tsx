@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Button, Text, TextField } from "@radix-ui/themes";
+import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { Database } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useCreateEventTarget, useDeleteEventTarget, useEventsTarget } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 interface RowData {
   account_id: string;
@@ -17,32 +17,35 @@ interface RowData {
 }
 
 export default function EventsTargetPage() {
-  const { eventsTarget: eventsTargetRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
+  const { data = [], isLoading } = useEventsTarget();
+  const deleteTarget = useDeleteEventTarget();
+  const createTarget = useCreateEventTarget();
   const [search, setSearch] = useState("");
+  const [type, setType] = useState("sqs");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["events-target"],
-    queryFn: async () => {
-      const res = (await eventsTargetRepository.getEventsTargetList()) as { notification_endpoints?: RowData[] };
-      return res.notification_endpoints ?? [];
-    },
-  });
 
   const rows = useMemo(
     () => data.filter((row) => row.account_id.toLowerCase().includes(search.toLowerCase())),
     [data, search],
   );
 
+  const create = async () => {
+    try {
+      await createTarget.mutateAsync({ type, name });
+      setName("");
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
   const remove = async (row: RowData) => {
     if (!window.confirm(t("Are you sure you want to delete this destination?"))) return;
     try {
-      await eventsTargetRepository.deleteEventTarget(row.service, row.account_id);
-      await queryClient.invalidateQueries({ queryKey: ["events-target"] });
+      await deleteTarget.mutateAsync(row);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Delete Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
     }
   };
 
@@ -51,7 +54,14 @@ export default function EventsTargetPage() {
       <PageHeader
         icon={Database}
         title={t("Event Destinations")}
-        actions={<TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />}
+        actions={
+          <Flex gap="2" wrap="wrap">
+            <TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
+            <TextField.Root value={type} onChange={(e) => setType(e.target.value)} placeholder={t("Type")} />
+            <TextField.Root value={name} onChange={(e) => setName(e.target.value)} placeholder={t("Name")} />
+            <Button onClick={() => void create()}>{t("Add Event Destination")}</Button>
+          </Flex>
+        }
       />
       {error ? <Text color="red">{error}</Text> : null}
       <DataTable

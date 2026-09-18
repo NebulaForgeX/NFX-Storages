@@ -1,48 +1,25 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { Archive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useCreateBucket, useDeleteBucket, useBuckets } from "@/hooks/storages";
+import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { DataTable } from "@/components/DataTable";
-import { niceBytes } from "@/utils/functions";
 
 export default function BrowserPage() {
-  const { buckets: bucketRepository, system: systemRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { data = [], isLoading } = useBuckets();
+  const createBucketMut = useCreateBucket();
+  const deleteBucketMut = useDeleteBucket();
   const [search, setSearch] = useState("");
   const [newName, setNewName] = useState("");
   const [error, setError] = useState("");
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["buckets"],
-    queryFn: async () => {
-      const response = await bucketRepository.listBuckets();
-      let usage: Record<string, { objects_count?: number; size?: number }> = {};
-      try {
-        const usageInfo = await systemRepository.getDataUsageInfo();
-        usage = (usageInfo?.buckets_usage ?? {}) as typeof usage;
-      } catch {
-        usage = {};
-      }
-      return (response.Buckets ?? [])
-        .filter((item): item is { Name: string; CreationDate?: Date } => Boolean(item.Name))
-        .map((item) => ({
-          Name: item.Name,
-          CreationDate: item.CreationDate ? new Date(item.CreationDate).toISOString() : "",
-          Count: usage[item.Name]?.objects_count ?? 0,
-          Size: niceBytes(String(usage[item.Name]?.size ?? 0)),
-        }))
-        .sort((a, b) => a.Name.localeCompare(b.Name));
-    },
-  });
 
   const rows = useMemo(
     () => data.filter((row) => row.Name.toLowerCase().includes(search.toLowerCase())),
@@ -52,9 +29,8 @@ export default function BrowserPage() {
   const createBucket = async () => {
     if (!newName.trim()) return;
     try {
-      await bucketRepository.createBucket({ Bucket: newName.trim() });
+      await createBucketMut.mutateAsync(newName.trim());
       setNewName("");
-      await queryClient.invalidateQueries({ queryKey: ["buckets"] });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Create Failed"));
     }
@@ -63,8 +39,7 @@ export default function BrowserPage() {
   const removeBucket = async (name: string) => {
     if (!window.confirm(t("Are you sure you want to delete this bucket?"))) return;
     try {
-      await bucketRepository.deleteBucket(name);
-      await queryClient.invalidateQueries({ queryKey: ["buckets"] });
+      await deleteBucketMut.mutateAsync(name);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Delete Failed"));
     }
@@ -80,7 +55,7 @@ export default function BrowserPage() {
             <TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
             <TextField.Root value={newName} onChange={(e) => setNewName(e.target.value)} placeholder={t("Create Bucket")} />
             <Button onClick={() => void createBucket()}>{t("Create Bucket")}</Button>
-            <Button variant="outline" onClick={() => void queryClient.invalidateQueries({ queryKey: ["buckets"] })}>
+            <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.BUCKETS)}>
               {t("Refresh")}
             </Button>
           </Flex>

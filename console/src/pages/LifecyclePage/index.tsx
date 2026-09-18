@@ -1,66 +1,48 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { Layers } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useStorageRepositories } from "@/hooks/storages";
+import { useLifecycle, useSaveLifecycle } from "@/hooks/storages";
 import { BucketSelect } from "@/components/BucketSelect";
 import { DataTable } from "@/components/DataTable";
-
-interface LifecycleRule {
-  ID?: string;
-  Status?: string;
-  Filter?: { Prefix?: string };
-  Expiration?: { Days?: number };
-}
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 export default function LifecyclePage() {
-  const { buckets: bucketRepository } = useStorageRepositories();
   const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
   const [bucket, setBucket] = useState("");
   const [ruleId, setRuleId] = useState("");
   const [prefix, setPrefix] = useState("");
   const [days, setDays] = useState("30");
   const [error, setError] = useState("");
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["lifecycle", bucket],
-    enabled: Boolean(bucket),
-    queryFn: async () => {
-      const res = await bucketRepository.getBucketLifecycleConfiguration(bucket);
-      return (res.Rules ?? []) as LifecycleRule[];
-    },
-  });
+  const { data = [], isLoading } = useLifecycle(bucket);
+  const saveLifecycle = useSaveLifecycle();
 
   const addRule = async () => {
     if (!bucket) return;
     try {
-      const next: LifecycleRule[] = [
-        ...data,
-        { ID: ruleId || `rule-${Date.now()}`, Status: "Enabled", Filter: { Prefix: prefix }, Expiration: { Days: Number(days) || 30 } },
-      ];
-      await bucketRepository.putBucketLifecycleConfiguration(bucket, { Rules: next });
+      await saveLifecycle.mutateAsync({
+        bucket,
+        rules: [
+          ...data,
+          { ID: ruleId || `rule-${Date.now()}`, Status: "Enabled", Filter: { Prefix: prefix }, Expiration: { Days: Number(days) || 30 } },
+        ],
+      });
       setRuleId("");
-      await queryClient.invalidateQueries({ queryKey: ["lifecycle", bucket] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Add Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
   };
 
   const remove = async (id?: string) => {
     if (!bucket || !window.confirm(t("Are you sure you want to delete this rule?"))) return;
-    const next = data.filter((rule) => rule.ID !== id);
     try {
-      if (!next.length) await bucketRepository.deleteBucketLifecycle(bucket);
-      else await bucketRepository.putBucketLifecycleConfiguration(bucket, { Rules: next });
-      await queryClient.invalidateQueries({ queryKey: ["lifecycle", bucket] });
+      await saveLifecycle.mutateAsync({ bucket, rules: data.filter((rule) => rule.ID !== id) });
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Delete Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
     }
   };
 

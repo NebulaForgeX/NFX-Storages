@@ -37,8 +37,29 @@ NFX-Storages/
 ├── engine/iam            # IAM + session keys
 ├── engine/sigv4          # AWS SigV4
 ├── console/              # Vite + React console (nfx-ui)
-├── databases/src        # PostgreSQL schema
+├── errors/src            # i18n error codes (not a News leftover)
+├── events/               # Kafka topic keys
+├── databases/scripts     # Atlas + license-free (psqldef/goose) pipeline
+├── Taskfile.yml          # task start / go:up / errors / atlas / databases
+├── docker-compose.dev.yml
 └── docker-compose.yml
+```
+
+HTTP 入口只有 **NFX-Edge**（先 `cd ../NFX-Edge && ./start.sh`）。本仓不跑 Traefik。
+
+## Tasks / 任务
+
+```bash
+cp .example.env .env
+task start                 # interactive menu (CityPulso-style)
+task install
+task errors                # add i18n templates + generate langs
+task proto:gen
+task db:create
+task atlas:pipeline:run    # or: task databases:pipeline:run
+task run                   # docker compose (needs nfx-edge)
+task scripts:test-db
+task console
 ```
 
 ## Login
@@ -56,7 +77,7 @@ cp .example.env .env
 docker compose up -d
 ```
 
-Console talks to Traefik (`VITE_API_URL`) for `/nfxstorages/admin/v3` and S3 `/`. Identity HTTP is `VITE_IDENTITY_API_URL`.
+Console talks to **NFX-Edge** (`VITE_API_URL`) for `/nfxstorages/admin/v3` and S3 Host. Identity HTTP is `VITE_IDENTITY_API_URL`.
 
 ## Ports (example)
 

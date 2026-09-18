@@ -75,7 +75,7 @@ interface HostInfo {
 // Constants
 // ============================================================================
 
-const STORAGE_KEY = 'nebulafx-server-host'
+const STORAGE_KEY = 'nfxstorages-server-host'
 const DEFAULT_REGION = 'us-east-1'
 const API_PATH = '/nfxstorages/admin/v3'
 const CONFIG_PATH = '/config.json'
@@ -334,33 +334,6 @@ export const getServerDefaultConfig = (): ConfigResult => {
   return { config, source: 'default' }
 }
 
-// ============================================================================
-// Compatibility Functions (for backward compatibility)
-// ============================================================================
-
-/**
- * @deprecated Use getStoredHostConfig() instead
- */
-export const getStoredHostConfigLegacy = (): SiteConfig | null => {
-  const result = getStoredHostConfig()
-  return result.config
-}
-
-/**
- * @deprecated Use getCurrentBrowserConfig() instead
- */
-export const getCurrentBrowserConfigLegacy = (): SiteConfig | null => {
-  const result = getCurrentBrowserConfig()
-  return result.config
-}
-
-// ============================================================================
-// Configuration Management Functions
-// ============================================================================
-
-/**
- * Save host configuration to localStorage
- */
 export const saveHostConfig = (serverHost: string): ConfigResult => {
   if (!isBrowser()) {
     return { config: null, source: 'localStorage', error: 'Not in browser environment' }

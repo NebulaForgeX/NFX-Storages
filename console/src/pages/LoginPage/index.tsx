@@ -7,6 +7,7 @@ import { useAuthRepository } from "nfx-ui/apis";
 import { AuthStore, ensureDeviceIdStorage } from "nfx-ui/stores";
 
 import { authEventEmitter, authEvents } from "@/events/auth";
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 import AuthShell from "./AuthShell";
 
 export default function LoginPage() {
@@ -59,7 +60,7 @@ export default function LoginPage() {
   });
 
   const pending = login.isPending || signup.isPending;
-  const error = (login.error || signup.error || sendCode.error || github.error) as Error | null;
+  const error = login.error || signup.error || sendCode.error || github.error;
 
   return (
     <AuthShell brandEyebrow="NFX Storages" brandTitle={t("title")} heroFooter={t("subtitle")}>
@@ -85,7 +86,7 @@ export default function LoginPage() {
           ) : null}
           {error ? (
             <Text size="2" color="red">
-              {error.message}
+              {getStoragesApiErrorMessage(error, t("loginFailed"))}
             </Text>
           ) : null}
           <Button

@@ -289,7 +289,7 @@ const file_system_system_state_proto_rawDesc = "" +
 	"\fsystem_state\x18\x01 \x01(\v2\x19.system_state.SystemStateR\vsystemState2\xe6\x01\n" +
 	"\x12SystemStateService\x12m\n" +
 	"\x14GetLatestSystemState\x12).system_state.GetLatestSystemStateRequest\x1a*.system_state.GetLatestSystemStateResponse\x12a\n" +
-	"\x10InitializeSystem\x12%.system_state.InitializeSystemRequest\x1a&.system_state.InitializeSystemResponseB6Z4nfxstorages/protos/gen/system/system_state;systemstatepbb\x06proto3"
+	"\x10InitializeSystem\x12%.system_state.InitializeSystemRequest\x1a&.system_state.InitializeSystemResponseB:Z8nfxstorages/protos/gen/system/system_state;systemstatepbb\x06proto3"
 
 var (
 	file_system_system_state_proto_rawDescOnce sync.Once

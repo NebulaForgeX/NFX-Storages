@@ -35,8 +35,30 @@ NFX-Storages/
 ├── engine/store          # NAS 对象引擎
 ├── engine/iam            # IAM 与会话密钥
 ├── console/              # Vite + React（nfx-ui）
-└── databases/src        # PostgreSQL schema
+├── errors/src            # i18n 错误码（Storages 域，不是 News 拷贝）
+├── events/               # Kafka topic keys
+├── databases/scripts     # Atlas + license-free (psqldef/goose)
+├── Taskfile.yml          # task start / run / errors / atlas / databases
+├── docker-compose.dev.yml
+└── docker-compose.yml
 ```
+
+HTTP 入口只有 **NFX-Edge**（先 `cd ../NFX-Edge && ./start.sh`）。本仓不跑 Traefik。
+
+## 任务
+
+```bash
+cp .example.env .env
+task start                 # 交互菜单
+task install
+task errors                # i18n 模板 + langs
+task proto:gen
+task db:create
+task atlas:pipeline:run    # 或: task databases:pipeline:run
+task run                   # 需要 nfx-edge
+task console
+```
+
 
 ## 登录
 
@@ -53,7 +75,7 @@ cp .example.env .env
 docker compose up -d
 ```
 
-控制台经 Traefik（`VITE_API_URL`）访问 `/nfxstorages/admin/v3` 与 S3 `/`。Identity HTTP 为 `VITE_IDENTITY_API_URL`。
+控制台经 **NFX-Edge**（`VITE_API_URL`）访问 `/nfxstorages/admin/v3` 与 S3 Host。Identity HTTP 为 `VITE_IDENTITY_API_URL`。
 
 ## 技术栈
 

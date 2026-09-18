@@ -1,4 +1,5 @@
 import { createAdminApiClient } from "@/apis/clients";
+import * as systemApi from "@/apis/system.api";
 
 export const usersRepository = {
   listUsers: () => createAdminApiClient().get("/list-users"),
@@ -63,6 +64,9 @@ export const systemRepository = {
   getDataUsageInfo: () => createAdminApiClient().get("/datausageinfo"),
   getSystemMetrics: () => createAdminApiClient().get("/metrics"),
   getLicense: () => createAdminApiClient().get("/license"),
+  getErrorTranslations: systemApi.getErrorTranslations,
+  getLatestSystemState: systemApi.getLatestSystemState,
+  initializeSystem: systemApi.initializeSystem,
 };
 
 export const eventsTargetRepository = {
