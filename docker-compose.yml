@@ -1,51 +1,16 @@
 name: nfx-storages
 
 # HTTP 入口只有 NFX-Edge（先启动 Edge：共享网络 nfx-edge + Traefik）。
-# 本栈不跑 reverse-proxy。traefik.project 由 Edge LabelRegex 发现。
-# Must start NFX-Edge first (creates nfx-edge). This stack has no reverse-proxy.
+# 本栈不跑 reverse-proxy。对齐 CityPulso PulsoLoop-API docker-compose.dev.yml。
+# Must start NFX-Edge first (creates nfx-edge).
 
 services:
-  s3-api:
-    image: nfx-storages-s3-api:prod
-    container_name: NFX-Storages-S3-Api
+  s3-base:
+    image: nfx-storages-s3-base:prod
+    container_name: NFX-Storages-S3-Base-Prod
     build:
       context: .
-      dockerfile: inputs/s3/api/Dockerfile
-      target: prod
-    environment:
-      - ENV=prod
-      - STORAGES_VOLUMES=${STORAGES_VOLUME_0},${STORAGES_VOLUME_1},${STORAGES_VOLUME_2},${STORAGES_VOLUME_3}
-    expose:
-      - "${HTTP_PORT}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.http.services.storages-s3-api.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-s3-api.entrypoints: web
-      traefik.http.routers.storages-s3-api.rule: Host(`${TRAEFIK_S3_HOST}`)
-      traefik.http.routers.storages-s3-api.service: storages-s3-api
-      traefik.http.routers.storages-s3-api-secure.entrypoints: websecure
-      traefik.http.routers.storages-s3-api-secure.rule: Host(`${TRAEFIK_S3_HOST}`)
-      traefik.http.routers.storages-s3-api-secure.service: storages-s3-api
-      traefik.http.routers.storages-s3-api-secure.tls: "true"
-    volumes:
-      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
-      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
-      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
-      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-      - nfx-edge
-    restart: unless-stopped
-
-  s3-connection:
-    image: nfx-storages-s3-connection:prod
-    container_name: NFX-Storages-S3-Connection
-    build:
-      context: .
-      dockerfile: inputs/s3/connection/Dockerfile
+      dockerfile: inputs/s3/configuration/Dockerfile.Base
       target: prod
     environment:
       - ENV=prod
@@ -55,49 +20,36 @@ services:
       - "${GRPC_PORT_S3}"
     ports:
       - "${GRPC_PORT_S3}:${GRPC_PORT_S3}"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-    restart: unless-stopped
-
-
-  admin-api:
-    image: nfx-storages-admin-api:prod
-    container_name: NFX-Storages-Admin-Api
-    build:
-      context: .
-      dockerfile: inputs/admin/api/Dockerfile
-      target: prod
-    environment:
-      - ENV=prod
-      - STORAGES_VOLUMES=${STORAGES_VOLUME_0},${STORAGES_VOLUME_1},${STORAGES_VOLUME_2},${STORAGES_VOLUME_3}
-    expose:
-      - "${HTTP_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
-      traefik.http.services.storages-admin-api.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-admin-api.entrypoints: web
-      traefik.http.routers.storages-admin-api.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ADMIN}`)
-      traefik.http.routers.storages-admin-api.service: storages-admin-api
-      traefik.http.routers.storages-admin-api-secure.entrypoints: websecure
-      traefik.http.routers.storages-admin-api-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ADMIN}`)
-      traefik.http.routers.storages-admin-api-secure.service: storages-admin-api
-      traefik.http.routers.storages-admin-api-secure.tls: "true"
+      traefik.http.services.storages-s3-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.storages-s3-base.entrypoints: web
+      traefik.http.routers.storages-s3-base.rule: Host(`${TRAEFIK_S3_HOST}`)
+      traefik.http.routers.storages-s3-base.service: storages-s3-base
+      traefik.http.routers.storages-s3-base-secure.entrypoints: websecure
+      traefik.http.routers.storages-s3-base-secure.rule: Host(`${TRAEFIK_S3_HOST}`)
+      traefik.http.routers.storages-s3-base-secure.service: storages-s3-base
+      traefik.http.routers.storages-s3-base-secure.tls: "true"
+    volumes:
+      - ./errors/langs:/app/errors/langs
+      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
+      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
+      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
+      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-storages
       - nfx-edge
-    restart: unless-stopped
 
-  admin-connection:
-    image: nfx-storages-admin-connection:prod
-    container_name: NFX-Storages-Admin-Connection
+  admin-base:
+    image: nfx-storages-admin-base:prod
+    container_name: NFX-Storages-Admin-Base-Prod
     build:
       context: .
-      dockerfile: inputs/admin/connection/Dockerfile
+      dockerfile: inputs/admin/configuration/Dockerfile.Base
       target: prod
     environment:
       - ENV=prod
@@ -107,49 +59,36 @@ services:
       - "${GRPC_PORT_ADMIN}"
     ports:
       - "${GRPC_PORT_ADMIN}:${GRPC_PORT_ADMIN}"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-    restart: unless-stopped
-
-
-  object-api:
-    image: nfx-storages-object-api:prod
-    container_name: NFX-Storages-Object-Api
-    build:
-      context: .
-      dockerfile: inputs/object/api/Dockerfile
-      target: prod
-    environment:
-      - ENV=prod
-      - STORAGES_VOLUMES=${STORAGES_VOLUME_0},${STORAGES_VOLUME_1},${STORAGES_VOLUME_2},${STORAGES_VOLUME_3}
-    expose:
-      - "${HTTP_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
-      traefik.http.services.storages-object-api.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-object-api.entrypoints: web
-      traefik.http.routers.storages-object-api.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_OBJECT}`)
-      traefik.http.routers.storages-object-api.service: storages-object-api
-      traefik.http.routers.storages-object-api-secure.entrypoints: websecure
-      traefik.http.routers.storages-object-api-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_OBJECT}`)
-      traefik.http.routers.storages-object-api-secure.service: storages-object-api
-      traefik.http.routers.storages-object-api-secure.tls: "true"
+      traefik.http.services.storages-admin-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.storages-admin-base.entrypoints: web
+      traefik.http.routers.storages-admin-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ADMIN}`)
+      traefik.http.routers.storages-admin-base.service: storages-admin-base
+      traefik.http.routers.storages-admin-base-secure.entrypoints: websecure
+      traefik.http.routers.storages-admin-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ADMIN}`)
+      traefik.http.routers.storages-admin-base-secure.service: storages-admin-base
+      traefik.http.routers.storages-admin-base-secure.tls: "true"
+    volumes:
+      - ./errors/langs:/app/errors/langs
+      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
+      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
+      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
+      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-storages
       - nfx-edge
-    restart: unless-stopped
 
-  object-connection:
-    image: nfx-storages-object-connection:prod
-    container_name: NFX-Storages-Object-Connection
+  object-base:
+    image: nfx-storages-object-base:prod
+    container_name: NFX-Storages-Object-Base-Prod
     build:
       context: .
-      dockerfile: inputs/object/connection/Dockerfile
+      dockerfile: inputs/object/configuration/Dockerfile.Base
       target: prod
     environment:
       - ENV=prod
@@ -159,49 +98,36 @@ services:
       - "${GRPC_PORT_OBJECT}"
     ports:
       - "${GRPC_PORT_OBJECT}:${GRPC_PORT_OBJECT}"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-    restart: unless-stopped
-
-
-  iam-api:
-    image: nfx-storages-iam-api:prod
-    container_name: NFX-Storages-Iam-Api
-    build:
-      context: .
-      dockerfile: inputs/iam/api/Dockerfile
-      target: prod
-    environment:
-      - ENV=prod
-      - STORAGES_VOLUMES=${STORAGES_VOLUME_0},${STORAGES_VOLUME_1},${STORAGES_VOLUME_2},${STORAGES_VOLUME_3}
-    expose:
-      - "${HTTP_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
-      traefik.http.services.storages-iam-api.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-iam-api.entrypoints: web
-      traefik.http.routers.storages-iam-api.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IAM}`)
-      traefik.http.routers.storages-iam-api.service: storages-iam-api
-      traefik.http.routers.storages-iam-api-secure.entrypoints: websecure
-      traefik.http.routers.storages-iam-api-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IAM}`)
-      traefik.http.routers.storages-iam-api-secure.service: storages-iam-api
-      traefik.http.routers.storages-iam-api-secure.tls: "true"
+      traefik.http.services.storages-object-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.storages-object-base.entrypoints: web
+      traefik.http.routers.storages-object-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_OBJECT}`)
+      traefik.http.routers.storages-object-base.service: storages-object-base
+      traefik.http.routers.storages-object-base-secure.entrypoints: websecure
+      traefik.http.routers.storages-object-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_OBJECT}`)
+      traefik.http.routers.storages-object-base-secure.service: storages-object-base
+      traefik.http.routers.storages-object-base-secure.tls: "true"
+    volumes:
+      - ./errors/langs:/app/errors/langs
+      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
+      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
+      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
+      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-storages
       - nfx-edge
-    restart: unless-stopped
 
-  iam-connection:
-    image: nfx-storages-iam-connection:prod
-    container_name: NFX-Storages-Iam-Connection
+  iam-base:
+    image: nfx-storages-iam-base:prod
+    container_name: NFX-Storages-Iam-Base-Prod
     build:
       context: .
-      dockerfile: inputs/iam/connection/Dockerfile
+      dockerfile: inputs/iam/configuration/Dockerfile.Base
       target: prod
     environment:
       - ENV=prod
@@ -211,49 +137,36 @@ services:
       - "${GRPC_PORT_IAM}"
     ports:
       - "${GRPC_PORT_IAM}:${GRPC_PORT_IAM}"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-    restart: unless-stopped
-
-
-  notify-api:
-    image: nfx-storages-notify-api:prod
-    container_name: NFX-Storages-Notify-Api
-    build:
-      context: .
-      dockerfile: inputs/notify/api/Dockerfile
-      target: prod
-    environment:
-      - ENV=prod
-      - STORAGES_VOLUMES=${STORAGES_VOLUME_0},${STORAGES_VOLUME_1},${STORAGES_VOLUME_2},${STORAGES_VOLUME_3}
-    expose:
-      - "${HTTP_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
-      traefik.http.services.storages-notify-api.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-notify-api.entrypoints: web
-      traefik.http.routers.storages-notify-api.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_NOTIFY}`)
-      traefik.http.routers.storages-notify-api.service: storages-notify-api
-      traefik.http.routers.storages-notify-api-secure.entrypoints: websecure
-      traefik.http.routers.storages-notify-api-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_NOTIFY}`)
-      traefik.http.routers.storages-notify-api-secure.service: storages-notify-api
-      traefik.http.routers.storages-notify-api-secure.tls: "true"
+      traefik.http.services.storages-iam-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.storages-iam-base.entrypoints: web
+      traefik.http.routers.storages-iam-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IAM}`)
+      traefik.http.routers.storages-iam-base.service: storages-iam-base
+      traefik.http.routers.storages-iam-base-secure.entrypoints: websecure
+      traefik.http.routers.storages-iam-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IAM}`)
+      traefik.http.routers.storages-iam-base-secure.service: storages-iam-base
+      traefik.http.routers.storages-iam-base-secure.tls: "true"
+    volumes:
+      - ./errors/langs:/app/errors/langs
+      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
+      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
+      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
+      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-storages
       - nfx-edge
-    restart: unless-stopped
 
-  notify-connection:
-    image: nfx-storages-notify-connection:prod
-    container_name: NFX-Storages-Notify-Connection
+  notify-base:
+    image: nfx-storages-notify-base:prod
+    container_name: NFX-Storages-Notify-Base-Prod
     build:
       context: .
-      dockerfile: inputs/notify/connection/Dockerfile
+      dockerfile: inputs/notify/configuration/Dockerfile.Base
       target: prod
     environment:
       - ENV=prod
@@ -263,49 +176,36 @@ services:
       - "${GRPC_PORT_NOTIFY}"
     ports:
       - "${GRPC_PORT_NOTIFY}:${GRPC_PORT_NOTIFY}"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-    restart: unless-stopped
-
-
-  system-api:
-    image: nfx-storages-system-api:prod
-    container_name: NFX-Storages-System-Api
-    build:
-      context: .
-      dockerfile: inputs/system/api/Dockerfile
-      target: prod
-    environment:
-      - ENV=prod
-      - STORAGES_VOLUMES=${STORAGES_VOLUME_0},${STORAGES_VOLUME_1},${STORAGES_VOLUME_2},${STORAGES_VOLUME_3}
-    expose:
-      - "${HTTP_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
-      traefik.http.services.storages-system-api.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-system-api.entrypoints: web
-      traefik.http.routers.storages-system-api.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
-      traefik.http.routers.storages-system-api.service: storages-system-api
-      traefik.http.routers.storages-system-api-secure.entrypoints: websecure
-      traefik.http.routers.storages-system-api-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
-      traefik.http.routers.storages-system-api-secure.service: storages-system-api
-      traefik.http.routers.storages-system-api-secure.tls: "true"
+      traefik.http.services.storages-notify-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.storages-notify-base.entrypoints: web
+      traefik.http.routers.storages-notify-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_NOTIFY}`)
+      traefik.http.routers.storages-notify-base.service: storages-notify-base
+      traefik.http.routers.storages-notify-base-secure.entrypoints: websecure
+      traefik.http.routers.storages-notify-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_NOTIFY}`)
+      traefik.http.routers.storages-notify-base-secure.service: storages-notify-base
+      traefik.http.routers.storages-notify-base-secure.tls: "true"
+    volumes:
+      - ./errors/langs:/app/errors/langs
+      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
+      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
+      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
+      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-storages
       - nfx-edge
-    restart: unless-stopped
 
-  system-connection:
-    image: nfx-storages-system-connection:prod
-    container_name: NFX-Storages-System-Connection
+  system-base:
+    image: nfx-storages-system-base:prod
+    container_name: NFX-Storages-System-Base-Prod
     build:
       context: .
-      dockerfile: inputs/system/connection/Dockerfile
+      dockerfile: inputs/system/configuration/Dockerfile.Base
       target: prod
     environment:
       - ENV=prod
@@ -315,21 +215,39 @@ services:
       - "${GRPC_PORT_SYSTEM}"
     ports:
       - "${GRPC_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"
+    labels:
+      traefik.enable: "true"
+      traefik.project: "nfx-storages"
+      traefik.http.services.storages-system-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.storages-system-base.entrypoints: web
+      traefik.http.routers.storages-system-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.storages-system-base.service: storages-system-base
+      traefik.http.routers.storages-system-base-secure.entrypoints: websecure
+      traefik.http.routers.storages-system-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.storages-system-base-secure.service: storages-system-base
+      traefik.http.routers.storages-system-base-secure.tls: "true"
+    volumes:
+      - ./errors/langs:/app/errors/langs
+      - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
+      - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
+      - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
+      - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-storages
-    restart: unless-stopped
-
+      - nfx-edge
 
   console:
     image: nfx-storages-console:prod
-    container_name: NFX-Storages-Console
+    container_name: NFX-Storages-Console-Prod
     build:
       context: ./console
       dockerfile: Dockerfile
       additional_contexts:
         nfx-ui: ../NFX-UI
+      target: prod
       args:
         VITE_API_URL: ${VITE_API_URL}
         VITE_IDENTITY_API_URL: ${VITE_IDENTITY_API_URL}
@@ -351,10 +269,10 @@ services:
       traefik.http.routers.storages-console-secure.service: storages-console
       traefik.http.routers.storages-console-secure.tls: "true"
       traefik.http.routers.storages-console-secure.priority: "1"
+    restart: always
     networks:
       - nfx-storages
       - nfx-edge
-    restart: unless-stopped
 
 networks:
   nfx-storages:

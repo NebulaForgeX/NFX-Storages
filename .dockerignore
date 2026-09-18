@@ -19,23 +19,22 @@ data
 assets
 static
 dynamic
+console
+**/node_modules
 
 # Task / scripts (not needed for go build)
 .task
 Taskfile.yml
 run_atlas_pipeline.sh
 scripts
-atlas/migrations
-atlas/scripts
-atlas/templates
-atlas/src
+databases
 
 # Docker / compose (avoid recursive context)
 docker-compose*.yml
 Dockerfile*
 .dockerignore
 
-# Env and secrets (.env kept for dev image COPY . ./ like NFX-Identity)
+# Env and secrets (.env kept for dev image COPY . ./)
 .env.*
 *.key
 *.pem

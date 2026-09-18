@@ -10,7 +10,7 @@ services:
     container_name: NFX-Storages-S3-Base-Dev
     build:
       context: .
-      dockerfile: inputs/s3/base/Dockerfile
+      dockerfile: inputs/s3/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -49,7 +49,7 @@ services:
     container_name: NFX-Storages-Admin-Base-Dev
     build:
       context: .
-      dockerfile: inputs/admin/base/Dockerfile
+      dockerfile: inputs/admin/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -88,7 +88,7 @@ services:
     container_name: NFX-Storages-Object-Base-Dev
     build:
       context: .
-      dockerfile: inputs/object/base/Dockerfile
+      dockerfile: inputs/object/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -127,7 +127,7 @@ services:
     container_name: NFX-Storages-Iam-Base-Dev
     build:
       context: .
-      dockerfile: inputs/iam/base/Dockerfile
+      dockerfile: inputs/iam/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -166,7 +166,7 @@ services:
     container_name: NFX-Storages-Notify-Base-Dev
     build:
       context: .
-      dockerfile: inputs/notify/base/Dockerfile
+      dockerfile: inputs/notify/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -205,7 +205,7 @@ services:
     container_name: NFX-Storages-System-Base-Dev
     build:
       context: .
-      dockerfile: inputs/system/base/Dockerfile
+      dockerfile: inputs/system/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
