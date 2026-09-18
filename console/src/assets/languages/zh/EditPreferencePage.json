@@ -6,7 +6,7 @@
   },
   "serverHost": {
     "label": "服务器地址",
-    "description": "用于管理 API 与 S3 的 NebulaFX 服务器地址",
+    "description": "用于管理 API 与 S3 的 NFX Storages 服务器地址",
     "placeholder": "http://localhost:9000",
     "save": "保存配置",
     "reset": "恢复默认"

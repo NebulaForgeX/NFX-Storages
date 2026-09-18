@@ -6,7 +6,7 @@
   },
   "serverHost": {
     "label": "Server Host",
-    "description": "NebulaFX server address used for admin API and S3",
+    "description": "NFX Storages server address used for admin API and S3",
     "placeholder": "http://localhost:9000",
     "save": "Save Configuration",
     "reset": "Reset to Default"
