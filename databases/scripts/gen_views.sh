@@ -29,7 +29,7 @@ if [[ -z "${ATLAS_ENV}" ]]; then echo "Error: ATLAS_ENV environment variable is 
 
 # shellcheck source=/dev/null
 . "${SCRIPT_DIR}/postgres_client.sh"
-if pulsoloop_postgres_use_docker && [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
+if nfxstorages_postgres_use_docker && [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
   echo "Error: POSTGRES_CONTAINER_NAME environment variable is required for Docker PostgreSQL"
   exit 1
 fi
@@ -50,7 +50,7 @@ for module_views in "${REPO_ROOT}/modules"/*/infrastructure/rdb/views; do
   fi
 done
 
-pulsoloop_psql_admin -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
+nfxstorages_psql_admin -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
 
 cd "${ATLAS_DIR}" || exit 1
 if ! atlas schema inspect --env gen-views; then
@@ -66,12 +66,7 @@ for src in "${GEN_DIR}"/*.go; do
     schema_name="${BASH_REMATCH[1]}"
     view_name="${BASH_REMATCH[2]}"
     view_name="${view_name%.go}"
-    # DB schema "loop" maps to Go module "content" (Near-style module name).
-    module_name="${schema_name}"
-    if [[ "${schema_name}" == "loop" ]]; then
-      module_name="content"
-    fi
-    DEST_DIR="${REPO_ROOT}/modules/${module_name}/infrastructure/rdb/views"
+    DEST_DIR="${REPO_ROOT}/modules/${schema_name}/infrastructure/rdb/views"
     mkdir -p "${DEST_DIR}"
     rm -f "${DEST_DIR}/${view_name}_dbgen.go"
     dest_file="${DEST_DIR}/${view_name}_dbgen.go"

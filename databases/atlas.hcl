@@ -1,5 +1,5 @@
-// Atlas configuration for nfxstorages service using PostgreSQL.
-// Using Docker Atlas toolchain.
+// Atlas configuration for nfxstorages using PostgreSQL.
+// Schema source: databases/src.
 
 // === Public variables ===
 variable "db_user" {
@@ -22,14 +22,9 @@ variable "db_port" {
   default = getenv("POSTGRES_PORT")
 }
 
-variable "db_dev_name" {
+variable "db_name" {
   type    = string
-  default = getenv("POSTGRES_DB_DEV")
-}
-
-variable "db_prod_name" {
-  type    = string
-  default = getenv("POSTGRES_DB_PROD")
+  default = getenv("POSTGRES_DB")
 }
 
 variable "db_shadow_name" {
@@ -39,39 +34,43 @@ variable "db_shadow_name" {
 
 // === Local configuration ===
 locals {
-  query_params = "sslmode=disable&TimeZone=UTC"
-  src_file           = "file://src/main.sql"
-  migration_dir_dev  = "file://migrations/development"
-  migration_dir_prod = "file://migrations/production"
-  template_helpers = "templates/_helpers.tmpl"
-  template_models  = "templates/gen_models.tmpl"
-  template_views   = "templates/gen_views.tmpl"
-  template_enums   = "templates/gen_enums.tmpl"
-  
-  // Database connection URLs
+  // RDS / managed Postgres: use POSTGRES_SSLMODE=require (or verify-full). Local: disable.
+  // 推荐直接写 libpq sslmode；true|false|1|0 仅作兼容映射到 require|disable。
+  _ssl_raw = lower(trimspace(getenv("POSTGRES_SSLMODE")))
+  _ssl_on  = contains(["true", "1", "yes", "on"], local._ssl_raw)
+  _ssl_off = contains(["false", "0", "no", "off"], local._ssl_raw)
+  _ssl_from_env = local._ssl_on ? "require" : (local._ssl_off ? "disable" : local._ssl_raw)
+  sslmode = local._ssl_from_env != "" ? local._ssl_from_env : (
+    contains(["127.0.0.1", "localhost", "::1"], var.db_host) ? "disable" : "require"
+  )
+  query_params       = "sslmode=${local.sslmode}&TimeZone=UTC"
+  src_file             = "file://src/main.sql"
+  migration_dir_dev    = "file://migrations/development"
+  migration_dir_secure = "file://migrations/secure"
+  template_helpers     = "templates/_helpers.tmpl"
+  template_models    = "templates/gen_models.tmpl"
+  template_views     = "templates/gen_views.tmpl"
+  template_enums     = "templates/gen_enums.tmpl"
+
   db_url_base = "postgres://${var.db_user}:${urlescape(var.db_password)}@${var.db_host}:${var.db_port}"
   dev_shadow  = "${local.db_url_base}/${var.db_shadow_name}?${local.query_params}"
-  dev_url     = "${local.db_url_base}/${var.db_dev_name}?${local.query_params}"
-  prod_url    = "${local.db_url_base}/${var.db_prod_name}?${local.query_params}"
-  
-  // Format configuration values
+  // Single target DB: value comes from the active dotenv (.env -> pulsonear_dev, .secure.env -> pulsonear_secure).
+  db_url = "${local.db_url_base}/${var.db_name}?${local.query_params}"
+
   format_migrate_diff   = "{{ sql . \"  \"}}"
   format_schema_inspect = "{{ sql . | split | write \"src\" }}"
-  
-  // Template content for code generation
+
   template_helpers_content = file(local.template_helpers)
   template_models_content  = "${local.template_helpers_content}${file(local.template_models)}"
   template_views_content   = "${local.template_helpers_content}${file(local.template_views)}"
   template_enums_content   = "${local.template_helpers_content}${file(local.template_enums)}"
-  
-  // Common exclude list for generation environments
-  exclude_public = ["public"]
+  exclude_public           = ["public"]
 }
 
 // === Development environment ===
 env "dev" {
   src = local.src_file
-  url = local.dev_url
+  url = local.db_url
   dev = local.dev_shadow
   migration {
     dir = local.migration_dir_dev
@@ -91,13 +90,13 @@ env "dev" {
   }
 }
 
-// === Production environment ===
-env "prod" {
+// === Secure (production) environment ===
+env "secure" {
   src = local.src_file
-  url = local.prod_url
+  url = local.db_url
   dev = local.dev_shadow
   migration {
-    dir = local.migration_dir_prod
+    dir = local.migration_dir_secure
   }
   format {
     migrate {

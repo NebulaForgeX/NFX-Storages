@@ -30,7 +30,7 @@ if [[ -z "${ATLAS_ENV}" ]]; then echo "Error: ATLAS_ENV environment variable is 
 
 # shellcheck source=/dev/null
 . "${SCRIPT_DIR}/postgres_client.sh"
-if pulsoloop_postgres_use_docker && [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
+if nfxstorages_postgres_use_docker && [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
   echo "Error: POSTGRES_CONTAINER_NAME environment variable is required for Docker PostgreSQL"
   exit 1
 fi
@@ -45,7 +45,7 @@ if [ -d "$DEST_DIR" ]; then
   rm -f "${DEST_DIR}"/*_enum_dbgen.go
 fi
 
-pulsoloop_psql_admin -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
+nfxstorages_psql_admin -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
 
 cd "${ATLAS_DIR}" || exit 1
 if ! atlas schema inspect --env gen-enums; then

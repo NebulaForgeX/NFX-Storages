@@ -6,7 +6,7 @@
 # Override: ATLAS_POSTGRES_USE_DOCKER=true|false
 # Optional: POSTGRES_SSLMODE — true/1/yes/on => require; false/0/no/off => disable; else libpq mode (require, …)
 
-pulsoloop_normalize_pgsslmode() {
+nfxstorages_normalize_pgsslmode() {
   local v="${POSTGRES_SSLMODE:-${PGSSLMODE:-}}"
   v=$(printf '%s' "$v" | tr '[:upper:]' '[:lower:]')
   case "$v" in
@@ -17,9 +17,9 @@ pulsoloop_normalize_pgsslmode() {
   esac
 }
 
-pulsoloop_effective_pgsslmode() {
+nfxstorages_effective_pgsslmode() {
   local s
-  s=$(pulsoloop_normalize_pgsslmode)
+  s=$(nfxstorages_normalize_pgsslmode)
   if [[ -n "$s" ]]; then
     printf '%s' "$s"
     return
@@ -30,7 +30,7 @@ pulsoloop_effective_pgsslmode() {
   esac
 }
 
-pulsoloop_postgres_use_docker() {
+nfxstorages_postgres_use_docker() {
   if [[ -n "${ATLAS_POSTGRES_USE_DOCKER:-}" ]]; then
     case "${ATLAS_POSTGRES_USE_DOCKER}" in
       1|true|TRUE|yes|YES|on|ON) return 0 ;;
@@ -47,7 +47,7 @@ pulsoloop_postgres_use_docker() {
   esac
 }
 
-pulsoloop_docker() {
+nfxstorages_docker() {
   if docker info >/dev/null 2>&1; then
     docker "$@"
   elif sudo docker info >/dev/null 2>&1; then
@@ -59,7 +59,7 @@ pulsoloop_docker() {
 }
 
 # Ensure psql exists for remote TCP connections; interactive apt install on Debian/Ubuntu.
-pulsoloop_ensure_psql_cli() {
+nfxstorages_ensure_psql_cli() {
   if command -v psql >/dev/null 2>&1; then
     return 0
   fi
@@ -86,17 +86,17 @@ pulsoloop_ensure_psql_cli() {
 }
 
 # Run psql against maintenance database "postgres". Pass-through args, e.g. -c "..." or -tc "..."
-pulsoloop_psql_admin() {
-  if pulsoloop_postgres_use_docker; then
+nfxstorages_psql_admin() {
+  if nfxstorages_postgres_use_docker; then
     if [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
       echo "Error: POSTGRES_CONTAINER_NAME is required for Docker PostgreSQL" >&2
       return 1
     fi
-    pulsoloop_docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres "$@"
+    nfxstorages_docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres "$@"
   else
-    pulsoloop_ensure_psql_cli || return 1
+    nfxstorages_ensure_psql_cli || return 1
     export PGPASSWORD="${POSTGRES_PASSWORD}"
-    export PGSSLMODE="$(pulsoloop_effective_pgsslmode)"
+    export PGSSLMODE="$(nfxstorages_effective_pgsslmode)"
     psql -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d postgres "$@"
   fi
 }

@@ -25,8 +25,7 @@ vars:
   ATLAS_ENV: '{{default "dev" .ATLAS_ENV}}'
   ATLAS_CONFIG_PATH: "file://databases/atlas.hcl"
   ATLAS_MIGRATIONS_DIR_DEV: "file://databases/migrations/development"
-  ATLAS_MIGRATIONS_DIR_PROD: "file://databases/migrations/production"
-  RESOURCES_DOCKER_COMPOSE: "../NFX-Stack/Infrastructure/docker-compose.postgresql.yml"
+  ATLAS_MIGRATIONS_DIR_SECURE: "file://databases/migrations/secure"
   ENV: '{{.ENV | default "dev"}}'
   APP_COMPOSE: '{{if eq .ENV "prod"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
 
@@ -142,44 +141,57 @@ tasks:
     desc: "Generate Go models from the PostgreSQL schema"
     cmds:
       - |
-        POSTGRES_USER="{{.POSTGRES_USER}}" \
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
-        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
-        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB="{{if eq .ATLAS_ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}" \
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
-        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
-        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
-        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+        else
+          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        fi
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_models.sh
 
   atlas:gen-views:
     desc: "Generate Go views from the PostgreSQL schema"
     cmds:
       - |
-        POSTGRES_USER="{{.POSTGRES_USER}}" \
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
-        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
-        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB="{{if eq .ATLAS_ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}" \
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
-        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
-        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
-        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+        else
+          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        fi
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_views.sh
 
   atlas:gen-enums:
     desc: "Generate Go enums from the PostgreSQL schema"
     cmds:
       - |
-        POSTGRES_USER="{{.POSTGRES_USER}}" \
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
-        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
-        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB="{{if eq .ATLAS_ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}" \
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
-        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
-        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        export POSTGRES_USER="{{.POSTGRES_USER}}"
+        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+        else
+          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        fi
+        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_enums.sh
 
   atlas:gen:
@@ -191,39 +203,27 @@ tasks:
 
   atlas:pipeline:run:sh:
     desc: "Run Atlas pipeline using bash (interactive environment selection)"
-    env:
-      POSTGRES_USER: "{{.POSTGRES_USER}}"
-      POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
-      POSTGRES_HOST: "{{.POSTGRES_HOST}}"
-      POSTGRES_PORT: "{{.POSTGRES_PORT}}"
-      POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
-      POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
-      POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
-      POSTGRES_CONTAINER_NAME: "{{.POSTGRES_CONTAINER_NAME}}"
-      RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
-      ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
     cmds:
-      - bash run_atlas_pipeline.sh
+      - task: atlas:pipeline:run
 
   atlas:pipeline:run:
-    desc: "Run Atlas pipeline (ENV=dev|prod; extra flags after --)"
+    desc: "Run Atlas pipeline (ENV=dev|secure; extra flags after --)"
     cmds:
       - |
         export POSTGRES_USER="{{.POSTGRES_USER}}"
         export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
         export POSTGRES_HOST="{{.POSTGRES_HOST}}"
         export POSTGRES_PORT="{{.POSTGRES_PORT}}"
-        export POSTGRES_DB="{{if eq .ENV \"prod\"}}{{.POSTGRES_DB_PROD}}{{else}}{{.POSTGRES_DB_DEV}}{{end}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+        else
+          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+        fi
         export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
         export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
-        export RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}"
         export ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
         bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
-
-  atlas:pipeline:run:ps1:
-    desc: "Run Atlas pipeline using PowerShell"
-    cmds:
-      - pwsh run_atlas_pipeline.ps1
 
   atlas:status:
     desc: "Show Atlas migrate status (dev)"

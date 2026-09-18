@@ -28,7 +28,7 @@ if [[ -z "${POSTGRES_DB_SHADOW}" ]]; then echo "Error: POSTGRES_DB_SHADOW enviro
 
 # shellcheck source=/dev/null
 . "${SCRIPT_DIR}/postgres_client.sh"
-if pulsoloop_postgres_use_docker && [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
+if nfxstorages_postgres_use_docker && [[ -z "${POSTGRES_CONTAINER_NAME:-}" ]]; then
   echo "Error: POSTGRES_CONTAINER_NAME environment variable is required for Docker PostgreSQL"
   exit 1
 fi
@@ -65,7 +65,7 @@ done
 MODPATH="$(go list -m 2>/dev/null || echo "")"
 [[ -n "$MODPATH" ]] && export GOIMPORTSLOCAL="$MODPATH"
 
-pulsoloop_psql_admin -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
+nfxstorages_psql_admin -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
 
 cd "${ATLAS_DIR}" || exit 1
 if ! atlas schema inspect --env gen-models; then
@@ -82,12 +82,7 @@ for src in "${GEN_DIR}"/*.go; do
     schema_name="${BASH_REMATCH[1]}"
     table_name="${BASH_REMATCH[2]}"
     table_name="${table_name%.go}"
-    # DB schema "loop" maps to Go module "content" (Near-style module name).
-    module_name="${schema_name}"
-    if [[ "${schema_name}" == "loop" ]]; then
-      module_name="content"
-    fi
-    DEST_DIR="${REPO_ROOT}/modules/${module_name}/infrastructure/rdb/models"
+    DEST_DIR="${REPO_ROOT}/modules/${schema_name}/infrastructure/rdb/models"
     mkdir -p "${DEST_DIR}"
     rm -f "${DEST_DIR}/${table_name}_dbgen.go"
     dest_file="${DEST_DIR}/${table_name}_dbgen.go"
