@@ -40,6 +40,7 @@ export default function TiersPage() {
   };
 
   const update = async (tierName: string) => {
+    if (!tierName) return;
     try {
       await updateTier.mutateAsync({ name: tierName, endpoint });
     } catch (err) {
