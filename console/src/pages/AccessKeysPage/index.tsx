@@ -6,7 +6,7 @@ import { KeyRound } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useCreateAccessKey, useDeleteAccessKey, useAccessKeys, useUpdateAccessKey } from "@/hooks/storages";
+import { useCreateAccessKey, useDeleteAccessKey, useAccessKeys, useUpdateAccessKey } from "@/hooks";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 

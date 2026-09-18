@@ -7,7 +7,7 @@ import { Archive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useCreateBucket, useDeleteBucket, useBuckets } from "@/hooks/storages";
+import { useCreateBucket, useDeleteBucket, useBuckets } from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { DataTable } from "@/components/DataTable";
 

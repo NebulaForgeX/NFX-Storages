@@ -6,7 +6,7 @@ import { ArrowLeftRight, Download, Upload } from "lucide-react";
 import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useExportIam, useImportIam } from "@/hooks/storages";
+import { useExportIam, useImportIam } from "@/hooks";
 import { exportFile } from "@/utils/export-file";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 

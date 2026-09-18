@@ -6,7 +6,7 @@ import { FileText } from "lucide-react";
 import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useLicense } from "@/hooks/storages";
+import { useLicense } from "@/hooks";
 
 export default function LicensePage() {
   const { t } = useTranslation("common");

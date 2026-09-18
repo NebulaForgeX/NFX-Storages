@@ -6,7 +6,7 @@ import { Database } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useCreateEventTarget, useDeleteEventTarget, useEventsTarget } from "@/hooks/storages";
+import { useCreateEventTarget, useDeleteEventTarget, useEventsTarget } from "@/hooks";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 

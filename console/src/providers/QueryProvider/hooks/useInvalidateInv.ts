@@ -24,6 +24,7 @@ export function useInvalidateInv() {
       [invalidateEvents.KMS, STORAGES_QUERY_KEYS.kmsStatus],
       [invalidateEvents.PERFORMANCE, STORAGES_QUERY_KEYS.performance],
       [invalidateEvents.LICENSE, STORAGES_QUERY_KEYS.license],
+      [invalidateEvents.POOLS, STORAGES_QUERY_KEYS.pools],
     ];
 
     const handlers = map.map(([event, key]) => {

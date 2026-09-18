@@ -6,7 +6,7 @@ import (
 
 	s3app "nfxstorages/modules/s3/application/s3"
 	systemapp "nfxstorages/modules/s3/application/system"
-	"nfxstorages/modules/s3/interfaces/http/handler"
+	"nfxstorages/modules/s3/interface/http/handler"
 	"nfxstorages/pkgs/fiberx"
 	"nfxstorages/pkgs/fiberx/middleware"
 	"nfxstorages/pkgs/httpx"

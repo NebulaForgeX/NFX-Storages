@@ -17,6 +17,7 @@ export const invalidateEvents = defineEvents({
   KMS: "STORAGES:INVALIDATE_KMS",
   PERFORMANCE: "STORAGES:INVALIDATE_PERFORMANCE",
   LICENSE: "STORAGES:INVALIDATE_LICENSE",
+  POOLS: "STORAGES:INVALIDATE_POOLS",
 });
 
 type InvalidateEvent = EventNamesOf<typeof invalidateEvents>;

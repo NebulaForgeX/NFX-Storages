@@ -7,7 +7,7 @@ import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
 import { AccessKeyStatusEnum } from "@/enums";
-import { useAssignGroupPolicy, useChangeGroupStatus, useCreateGroup, useDeleteGroup, useGroups, useUpdateGroupMembers } from "@/hooks/storages";
+import { useAssignGroupPolicy, useChangeGroupStatus, useCreateGroup, useDeleteGroup, useGroups, useUpdateGroupMembers } from "@/hooks";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 

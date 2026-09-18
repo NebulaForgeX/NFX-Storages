@@ -8,10 +8,10 @@ import (
 	"strconv"
 
 	"nfxstorages/modules/object/config"
-	grpcInterfaces "nfxstorages/modules/object/interfaces/grpc"
-	httpInterfaces "nfxstorages/modules/object/interfaces/http"
-	messagingInterfaces "nfxstorages/modules/object/interfaces/messaging"
-	eventbusInterfaces "nfxstorages/modules/object/interfaces/pipeline"
+	grpcInterfaces "nfxstorages/modules/object/interface/grpc"
+	httpInterfaces "nfxstorages/modules/object/interface/http"
+	messagingInterfaces "nfxstorages/modules/object/interface/messaging"
+	eventbusInterfaces "nfxstorages/modules/object/interface/pipeline"
 	"nfxstorages/pkgs/logx"
 
 	"golang.org/x/sync/errgroup"

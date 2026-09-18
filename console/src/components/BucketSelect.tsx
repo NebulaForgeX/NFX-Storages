@@ -1,6 +1,6 @@
 import { Select } from "@radix-ui/themes";
 
-import { useBuckets } from "@/hooks/storages";
+import { useBuckets } from "@/hooks";
 
 interface BucketSelectProps {
   value: string;

@@ -16,4 +16,5 @@ export const STORAGES_QUERY_KEYS = {
   kmsKeys: ["kms-keys"] as const,
   performance: ["performance"] as const,
   license: ["license"] as const,
+  pools: ["pools"] as const,
 };

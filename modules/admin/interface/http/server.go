@@ -6,7 +6,7 @@ import (
 
 	adminapp "nfxstorages/modules/admin/application/admin"
 	systemapp "nfxstorages/modules/admin/application/system"
-	adminhandler "nfxstorages/modules/admin/interfaces/http/handler"
+	adminhandler "nfxstorages/modules/admin/interface/http/handler"
 	"nfxstorages/pkgs/fiberx"
 	"nfxstorages/pkgs/fiberx/middleware"
 	"nfxstorages/pkgs/httpx"

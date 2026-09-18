@@ -16,6 +16,7 @@ const routeMap = defineRouter({
   USER_GROUPS: "/user-groups",
   IMPORT_EXPORT: "/import-export",
   PERFORMANCE: "/performance",
+  POOLS: "/pools",
   EVENTS: "/events",
   REPLICATION: "/replication",
   LIFECYCLE: "/lifecycle",

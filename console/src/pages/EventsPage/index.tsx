@@ -6,7 +6,7 @@ import { Bell } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useBucketEvents, useEventTargetArns, usePutBucketNotifications } from "@/hooks/storages";
+import { useBucketEvents, useEventTargetArns, usePutBucketNotifications } from "@/hooks";
 import { BucketSelect } from "@/components/BucketSelect";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";

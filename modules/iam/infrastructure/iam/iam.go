@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strings"
+	"sync"
 	"time"
 
 	storageserr "nfxstorages/errors/src/storages"
@@ -94,9 +95,13 @@ type RemoteTarget struct {
 
 func (RemoteTarget) TableName() string { return "storages.remote_targets" }
 
-type Service struct{ db *gorm.DB }
+type Service struct {
+	db     *gorm.DB
+	poolMu sync.Mutex
+	pools  map[string]string
+}
 
-func New(db *gorm.DB) *Service { return &Service{db: db} }
+func New(db *gorm.DB) *Service { return &Service{db: db, pools: map[string]string{}} }
 
 func randomHex(n int) string {
 	b := make([]byte, n)
@@ -207,7 +212,7 @@ func (s *Service) ListUsers(accountID string) map[string]any {
 	out := map[string]any{}
 	for _, r := range rows {
 		out[r.AccessKey] = map[string]any{
-			"status": r.Status, "policyName": r.PolicyName, "name": r.Name, "memberOf": s.GroupsForUser(r.AccessKey),
+			"status": r.Status, "policyName": r.PolicyName, "name": r.Name, "description": r.Description, "memberOf": s.GroupsForUser(r.AccessKey),
 		}
 	}
 	return out
@@ -696,4 +701,22 @@ func (s *Service) ImportIAM(dump map[string]any) error {
 		}
 	}
 	return nil
+}
+
+func (s *Service) SetPoolStatus(id, status string) {
+	s.poolMu.Lock()
+	defer s.poolMu.Unlock()
+	if s.pools == nil {
+		s.pools = map[string]string{}
+	}
+	s.pools[id] = status
+}
+
+func (s *Service) PoolStatus(id string) string {
+	s.poolMu.Lock()
+	defer s.poolMu.Unlock()
+	if s.pools[id] == "" {
+		return "online"
+	}
+	return s.pools[id]
 }

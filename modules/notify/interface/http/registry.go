@@ -2,7 +2,7 @@ package http
 
 import (
 	systemapp "nfxstorages/modules/notify/application/system"
-	"nfxstorages/modules/notify/interfaces/http/handler"
+	"nfxstorages/modules/notify/interface/http/handler"
 )
 
 type Registry struct {

@@ -2,7 +2,7 @@ package http
 
 import (
 	systemapp "nfxstorages/modules/iam/application/system"
-	"nfxstorages/modules/iam/interfaces/http/handler"
+	"nfxstorages/modules/iam/interface/http/handler"
 )
 
 type Registry struct {

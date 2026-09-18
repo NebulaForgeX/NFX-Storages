@@ -1,0 +1,6 @@
+{
+  "STORAGES_VOLUME_ALERT": {
+    "title": "Storage volume alert",
+    "body": "A storage volume reported an unhealthy state."
+  }
+}

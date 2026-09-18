@@ -6,7 +6,7 @@ import { HardDrive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useCreateTier, useDeleteTier, useTiers, useUpdateTier } from "@/hooks/storages";
+import { useCreateTier, useDeleteTier, useTiers, useUpdateTier } from "@/hooks";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 

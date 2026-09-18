@@ -42,6 +42,7 @@ function useSidebarItems(): SidebarMenuItem[] {
       { label: t("sidebar.userGroups"), path: ROUTES.USER_GROUPS, icon: <Users size={18} /> },
       { label: t("sidebar.importExport"), path: ROUTES.IMPORT_EXPORT, icon: <ArrowLeftRight size={18} /> },
       { label: t("sidebar.performance"), path: ROUTES.PERFORMANCE, icon: <Activity size={18} /> },
+      { label: t("sidebar.pools"), path: ROUTES.POOLS, icon: <HardDrive size={18} /> },
       {
         label: t("sidebar.bucketSetting"),
         path: ROUTES.EVENTS,

@@ -1,9 +1,9 @@
 package http
 
 import (
-	adminhandler "nfxstorages/modules/admin/interfaces/http/handler"
+	adminhandler "nfxstorages/modules/admin/interface/http/handler"
 	systemapp "nfxstorages/modules/admin/application/system"
-	"nfxstorages/modules/admin/interfaces/http/handler"
+	"nfxstorages/modules/admin/interface/http/handler"
 )
 
 type Registry struct {

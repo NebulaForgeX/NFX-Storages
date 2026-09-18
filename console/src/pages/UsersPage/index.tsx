@@ -13,9 +13,10 @@ import {
   useCreateUser,
   useCreateUserAccessKey,
   useDeleteUser,
+  useUpdateUser,
   useUpdateUserGroups,
   useUsers,
-} from "@/hooks/storages";
+} from "@/hooks";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
@@ -28,11 +29,14 @@ export default function UsersPage() {
   const assignPolicy = useAssignUserPolicy();
   const updateGroups = useUpdateUserGroups();
   const createUserKey = useCreateUserAccessKey();
+  const updateUser = useUpdateUser();
   const [search, setSearch] = useState("");
   const [accessKey, setAccessKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
   const [policyName, setPolicyName] = useState("");
   const [groups, setGroups] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
   const rows = useMemo(
@@ -96,6 +100,14 @@ export default function UsersPage() {
     }
   };
 
+  const saveUser = async (name: string) => {
+    try {
+      await updateUser.mutateAsync({ accessKey: name, name: displayName, description });
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
   return (
     <PageFrame>
       <PageHeader
@@ -108,6 +120,8 @@ export default function UsersPage() {
             <TextField.Root type="password" value={secretKey} onChange={(e) => setSecretKey(e.target.value)} placeholder={t("Key")} />
             <TextField.Root value={policyName} onChange={(e) => setPolicyName(e.target.value)} placeholder={t("Assign Policy")} />
             <TextField.Root value={groups} onChange={(e) => setGroups(e.target.value)} placeholder={t("User Groups")} />
+            <TextField.Root value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t("Display Name")} />
+            <TextField.Root value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("Description")} />
             <Button onClick={() => void create()}>{t("Add User")}</Button>
           </Flex>
         }
@@ -120,6 +134,11 @@ export default function UsersPage() {
         rowKey={(row) => row.accessKey}
         columns={[
           { key: "accessKey", header: t("Name") },
+          {
+            key: "displayName",
+            header: t("Display Name"),
+            render: (row) => String((row as { name?: string }).name ?? "-"),
+          },
           { key: "status", header: t("Status") },
           {
             key: "policyName",
@@ -142,6 +161,9 @@ export default function UsersPage() {
                 </Button>
                 <Button size="1" variant="outline" onClick={() => void createKey(row.accessKey)}>
                   {t("Add Access Key")}
+                </Button>
+                <Button size="1" variant="outline" onClick={() => void saveUser(row.accessKey)}>
+                  {t("Save")}
                 </Button>
                 <Button size="1" color="red" variant="outline" onClick={() => void remove(row.accessKey)}>
                   {t("Delete")}

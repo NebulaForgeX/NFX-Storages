@@ -6,7 +6,7 @@ import { ShieldCheck } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useAssignUserPolicy, useCreatePolicy, useDeletePolicy, usePolicies } from "@/hooks/storages";
+import { useAssignPolicyMulti, useAssignUserPolicy, useCreatePolicy, useDeletePolicy, usePolicies } from "@/hooks";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
@@ -16,10 +16,13 @@ export default function PoliciesPage() {
   const createPolicy = useCreatePolicy();
   const deletePolicy = useDeletePolicy();
   const assignPolicy = useAssignUserPolicy();
+  const assignMulti = useAssignPolicyMulti();
   const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [content, setContent] = useState("{}");
   const [user, setUser] = useState("");
+  const [users, setUsers] = useState("");
+  const [groups, setGroups] = useState("");
   const [error, setError] = useState("");
 
   const rows = useMemo(
@@ -55,6 +58,17 @@ export default function PoliciesPage() {
     }
   };
 
+  const assignMany = async (policyName: string) => {
+    const userList = users.split(",").map((item) => item.trim()).filter(Boolean);
+    const groupList = groups.split(",").map((item) => item.trim()).filter(Boolean);
+    if (!userList.length && !groupList.length) return;
+    try {
+      await assignMulti.mutateAsync({ policyName, users: userList, groups: groupList });
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
   return (
     <PageFrame>
       <PageHeader
@@ -64,6 +78,8 @@ export default function PoliciesPage() {
           <Flex gap="2" wrap="wrap">
             <TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
             <TextField.Root value={user} onChange={(e) => setUser(e.target.value)} placeholder={t("Access Key")} />
+            <TextField.Root value={users} onChange={(e) => setUsers(e.target.value)} placeholder={t("Assign to Users")} />
+            <TextField.Root value={groups} onChange={(e) => setGroups(e.target.value)} placeholder={t("Assign to Groups")} />
           </Flex>
         }
       />
@@ -87,6 +103,9 @@ export default function PoliciesPage() {
               <Flex gap="2">
                 <Button size="1" variant="outline" onClick={() => void assign(row.name)}>
                   {t("Assign Policy")}
+                </Button>
+                <Button size="1" variant="outline" onClick={() => void assignMany(row.name)}>
+                  {t("Assign to Users")}
                 </Button>
                 <Button size="1" color="red" variant="outline" onClick={() => void remove(row.name)}>
                   {t("Delete")}

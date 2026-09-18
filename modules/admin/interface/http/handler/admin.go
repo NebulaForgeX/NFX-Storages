@@ -186,15 +186,10 @@ func (h *AdminHandler) Register(g fiber.Router) {
 	g.Post("/kms/generate-data-key", func(c fiber.Ctx) error { return c.JSON(h.generateDataKey(c)) })
 	g.Get("/export-iam", h.exportIAM)
 	g.Put("/import-iam", h.importIAM)
-	g.Get("/pools/list", func(c fiber.Ctx) error {
-		disks := h.svc.Objects.Disks()
-		return c.JSON(map[string]any{"pools": []map[string]any{{"id": "pool-0", "disks": disks}}})
-	})
-	g.Get("/pools/status", func(c fiber.Ctx) error {
-		return c.JSON(map[string]any{"status": "online"})
-	})
-	g.Post("/pools/decommission", func(c fiber.Ctx) error { return c.JSON(map[string]any{"status": "accepted"}) })
-	g.Post("/pools/cancel", func(c fiber.Ctx) error { return c.JSON(map[string]any{"status": "ok"}) })
+	g.Get("/pools/list", h.listPools)
+	g.Get("/pools/status", h.poolsStatus)
+	g.Post("/pools/decommission", h.decommissionPool)
+	g.Post("/pools/cancel", h.cancelPool)
 	g.Put("/set-remote-target", h.setRemoteTarget)
 	g.Get("/list-remote-targets", h.listRemoteTargets)
 	g.Delete("/remove-remote-target", h.removeRemoteTarget)
@@ -658,4 +653,46 @@ func (h *AdminHandler) listRemoteTargets(c fiber.Ctx) error {
 func (h *AdminHandler) removeRemoteTarget(c fiber.Ctx) error {
 	_ = h.svc.IAM.DeleteRemoteTarget(c.Query("bucket"), c.Query("arn"))
 	return c.JSON(map[string]any{"status": "ok"})
+}
+
+func (h *AdminHandler) listPools(c fiber.Ctx) error {
+	disks := h.svc.Objects.Disks()
+	id := "pool-0"
+	return c.JSON(map[string]any{
+		"pools": []map[string]any{{
+			"id": id, "disks": disks, "status": h.svc.IAM.PoolStatus(id),
+		}},
+	})
+}
+
+func (h *AdminHandler) poolsStatus(c fiber.Ctx) error {
+	id := c.Query("pool")
+	if id == "" {
+		id = "pool-0"
+	}
+	return c.JSON(map[string]any{"pool": id, "status": h.svc.IAM.PoolStatus(id)})
+}
+
+func (h *AdminHandler) decommissionPool(c fiber.Ctx) error {
+	var body struct {
+		Pool string `json:"pool"`
+	}
+	_ = c.Bind().Body(&body)
+	if body.Pool == "" {
+		body.Pool = "pool-0"
+	}
+	h.svc.IAM.SetPoolStatus(body.Pool, "decommissioning")
+	return c.JSON(map[string]any{"status": "accepted", "pool": body.Pool})
+}
+
+func (h *AdminHandler) cancelPool(c fiber.Ctx) error {
+	var body struct {
+		Pool string `json:"pool"`
+	}
+	_ = c.Bind().Body(&body)
+	if body.Pool == "" {
+		body.Pool = "pool-0"
+	}
+	h.svc.IAM.SetPoolStatus(body.Pool, "online")
+	return c.JSON(map[string]any{"status": "ok", "pool": body.Pool})
 }

@@ -7,15 +7,17 @@ import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
 import {
+  useCancelKmsKeyDeletion,
   useClearKmsCache,
   useConfigureKms,
   useCreateKmsKey,
   useDeleteKmsKey,
+  useGenerateKmsDataKey,
   useKmsKeys,
   useKmsStatus,
   useStartKms,
   useStopKms,
-} from "@/hooks/storages";
+} from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
@@ -30,8 +32,11 @@ export default function SsePage() {
   const deleteKey = useDeleteKmsKey();
   const configureKms = useConfigureKms();
   const clearCache = useClearKmsCache();
+  const cancelDeletion = useCancelKmsKeyDeletion();
+  const generateDataKey = useGenerateKmsDataKey();
   const [description, setDescription] = useState("");
   const [config, setConfig] = useState('{"backend":"local"}');
+  const [dataKey, setDataKey] = useState("");
   const [error, setError] = useState("");
 
   const create = async () => {
@@ -57,6 +62,23 @@ export default function SsePage() {
       await deleteKey.mutateAsync(keyId);
     } catch (err) {
       setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
+    }
+  };
+
+  const cancel = async (keyId: string) => {
+    try {
+      await cancelDeletion.mutateAsync(keyId);
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
+  const generate = async (keyId: string) => {
+    try {
+      const result = await generateDataKey.mutateAsync(keyId);
+      setDataKey(JSON.stringify(result ?? {}, null, 2));
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
   };
 
@@ -93,6 +115,7 @@ export default function SsePage() {
         <Button onClick={() => void create()}>{t("Create Key")}</Button>
       </Flex>
       {error ? <Text color="red">{error}</Text> : null}
+      {dataKey ? <pre style={{ whiteSpace: "pre-wrap" }}>{dataKey}</pre> : null}
       <DataTable
         empty={t("No Data")}
         rows={keys}
@@ -105,18 +128,31 @@ export default function SsePage() {
           },
           { key: "description", header: t("Description") },
           {
+            key: "status",
+            header: t("Status"),
+            render: (row) => String(row.status ?? "-"),
+          },
+          {
             key: "actions",
             header: t("Actions"),
-            render: (row) => (
-              <Button
-                size="1"
-                color="red"
-                variant="outline"
-                onClick={() => void remove(String(row.key_id ?? row.KeyId ?? ""))}
-              >
-                {t("Delete")}
-              </Button>
-            ),
+            render: (row) => {
+              const keyId = String(row.key_id ?? row.KeyId ?? "");
+              return (
+                <Flex gap="2">
+                  <Button size="1" variant="outline" onClick={() => void generate(keyId)}>
+                    {t("Generate Data Key")}
+                  </Button>
+                  {row.status === "pending-deletion" ? (
+                    <Button size="1" variant="outline" onClick={() => void cancel(keyId)}>
+                      {t("Cancel Deletion")}
+                    </Button>
+                  ) : null}
+                  <Button size="1" color="red" variant="outline" onClick={() => void remove(keyId)}>
+                    {t("Delete")}
+                  </Button>
+                </Flex>
+              );
+            },
           },
         ]}
       />

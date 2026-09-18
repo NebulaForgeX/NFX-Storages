@@ -1,0 +1,6 @@
+{
+  "STORAGES_VOLUME_ALERT": {
+    "title": "Alerte de volume de stockage",
+    "body": "Un volume de stockage signale un état anormal."
+  }
+}

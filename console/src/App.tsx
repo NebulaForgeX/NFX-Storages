@@ -23,6 +23,7 @@ import {
   ObjectBrowserPage,
   PerformancePage,
   PoliciesPage,
+  PoolsPage,
   ReplicationPage,
   SelectProfilePage,
   SettingsPage,
@@ -96,6 +97,7 @@ function App() {
         <Route path={ROUTES.USER_GROUPS} element={<UserGroupsPage />} />
         <Route path={ROUTES.IMPORT_EXPORT} element={<ImportExportPage />} />
         <Route path={ROUTES.PERFORMANCE} element={<PerformancePage />} />
+        <Route path={ROUTES.POOLS} element={<PoolsPage />} />
         <Route path={ROUTES.EVENTS} element={<EventsPage />} />
         <Route path={ROUTES.REPLICATION} element={<ReplicationPage />} />
         <Route path={ROUTES.LIFECYCLE} element={<LifecyclePage />} />

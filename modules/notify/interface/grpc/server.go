@@ -3,7 +3,7 @@ package grpc
 import (
 	"nfxstorages/modules/notify/application/resource"
 	systemapp "nfxstorages/modules/notify/application/system"
-	grpcHandler "nfxstorages/modules/notify/interfaces/grpc/handler"
+	grpcHandler "nfxstorages/modules/notify/interface/grpc/handler"
 	"nfxstorages/pkgs/grpcx/interceptor"
 	"nfxstorages/pkgs/security/token"
 	"nfxstorages/pkgs/security/token/servertoken"

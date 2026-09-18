@@ -17,16 +17,16 @@ fi
 
 # ── Pick the environment once; every task launched from the menu inherits it via $ENV ──
 announce_environment() {
-  if [ "$ENV" = "prod" ]; then
-    printf '\n  → ENV=prod  (docker-compose.yml · attach nfx-edge)\n\n'
+  if [ "$ENV" = "secure" ]; then
+    printf '\n  → ENV=secure  (docker-compose.yml · attach nfx-edge)\n\n'
   else
-    printf '\n  → ENV=dev   (docker-compose.dev.yml · attach nfx-edge)\n\n'
+    printf '\n  → ENV=dev     (docker-compose.dev.yml · attach nfx-edge)\n\n'
   fi
 }
 
 choose_environment() {
   case "${ENV:-}" in
-    dev | prod)
+    dev | secure)
       export ENV
       announce_environment
       return
@@ -34,15 +34,15 @@ choose_environment() {
   esac
   local choice
   printf '\n  NFX-Storages — select environment\n'
-  printf '    [D]ev  docker-compose.dev.yml · nfx-edge\n'
-  printf '    [P]rod docker-compose.yml     · nfx-edge\n'
-  printf '  Choice [D/p]: '
+  printf '    [D]ev     docker-compose.dev.yml · nfx-edge\n'
+  printf '    [S]ecure  docker-compose.yml     · nfx-edge\n'
+  printf '  Choice [D/s]: '
   IFS= read -r choice || choice=""
   case "$choice" in
     "" | d | D | dev) ENV=dev ;;
-    p | P | prod) ENV=prod ;;
+    s | S | secure) ENV=secure ;;
     *)
-      echo "Invalid choice: ${choice} (expected dev|prod)" >&2
+      echo "Invalid choice: ${choice} (expected dev|secure)" >&2
       exit 1
       ;;
   esac

@@ -12,6 +12,7 @@
     "userGroups": "User Groups",
     "importExport": "Import/Export",
     "performance": "Performance",
+    "pools": "Storage Pools",
     "bucketSetting": "Bucket Setting",
     "events": "Bucket Events",
     "replication": "Bucket Replication",

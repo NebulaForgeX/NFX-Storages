@@ -6,7 +6,7 @@ import { Repeat } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useDeleteRemoteTarget, useRemoteTargets, useReplication, useSaveReplication, useSetRemoteTarget } from "@/hooks/storages";
+import { useDeleteRemoteTarget, useRemoteTargets, useReplication, useSaveReplication, useSetRemoteTarget } from "@/hooks";
 import { BucketSelect } from "@/components/BucketSelect";
 import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";

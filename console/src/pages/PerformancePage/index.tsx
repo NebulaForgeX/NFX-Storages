@@ -5,7 +5,7 @@ import { Activity, HardDrive, Server } from "lucide-react";
 import { CardHeader, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { usePerformance } from "@/hooks/storages";
+import { usePerformance } from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { niceBytes } from "@/utils/functions";
 

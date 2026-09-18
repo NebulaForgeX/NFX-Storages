@@ -12,6 +12,7 @@
     "userGroups": "用户组",
     "importExport": "导入/导出",
     "performance": "性能",
+    "pools": "存储池",
     "bucketSetting": "存储桶设置",
     "events": "存储桶事件",
     "replication": "存储桶复制",

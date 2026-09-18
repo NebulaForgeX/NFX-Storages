@@ -17,6 +17,7 @@ export { default as TiersPage } from "./TiersPage";
 export { default as SsePage } from "./SsePage";
 export { default as ImportExportPage } from "./ImportExportPage";
 export { default as PerformancePage } from "./PerformancePage";
+export { default as PoolsPage } from "./PoolsPage";
 export { default as LicensePage } from "./LicensePage";
 export { default as SettingsPage } from "./User/Settings";
 export { default as NotFoundPage } from "./NotFoundPage";

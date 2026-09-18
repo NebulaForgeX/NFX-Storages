@@ -1,7 +1,7 @@
 package http
 
 import (
-	"nfxstorages/modules/s3/interfaces/http/handler"
+	"nfxstorages/modules/s3/interface/http/handler"
 	systemapp "nfxstorages/modules/s3/application/system"
 )
 

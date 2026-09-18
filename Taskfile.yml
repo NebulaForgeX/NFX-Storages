@@ -1,12 +1,10 @@
 # https://taskfile.dev
-# NFX-Storages — align Taskfile with CityPulso PulsoLoop-API + NFX-News/Identity.
-# HTTP 入口只有 NFX-Edge：先启动 Edge（nfx-edge 网络），本栈不跑 Traefik。
-# 交互：task start    直接：task go:up / task atlas:pipeline:run:sh
+# 推荐用法：`task start` → 先选择 dev / secure → 再从菜单选指令。
+#   task start
+#   task run（默认 dev） | task atlas:pipeline:run ENV=secure -- --no-skip
+# HTTP 入口只有 NFX-Edge；infra 在 NFX-Stack / NFX-Edge。
 
 version: "3"
-
-dotenv:
-  - ".env"
 
 vars:
   PROTO_SRC_DIR: protos
@@ -14,13 +12,15 @@ vars:
   GO_VERSION: "1.26.0"
   MODULE: "nfxstorages"
   ERRORS_DIR: errors
+  MESSAGES_DIR: messages
   ENV: '{{.ENV | default "dev"}}'
   ENV_FILE: '{{if eq .ENV "secure"}}.secure.env{{else}}.env{{end}}'
-  APP_COMPOSE: '{{if eq .ENV "prod"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
+  APP_COMPOSE: '{{if eq .ENV "secure"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
+  EDGE_NETWORK: nfx-edge
 
 tasks:
   start:
-    desc: "Interactive task menu (↑/↓ or w/s, Enter to run)"
+    desc: "Interactive task menu — browse Taskfile tasks with ↑/↓ or w/s, Enter to run"
     cmds:
       - ./task.sh
     interactive: true
@@ -45,7 +45,7 @@ tasks:
       - buf dep update
       - buf generate
     sources:
-      - "{{.PROTO_SRC_DIR}}/**/*.proto"
+      - "{{.PROTO_SRC_DIR}}/src/**/*.proto"
     generates:
       - "{{.PROTO_OUT_DIR}}/**/*.pb.go"
 
@@ -68,7 +68,7 @@ tasks:
       - task: lint
 
   errors:add-templates:
-    desc: "Add i18n comment blocks to errors/src files that lack them"
+    desc: "Add i18n comment blocks to .go files in errors/src that lack them"
     cmds:
       - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
 
@@ -88,43 +88,72 @@ tasks:
       - task: errors:add-templates
       - task: errors:gen-langs
 
+  messages:gen-langs:
+    desc: "Generate messages/langs/*.json from translation blocks in messages/src"
+    cmds:
+      - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}} {{.CLI_ARGS}}
+
+  messages:
+    desc: "Generate Storages notify i18n JSON"
+    cmds:
+      - task: messages:gen-langs
+
   clean:
     desc: "Clean build artifacts"
     cmds:
       - rm -rf bin/
 
   run:
-    desc: "Generate langs then start Go services + console (NFX-Edge must already be running)"
+    desc: "Generate langs then start s3/admin/object/iam/notify/system + console (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
     cmds:
-      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "prod"}}--prod{{end}}
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
+      - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
       - |
-        echo "==> ensure docker network nfx-edge"
-        if sudo docker network inspect nfx-edge >/dev/null 2>&1; then
-          echo "  network nfx-edge already exists"
+        echo "==> ensure docker network {{.EDGE_NETWORK}}"
+        if sudo docker network inspect {{.EDGE_NETWORK}}; then
+          echo "  network {{.EDGE_NETWORK}} already exists"
         else
-          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first:"
-          echo "  cd ../NFX-Edge && ./start.sh"
+          echo "ERROR: Docker network {{.EDGE_NETWORK}} missing. Start NFX-Edge first."
           exit 1
         fi
-        sudo docker compose --env-file .env -f {{.APP_COMPOSE}} up --build {{if eq .ENV "prod"}}-d{{end}}
+      - |
+        ENV_ARGS=(--env-file "{{.ENV_FILE}}")
+        echo "==> compose env: {{.ENV_FILE}}"
+        svcs=(s3-base admin-base object-base iam-base notify-base system-base console)
+        for svc in "${svcs[@]}"; do
+          echo "==> docker compose build $svc"
+          sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build "$svc"
+        done
+        echo "==> docker compose up"
+        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
 
   run:rebuild:
-    desc: "Force-rebuild (--no-cache) then start (NFX-Edge must already be running)"
+    desc: "Force-rebuild (--no-cache) s3/admin/object/iam/notify/system + console (ENV=dev|secure)"
     cmds:
-      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "prod"}}--prod{{end}}
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
+      - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
       - |
-        echo "==> ensure docker network nfx-edge"
-        if ! sudo docker network inspect nfx-edge >/dev/null 2>&1; then
-          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first."
+        echo "==> ensure docker network {{.EDGE_NETWORK}}"
+        if sudo docker network inspect {{.EDGE_NETWORK}}; then
+          echo "  network {{.EDGE_NETWORK}} already exists"
+        else
+          echo "ERROR: Docker network {{.EDGE_NETWORK}} missing. Start NFX-Edge first."
           exit 1
         fi
-        sudo docker compose --env-file .env -f {{.APP_COMPOSE}} build --no-cache
-        sudo docker compose --env-file .env -f {{.APP_COMPOSE}} up {{if eq .ENV "prod"}}-d{{end}}
+      - |
+        ENV_ARGS=(--env-file "{{.ENV_FILE}}")
+        svcs=(s3-base admin-base object-base iam-base notify-base system-base console)
+        for svc in "${svcs[@]}"; do
+          echo "==> docker compose build --no-cache $svc"
+          sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build --no-cache "$svc"
+        done
+        echo "==> docker compose up"
+        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
 
   run:down:
-    desc: "Stop the app stack (ENV=dev|prod)"
+    desc: "Stop the app stack (ENV=dev|secure)"
     cmds:
-      - sudo docker compose --env-file .env -f {{.APP_COMPOSE}} down
+      - sudo docker compose --env-file {{.ENV_FILE}} -f {{.APP_COMPOSE}} down
 
   atlas:gen-models:
     desc: "Generate Go models from the PostgreSQL schema (ENV=dev|secure)"
@@ -225,27 +254,10 @@ tasks:
         export ATLAS_CONFIG_PATH="file://databases/atlas.hcl"
         bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
 
-  atlas:pipeline:run:sh:
-    desc: "Run Atlas pipeline using bash (ENV=dev|secure)"
-    dotenv:
-      - "{{.ENV_FILE}}"
-    cmds:
-      - task: atlas:pipeline:run
-
-  db:create:
-    desc: "Create nfxstorages_dev / nfxstorages / nfxstorages_diff on Stack Postgres"
-    dotenv:
-      - "{{.ENV_FILE}}"
-    cmds:
-      - |
-        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
-        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
-        export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
-        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10105}}"
-        bash scripts/create_databases.sh
-
   scripts:test-db:
-    desc: "Probe PostgreSQL (+ Redis) using s3 TOML + .env. Pass -- --skip-redis / -- -timeout=5s."
+    desc: "Probe PostgreSQL (+ Redis) using s3 TOML + .env"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - ENV={{.ENV}} go run ./scripts/testdb/ {{.CLI_ARGS}}
 
@@ -265,28 +277,3 @@ tasks:
     dir: console
     cmds:
       - npm install
-
-  go:ub:
-    desc: "Up go dev server and build (NFX-Edge must already be running)"
-    cmds:
-      - |
-        if ! sudo docker network inspect nfx-edge >/dev/null 2>&1; then
-          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first."
-          exit 1
-        fi
-        sudo docker compose -f docker-compose.dev.yml up --build
-
-  go:up:
-    desc: "Up go dev server (NFX-Edge must already be running)"
-    cmds:
-      - |
-        if ! sudo docker network inspect nfx-edge >/dev/null 2>&1; then
-          echo "ERROR: Docker network nfx-edge missing. Start NFX-Edge first."
-          exit 1
-        fi
-        sudo docker compose -f docker-compose.dev.yml up
-
-  go:down:
-    desc: "Stop the app stack"
-    cmds:
-      - sudo docker compose -f {{.APP_COMPOSE}} down

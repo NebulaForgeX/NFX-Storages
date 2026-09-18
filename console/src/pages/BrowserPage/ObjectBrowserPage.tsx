@@ -7,7 +7,7 @@ import { FolderOpen } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useDeleteObject, useObjectInfo, useObjects, usePutObject, useSignedObjectUrl } from "@/hooks/storages";
+import { useDeleteObject, useObjectInfo, useObjects, usePutObject, useSignedObjectUrl } from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { DataTable } from "@/components/DataTable";
 import { niceBytes } from "@/utils/functions";
