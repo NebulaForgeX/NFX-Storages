@@ -14,19 +14,8 @@ vars:
   GO_VERSION: "1.26.0"
   MODULE: "nfxstorages"
   ERRORS_DIR: errors
-  POSTGRES_HOST: '{{.POSTGRESQL_HOST | default "172.18.0.6"}}'
-  POSTGRES_PORT: '{{.POSTGRESQL_PORT | default "5432"}}'
-  POSTGRES_USER: '{{.POSTGRESQL_USER | default "postgres"}}'
-  POSTGRES_PASSWORD: "{{.POSTGRESQL_PASSWORD}}"
-  POSTGRES_DB_DEV: '{{.POSTGRESQL_NAME_DEV | default "nfxstorages_dev"}}'
-  POSTGRES_DB_PROD: '{{.POSTGRESQL_NAME_PROD | default "nfxstorages"}}'
-  POSTGRES_DB_SHADOW: '{{.POSTGRESQL_NAME_SHADOW | default "nfxstorages_diff"}}'
-  POSTGRES_CONTAINER_NAME: "NFX-Stack-PostgreSQL"
-  ATLAS_ENV: '{{default "dev" .ATLAS_ENV}}'
-  ATLAS_CONFIG_PATH: "file://databases/atlas.hcl"
-  ATLAS_MIGRATIONS_DIR_DEV: "file://databases/migrations/development"
-  ATLAS_MIGRATIONS_DIR_SECURE: "file://databases/migrations/secure"
   ENV: '{{.ENV | default "dev"}}'
+  ENV_FILE: '{{if eq .ENV "secure"}}.secure.env{{else}}.env{{end}}'
   APP_COMPOSE: '{{if eq .ENV "prod"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
 
 tasks:
@@ -138,64 +127,73 @@ tasks:
       - sudo docker compose --env-file .env -f {{.APP_COMPOSE}} down
 
   atlas:gen-models:
-    desc: "Generate Go models from the PostgreSQL schema"
+    desc: "Generate Go models from the PostgreSQL schema (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        export POSTGRES_USER="{{.POSTGRES_USER}}"
-        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
-        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
-        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10105}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
-          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else
-          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
         fi
-        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxstorages_diff}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
-        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_models.sh
+    silent: false
 
   atlas:gen-views:
-    desc: "Generate Go views from the PostgreSQL schema"
+    desc: "Generate Go views from the PostgreSQL schema (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        export POSTGRES_USER="{{.POSTGRES_USER}}"
-        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
-        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
-        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10105}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
-          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else
-          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
         fi
-        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxstorages_diff}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
-        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_views.sh
+    silent: false
 
   atlas:gen-enums:
-    desc: "Generate Go enums from the PostgreSQL schema"
+    desc: "Generate Go enums from the PostgreSQL schema (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        export POSTGRES_USER="{{.POSTGRES_USER}}"
-        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
-        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
-        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10105}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
-          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else
-          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
         fi
-        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxstorages_diff}}"
         export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
-        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_enums.sh
+    silent: false
 
   atlas:gen:
     desc: "Generate Go models, enums and views from the database schema"
@@ -203,42 +201,48 @@ tasks:
       - task: atlas:gen-enums
       - task: atlas:gen-models
       - task: atlas:gen-views
+    silent: false
+
+  atlas:pipeline:run:
+    desc: "Run Atlas pipeline (ENV=dev|secure; extra flags after --, e.g. task atlas:pipeline:run ENV=secure -- --no-skip)"
+    dotenv:
+      - "{{.ENV_FILE}}"
+    cmds:
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10105}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
+        else
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
+        fi
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxstorages_diff}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
+        export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
+        export ATLAS_CONFIG_PATH="file://databases/atlas.hcl"
+        bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
 
   atlas:pipeline:run:sh:
-    desc: "Run Atlas pipeline using bash (interactive environment selection)"
+    desc: "Run Atlas pipeline using bash (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - task: atlas:pipeline:run
 
-  atlas:pipeline:run:
-    desc: "Run Atlas pipeline (ENV=dev|secure; extra flags after --)"
-    cmds:
-      - |
-        export POSTGRES_USER="{{.POSTGRES_USER}}"
-        export POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
-        export POSTGRES_HOST="{{.POSTGRES_HOST}}"
-        export POSTGRES_PORT="{{.POSTGRES_PORT}}"
-        if [[ "{{.ENV}}" == "secure" ]]; then
-          export POSTGRES_DB="{{.POSTGRES_DB_PROD}}"
-        else
-          export POSTGRES_DB="{{.POSTGRES_DB_DEV}}"
-        fi
-        export POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
-        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
-        export POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}"
-        export ATLAS_POSTGRES_USE_DOCKER="${ATLAS_POSTGRES_USE_DOCKER:-true}"
-        export ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
-        bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
-
-  atlas:status:
-    desc: "Show Atlas migrate status (dev)"
-    cmds:
-      - |
-        atlas migrate status --env dev --config {{.ATLAS_CONFIG_PATH}} --dir file://databases/migrations/development
-
   db:create:
     desc: "Create nfxstorages_dev / nfxstorages / nfxstorages_diff on Stack Postgres"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
-      - bash scripts/create_databases.sh
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10105}}"
+        bash scripts/create_databases.sh
 
   scripts:test-db:
     desc: "Probe PostgreSQL (+ Redis) using s3 TOML + .env. Pass -- --skip-redis / -- -timeout=5s."
