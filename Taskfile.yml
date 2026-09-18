@@ -94,7 +94,7 @@ tasks:
       - rm -rf bin/
 
   run:
-    desc: "Generate error langs then start the stack (NFX-Edge must already be running)"
+    desc: "Generate langs then start Go services + console (NFX-Edge must already be running)"
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "prod"}}--prod{{end}}
       - |
