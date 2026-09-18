@@ -36,7 +36,7 @@ export default function ConfigPage() {
   };
 
   return (
-    <AuthShell brandEyebrow="NFX Storage" brandTitle={t("Server Configuration")} heroFooter={t("Please configure your NebulaFX server address")}>
+    <AuthShell brandEyebrow="NFX Storage" brandTitle={t("Server Configuration")} heroFooter={t("Please configure your NFX Storages server address")}>
       <Flex direction="column" gap="4">
         <Heading as="h2" size="5">
           {t("Server Address")}

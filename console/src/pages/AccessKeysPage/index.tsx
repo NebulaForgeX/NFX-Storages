@@ -6,14 +6,16 @@ import { KeyRound } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useCreateAccessKey, useDeleteAccessKey, useAccessKeys } from "@/hooks/storages";
+import { useCreateAccessKey, useDeleteAccessKey, useAccessKeys, useUpdateAccessKey } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 export default function AccessKeysPage() {
   const { t } = useTranslation("common");
   const { data = [], isLoading } = useAccessKeys();
   const createAccessKey = useCreateAccessKey();
   const deleteAccessKey = useDeleteAccessKey();
+  const updateAccessKey = useUpdateAccessKey();
   const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +30,16 @@ export default function AccessKeysPage() {
       await createAccessKey.mutateAsync(name);
       setName("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Add Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
+  const rename = async (accessKey: string) => {
+    if (!name) return;
+    try {
+      await updateAccessKey.mutateAsync({ accessKey, name });
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
   };
 
@@ -37,7 +48,7 @@ export default function AccessKeysPage() {
     try {
       await deleteAccessKey.mutateAsync(accessKey);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Delete Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
     }
   };
 
@@ -69,9 +80,14 @@ export default function AccessKeysPage() {
             key: "actions",
             header: t("Actions"),
             render: (row) => (
-              <Button size="1" color="red" variant="outline" onClick={() => void remove(row.accessKey)}>
-                {t("Delete")}
-              </Button>
+              <Flex gap="2">
+                <Button size="1" variant="outline" onClick={() => void rename(row.accessKey)}>
+                  {t("Save")}
+                </Button>
+                <Button size="1" color="red" variant="outline" onClick={() => void remove(row.accessKey)}>
+                  {t("Delete")}
+                </Button>
+              </Flex>
             ),
           },
         ]}

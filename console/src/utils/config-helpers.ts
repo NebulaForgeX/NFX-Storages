@@ -122,7 +122,7 @@ const isValidServerConfig = (config: unknown): config is ServerConfigResponse =>
  * @example
  * ```typescript
  * const config = createDefaultConfig('https://example.com:9000')
- * console.log(config.api.baseURL) // 'https://example.com:9000/nebulafx/admin/v3'
+ * console.log(config.api.baseURL) // 'https://example.com:9000/nfxstorages/admin/v3'
  * ```
  */
 export const createDefaultConfig = (serverHost: string): SiteConfig => {

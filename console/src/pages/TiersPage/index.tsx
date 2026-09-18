@@ -6,8 +6,9 @@ import { HardDrive } from "@/assets/icons/lucide";
 import { PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
 
-import { useCreateTier, useDeleteTier, useTiers } from "@/hooks/storages";
+import { useCreateTier, useDeleteTier, useTiers, useUpdateTier } from "@/hooks/storages";
 import { DataTable } from "@/components/DataTable";
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 interface TierRow {
   type: string;
@@ -24,6 +25,7 @@ export default function TiersPage() {
   const { data = [], isLoading } = useTiers();
   const createTier = useCreateTier();
   const deleteTier = useDeleteTier();
+  const updateTier = useUpdateTier();
   const [name, setName] = useState("");
   const [endpoint, setEndpoint] = useState("");
   const [error, setError] = useState("");
@@ -33,7 +35,15 @@ export default function TiersPage() {
       await createTier.mutateAsync({ name, endpoint });
       setName("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Add Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
+  const update = async (tierName: string) => {
+    try {
+      await updateTier.mutateAsync({ name: tierName, endpoint });
+    } catch (err) {
+      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
   };
 
@@ -43,7 +53,7 @@ export default function TiersPage() {
     try {
       await deleteTier.mutateAsync(tierName);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Delete Failed"));
+      setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
     }
   };
 
@@ -72,9 +82,14 @@ export default function TiersPage() {
             key: "actions",
             header: t("Actions"),
             render: (row) => (
-              <Button size="1" color="red" variant="outline" onClick={() => void remove(row)}>
-                {t("Delete")}
-              </Button>
+              <Flex gap="2">
+                <Button size="1" variant="outline" onClick={() => void update(getConfig(row)?.name ?? "")}>
+                  {t("Save")}
+                </Button>
+                <Button size="1" color="red" variant="outline" onClick={() => void remove(row)}>
+                  {t("Delete")}
+                </Button>
+              </Flex>
             ),
           },
         ]}
