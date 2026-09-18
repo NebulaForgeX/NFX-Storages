@@ -20,7 +20,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_S3}"
     ports:
-      - "${GRPC_PORT_S3}:${GRPC_PORT_S3}"
+      - "${GRPC_EXT_PORT_S3}:${GRPC_PORT_S3}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
@@ -59,7 +59,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_ADMIN}"
     ports:
-      - "${GRPC_PORT_ADMIN}:${GRPC_PORT_ADMIN}"
+      - "${GRPC_EXT_PORT_ADMIN}:${GRPC_PORT_ADMIN}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
@@ -98,7 +98,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_OBJECT}"
     ports:
-      - "${GRPC_PORT_OBJECT}:${GRPC_PORT_OBJECT}"
+      - "${GRPC_EXT_PORT_OBJECT}:${GRPC_PORT_OBJECT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
@@ -137,7 +137,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_IAM}"
     ports:
-      - "${GRPC_PORT_IAM}:${GRPC_PORT_IAM}"
+      - "${GRPC_EXT_PORT_IAM}:${GRPC_PORT_IAM}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
@@ -176,7 +176,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_NOTIFY}"
     ports:
-      - "${GRPC_PORT_NOTIFY}:${GRPC_PORT_NOTIFY}"
+      - "${GRPC_EXT_PORT_NOTIFY}:${GRPC_PORT_NOTIFY}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
@@ -215,7 +215,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_SYSTEM}"
     ports:
-      - "${GRPC_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"
+      - "${GRPC_EXT_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"

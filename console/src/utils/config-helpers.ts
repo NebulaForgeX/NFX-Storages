@@ -329,7 +329,7 @@ export const getConfig = async (): Promise<ConfigResult> => {
  * Get server default configuration
  */
 export const getServerDefaultConfig = (): ConfigResult => {
-  const defaultServerHost = 'http://127.0.0.1:10130'
+  const defaultServerHost = 'http://127.0.0.1:10166'
   const config = createDefaultConfig(defaultServerHost)
   return { config, source: 'default' }
 }
