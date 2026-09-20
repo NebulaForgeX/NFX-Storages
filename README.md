@@ -8,6 +8,8 @@
 
 S3-compatible object storage in **Go**, with NAS-backed volumes, Identity login, and a React console.
 
+> Deploy, network, config, and security: [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation).
+
 [中文文档 / Chinese](README.cn.md)
 
 </div>
