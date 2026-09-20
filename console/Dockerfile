@@ -12,7 +12,7 @@ ENV VITE_SERVER_HOST=${VITE_SERVER_HOST}
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 ENV VITE_S3_ENDPOINT=${VITE_S3_ENDPOINT}
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 
 FROM deps AS dev
