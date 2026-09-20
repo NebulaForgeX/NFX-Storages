@@ -14,9 +14,12 @@ import {
   PutObjectRetentionCommand,
   PutObjectTaggingCommand,
 } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl as signUrl } from "@aws-sdk/s3-request-presigner";
 
 import { createS3Client } from "@/apis/s3";
+
+const MULTIPART_THRESHOLD = 8 * 1024 * 1024;
 
 export function objectRepository(bucket: string) {
   const client = () => createS3Client();
@@ -28,7 +31,21 @@ export function objectRepository(bucket: string) {
     headObject: (key: string) => client().send(new HeadObjectCommand({ Bucket: bucket, Key: key })),
     getSignedUrl: (key: string, expiresIn = 3600) =>
       signUrl(client(), new GetObjectCommand({ Bucket: bucket, Key: key }), { expiresIn }),
-    putObject: (key: string, body: Blob | string) => client().send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: body })),
+    async putObject(key: string, body: Blob | string) {
+      const payload = typeof body === "string" ? new Blob([body]) : body;
+      if (payload.size >= MULTIPART_THRESHOLD) {
+        const upload = new Upload({
+          client: client(),
+          params: { Bucket: bucket, Key: key, Body: payload },
+        });
+        return upload.done();
+      }
+      return client().send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: payload }));
+    },
+    createFolder: (key: string) => {
+      const folderKey = key.endsWith("/") ? key : `${key}/`;
+      return client().send(new PutObjectCommand({ Bucket: bucket, Key: folderKey, Body: new Blob([]) }));
+    },
     deleteObject,
     listObject: (prefix?: string, pageSize = 25, continuationToken?: string) =>
       client().send(

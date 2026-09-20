@@ -2,29 +2,38 @@ import { ShieldCheck } from "nfx-ui/icons";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
-
-import { PageHeader } from "@/components";
+import { Button, Heading, Text, TextArea, TextField } from "@radix-ui/themes";
+import { DataTable, FormDialog, PageHeader, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 
-import { useAssignPolicyMulti, useAssignUserPolicy, useCreatePolicy, useDeletePolicy, usePolicies } from "@/hooks";
-import { DataTable } from "@/components/DataTable";
+import { useAssignPolicyMulti, useCreatePolicy, useDeletePolicy, usePolicies, usePolicyUsers } from "@/hooks";
+import { showConfirm, showError } from "@/stores/modal";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
+
+function stringifyPolicy(content: unknown) {
+  if (typeof content === "string") return content;
+  try {
+    return JSON.stringify(content, null, 2);
+  } catch {
+    return String(content ?? "");
+  }
+}
 
 export default function PoliciesPage() {
   const { t } = useTranslation("common");
   const { data = [], isLoading } = usePolicies();
   const createPolicy = useCreatePolicy();
   const deletePolicy = useDeletePolicy();
-  const assignPolicy = useAssignUserPolicy();
   const assignMulti = useAssignPolicyMulti();
   const [search, setSearch] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [selected, setSelected] = useState("");
   const [name, setName] = useState("");
-  const [content, setContent] = useState("{}");
-  const [user, setUser] = useState("");
+  const [content, setContent] = useState("{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": []\n}");
   const [users, setUsers] = useState("");
   const [groups, setGroups] = useState("");
-  const [error, setError] = useState("");
+  const selectedPolicy = data.find((row) => row.name === selected);
+  const { data: boundUsers = [] } = usePolicyUsers(selected);
 
   const rows = useMemo(
     () => data.filter((row) => row.name.toLowerCase().includes(search.toLowerCase())),
@@ -35,87 +44,98 @@ export default function PoliciesPage() {
     try {
       await createPolicy.mutateAsync({ name, policy: content });
       setName("");
-      setContent("{}");
+      setCreateOpen(false);
     } catch (err) {
-      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+      showError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
   };
 
-  const remove = async (policyName: string) => {
-    if (!window.confirm(t("Are you sure you want to delete this policy?"))) return;
+  const assign = async () => {
+    if (!selected) return;
     try {
-      await deletePolicy.mutateAsync(policyName);
+      await assignMulti.mutateAsync({
+        policyName: selected,
+        users: users.split(",").map((item) => item.trim()).filter(Boolean),
+        groups: groups.split(",").map((item) => item.trim()).filter(Boolean),
+      });
     } catch (err) {
-      setError(getStoragesApiErrorMessage(err, t("Delete Failed")));
-    }
-  };
-
-  const assign = async (policyName: string) => {
-    if (!user) return;
-    try {
-      await assignPolicy.mutateAsync({ user, policyName });
-    } catch (err) {
-      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
-    }
-  };
-
-  const assignMany = async (policyName: string) => {
-    const userList = users.split(",").map((item) => item.trim()).filter(Boolean);
-    const groupList = groups.split(",").map((item) => item.trim()).filter(Boolean);
-    if (!userList.length && !groupList.length) return;
-    try {
-      await assignMulti.mutateAsync({ policyName, users: userList, groups: groupList });
-    } catch (err) {
-      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
+      showError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
   };
 
   return (
     <PageFrame>
-      <PageHeader
-        icon={ShieldCheck}
-        title={t("IAM Policies")}
-        actions={
-          <Flex gap="2" wrap="wrap">
-            <TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
-            <TextField.Root value={user} onChange={(e) => setUser(e.target.value)} placeholder={t("Access Key")} />
-            <TextField.Root value={users} onChange={(e) => setUsers(e.target.value)} placeholder={t("Assign to Users")} />
-            <TextField.Root value={groups} onChange={(e) => setGroups(e.target.value)} placeholder={t("Assign to Groups")} />
-          </Flex>
-        }
-      />
-      <Flex direction="column" gap="3" mb="4" maxWidth="640px">
-        <TextField.Root value={name} onChange={(e) => setName(e.target.value)} placeholder={t("Name")} />
-        <TextArea value={content} onChange={(e) => setContent(e.target.value)} rows={6} />
-        <Button onClick={() => void create()}>{t("New Policy")}</Button>
-      </Flex>
-      {error ? <Text color="red">{error}</Text> : null}
+      <PageHeader icon={ShieldCheck} title={t("IAM Policies")} />
+      <Toolbar search={search} onSearchChange={setSearch} searchPlaceholder={t("Search")}>
+        <Button onClick={() => setCreateOpen(true)}>{t("New Policy")}</Button>
+      </Toolbar>
       <DataTable
         loading={isLoading}
         empty={t("No Policies")}
+        emptyIcon={ShieldCheck}
         rows={rows}
         rowKey={(row) => row.name}
-        columns={[
-          { key: "name", header: t("Name") },
+        selectedKey={selected}
+        onRowClick={(row) => setSelected(row.name)}
+        columns={[{ key: "name", header: t("Name") }]}
+        actions={(row) => [
+          { label: t("Assign Policy"), onSelect: () => setSelected(row.name) },
           {
-            key: "actions",
-            header: t("Actions"),
-            render: (row) => (
-              <Flex gap="2">
-                <Button size="1" variant="outline" onClick={() => void assign(row.name)}>
-                  {t("Assign Policy")}
-                </Button>
-                <Button size="1" variant="outline" onClick={() => void assignMany(row.name)}>
-                  {t("Assign to Users")}
-                </Button>
-                <Button size="1" color="red" variant="outline" onClick={() => void remove(row.name)}>
-                  {t("Delete")}
-                </Button>
-              </Flex>
-            ),
+            label: t("Delete"),
+            color: "red",
+            onSelect: () =>
+              showConfirm({
+                title: t("Delete"),
+                message: t("Are you sure you want to delete this policy?"),
+                confirmText: t("Delete"),
+                cancelText: t("Cancel"),
+                onConfirm: () => {
+                  void deletePolicy.mutateAsync(row.name).catch((err) => {
+                    showError(getStoragesApiErrorMessage(err, t("Delete Failed")));
+                  });
+                },
+              }),
           },
         ]}
       />
+      <FormDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        title={t("New Policy")}
+        submitLabel={t("New Policy")}
+        cancelLabel={t("Cancel")}
+        submitting={createPolicy.isPending}
+        onSubmit={create}
+        maxWidth="640px"
+      >
+        <TextField.Root value={name} onChange={(event) => setName(event.target.value)} placeholder={t("Name")} />
+        <TextArea value={content} onChange={(event) => setContent(event.target.value)} rows={12} />
+      </FormDialog>
+      <FormDialog
+        open={Boolean(selected)}
+        onOpenChange={(open) => {
+          if (!open) setSelected("");
+        }}
+        title={selected}
+        cancelLabel={t("Close")}
+        maxWidth="720px"
+        footer={
+          <Button type="button" variant="outline" onClick={() => setSelected("")}>
+            {t("Close")}
+          </Button>
+        }
+      >
+        <Heading size="2">{t("Assign to Users")}</Heading>
+        <TextField.Root value={users} onChange={(event) => setUsers(event.target.value)} placeholder={t("Assign to Users")} />
+        <TextField.Root value={groups} onChange={(event) => setGroups(event.target.value)} placeholder={t("Assign to Groups")} />
+        <Button type="button" onClick={() => void assign()}>
+          {t("Assign Policy")}
+        </Button>
+        <Heading size="2">{t("Users")}</Heading>
+        <Text size="2">{boundUsers.length ? boundUsers.join(", ") : t("No Data")}</Text>
+        <Heading size="2">{t("Access Policy")}</Heading>
+        <TextArea readOnly value={stringifyPolicy(selectedPolicy?.content)} rows={12} />
+      </FormDialog>
     </PageFrame>
   );
 }

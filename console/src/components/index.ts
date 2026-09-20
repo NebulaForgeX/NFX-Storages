@@ -15,3 +15,14 @@ export type { PreferencesPopoverProps } from "./PreferencesPopover";
 
 export { default as VirtuosoList } from "./VirtuosoList";
 export type { VirtuosoListProps } from "./VirtuosoList";
+export { Toolbar } from "./Toolbar";
+export type { ToolbarProps } from "./Toolbar";
+export { FormDialog } from "./FormDialog";
+export type { FormDialogProps } from "./FormDialog";
+export { Inspector, PropertyList } from "./Inspector";
+export type { InspectorProps, PropertyItem } from "./Inspector";
+export { SecretDialog } from "./SecretDialog";
+export type { SecretDialogProps } from "./SecretDialog";
+export { DataTable } from "./DataTable";
+export type { Column, RowAction } from "./DataTable";
+export { BucketSelect } from "./BucketSelect";

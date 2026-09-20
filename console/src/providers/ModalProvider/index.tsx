@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Base } from "./components";
+import { Base, Confirm } from "./components";
 import { useSystemFeedbackInv } from "./hooks/useSystemFeedbackInv";
 
 const ModalProvider = ({ children }: { children: ReactNode }) => {
@@ -9,6 +9,7 @@ const ModalProvider = ({ children }: { children: ReactNode }) => {
     <>
       {children}
       <Base />
+      <Confirm />
     </>
   );
 };

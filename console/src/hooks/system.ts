@@ -17,15 +17,17 @@ export function usePerformance() {
   return useQuery({
     queryKey: STORAGES_QUERY_KEYS.performance,
     queryFn: async () => {
-      const [info, storage, usage] = await Promise.allSettled([
+      const [info, storage, usage, metrics] = await Promise.allSettled([
         repos.system.getSystemInfo(),
         repos.system.getStorageInfo(),
         repos.system.getDataUsageInfo(),
+        repos.system.getSystemMetrics(),
       ]);
       return {
-        info: info.status === "fulfilled" ? info.value : null,
-        storage: storage.status === "fulfilled" ? storage.value : null,
-        usage: usage.status === "fulfilled" ? usage.value : null,
+        info: info.status === "fulfilled" ? (info.value as Record<string, unknown>) : null,
+        storage: storage.status === "fulfilled" ? (storage.value as { disks?: Array<Record<string, unknown>> }) : null,
+        usage: usage.status === "fulfilled" ? (usage.value as Record<string, unknown>) : null,
+        metrics: metrics.status === "fulfilled" ? (metrics.value as Record<string, unknown>) : null,
       };
     },
   });
@@ -36,8 +38,16 @@ export function usePools() {
   return useQuery({
     queryKey: STORAGES_QUERY_KEYS.pools,
     queryFn: async () => {
-      const res = (await repos.pools.getPoolsList()) as { pools?: Array<{ id?: string; disks?: string[]; status?: string }> };
-      return res.pools ?? [];
+      const [list, status] = await Promise.allSettled([
+        repos.pools.getPoolsList() as Promise<{ pools?: Array<{ id?: string; disks?: string[]; status?: string }> }>,
+        repos.pools.getPoolsStatus() as Promise<{ pool?: string; status?: string }>,
+      ]);
+      const pools = list.status === "fulfilled" ? (list.value.pools ?? []) : [];
+      const statusRow = status.status === "fulfilled" ? status.value : null;
+      return pools.map((pool) => ({
+        ...pool,
+        status: pool.status ?? (statusRow && (statusRow.pool === pool.id || !pool.id) ? statusRow.status : pool.status),
+      }));
     },
   });
 }

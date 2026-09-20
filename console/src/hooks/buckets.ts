@@ -53,9 +53,10 @@ export function useBucketSettings(bucket: string) {
     queryKey: STORAGES_QUERY_KEYS.bucketSettings(bucket),
     enabled: Boolean(bucket),
     queryFn: async () => {
-      const [versioning, policy, encryption, tagging, objectLock] = await Promise.allSettled([
+      const [versioning, policy, policyStatus, encryption, tagging, objectLock] = await Promise.allSettled([
         repos.buckets.getBucketVersioning(bucket),
         repos.buckets.getBucketPolicy(bucket),
+        repos.buckets.getBucketPolicyStatus(bucket),
         repos.buckets.getBucketEncryption(bucket),
         repos.buckets.getBucketTagging(bucket),
         repos.buckets.getObjectLockConfiguration(bucket),
@@ -65,10 +66,14 @@ export function useBucketSettings(bucket: string) {
           ? (tagging.value.TagSet ?? []).map((tag) => ({ Key: tag.Key ?? "", Value: tag.Value ?? "" }))
           : [];
       const lock = objectLock.status === "fulfilled" ? objectLock.value.ObjectLockConfiguration : undefined;
+      const sse = encryption.status === "fulfilled" ? encryption.value.ServerSideEncryptionConfiguration : undefined;
+      const algorithm = sse?.Rules?.[0]?.ApplyServerSideEncryptionByDefault?.SSEAlgorithm;
       return {
         versioning: versioning.status === "fulfilled" ? versioning.value.Status : "-",
         policy: policy.status === "fulfilled" ? (policy.value.Policy ?? "") : "",
-        encryption: encryption.status === "fulfilled" ? JSON.stringify(encryption.value.ServerSideEncryptionConfiguration) : "",
+        policyPublic: policyStatus.status === "fulfilled" ? Boolean(policyStatus.value.PolicyStatus?.IsPublic) : false,
+        encryption: encryption.status === "fulfilled" ? JSON.stringify(sse ?? {}) : "",
+        encryptionAlgorithm: algorithm ?? "",
         tags,
         objectLockEnabled: lock?.ObjectLockEnabled === "Enabled",
         objectLockMode: lock?.Rule?.DefaultRetention?.Mode ?? "GOVERNANCE",
@@ -238,13 +243,24 @@ export function useBucketEvents(bucket: string) {
   });
 }
 
-export function usePutBucketNotifications() {
+export function useSaveBucketNotifications() {
   const repos = useStorageRepositories();
   return useMutation({
-    mutationFn: (body: { bucket: string; arn: string }) =>
-      repos.buckets.putBucketNotifications(body.bucket, {
-        QueueConfigurations: [{ Id: `queue-${Date.now()}`, QueueArn: body.arn, Events: ["s3:ObjectCreated:*"] }],
-      }),
+    mutationFn: (body: { bucket: string; items: NotificationItem[] }) => {
+      const asConfig = (type: string, arnKey: "QueueArn" | "TopicArn" | "LambdaFunctionArn") =>
+        body.items
+          .filter((item) => item.type === type)
+          .map((item) => ({
+            Id: item.id,
+            [arnKey]: item.arn,
+            Events: item.events,
+          }));
+      return repos.buckets.putBucketNotifications(body.bucket, {
+        QueueConfigurations: asConfig("SQS", "QueueArn"),
+        TopicConfigurations: asConfig("SNS", "TopicArn"),
+        LambdaFunctionConfigurations: asConfig("Lambda", "LambdaFunctionArn"),
+      });
+    },
     onSuccess: () => invalidateEventEmitter.emit(invalidateEvents.EVENTS),
   });
 }

@@ -5,6 +5,13 @@ import { AccessKeyStatusEnum } from "@/enums";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
 import { useStorageRepositories } from "@/apis/repositories";
 
+export interface CredentialResult {
+  accessKey?: string;
+  secretKey?: string;
+  name?: string;
+  status?: string;
+}
+
 export function useUsers() {
   const repos = useStorageRepositories();
   return useQuery({
@@ -23,7 +30,7 @@ export function useCreateUser() {
   const repos = useStorageRepositories();
   return useMutation({
     mutationFn: (body: { accessKey: string; secretKey?: string }) =>
-      repos.users.createUser({ ...body, status: AccessKeyStatusEnum.ENABLED }),
+      repos.users.createUser({ ...body, status: AccessKeyStatusEnum.ENABLED }) as Promise<CredentialResult>,
     onSuccess: () => invalidateEventEmitter.emit(invalidateEvents.USERS),
   });
 }
@@ -108,7 +115,7 @@ export function useAccessKeys() {
 export function useCreateAccessKey() {
   const repos = useStorageRepositories();
   return useMutation({
-    mutationFn: (name: string) => repos.accessKeys.createServiceAccount({ name }),
+    mutationFn: (name: string) => repos.accessKeys.createServiceAccount({ name }) as Promise<CredentialResult>,
     onSuccess: () => invalidateEventEmitter.emit(invalidateEvents.ACCESS_KEYS),
   });
 }
@@ -238,7 +245,7 @@ export function useUpdateUserGroups() {
 export function useCreateUserAccessKey() {
   const repos = useStorageRepositories();
   return useMutation({
-    mutationFn: (user: string) => repos.users.createAUserServiceAccount(user, { name: user }),
+    mutationFn: (user: string) => repos.users.createAUserServiceAccount(user, { name: user }) as Promise<CredentialResult>,
     onSuccess: () => {
       invalidateEventEmitter.emit(invalidateEvents.ACCESS_KEYS);
       invalidateEventEmitter.emit(invalidateEvents.USERS);
@@ -308,6 +315,34 @@ export function useAssignPolicyMulti() {
       invalidateEventEmitter.emit(invalidateEvents.USERS);
       invalidateEventEmitter.emit(invalidateEvents.GROUPS);
       invalidateEventEmitter.emit(invalidateEvents.POLICIES);
+    },
+  });
+}
+
+export function useUserServiceAccounts(name: string) {
+  const repos = useStorageRepositories();
+  return useQuery({
+    queryKey: [...STORAGES_QUERY_KEYS.users, name, "service-accounts"] as const,
+    enabled: Boolean(name),
+    queryFn: async () => {
+      const res = (await repos.users.listAllUserServiceAccounts(name)) as {
+        accounts?: Array<{ accessKey?: string; name?: string; accountStatus?: string }>;
+      };
+      return res.accounts ?? [];
+    },
+  });
+}
+
+export function usePolicyUsers(policyName: string) {
+  const repos = useStorageRepositories();
+  return useQuery({
+    queryKey: [...STORAGES_QUERY_KEYS.policies, policyName, "users"] as const,
+    enabled: Boolean(policyName),
+    queryFn: async () => {
+      const res = await repos.policies.listUsersForPolicy(policyName);
+      if (Array.isArray(res)) return res as string[];
+      if (res && typeof res === "object") return Object.keys(res as Record<string, unknown>);
+      return [];
     },
   });
 }

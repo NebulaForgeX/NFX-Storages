@@ -3,13 +3,14 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { Button, Flex, Text, TextField } from "@radix-ui/themes";
-import { PageHeader } from "@/components";
+import { Button, Text, TextField } from "@radix-ui/themes";
+import { DataTable, FormDialog, PageHeader, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 
 import { useCreateBucket, useDeleteBucket, useBuckets } from "@/hooks";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
-import { DataTable } from "@/components/DataTable";
+import { showConfirm, showError } from "@/stores/modal";
+import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 export default function BrowserPage() {
   const { t } = useTranslation("common");
@@ -18,8 +19,8 @@ export default function BrowserPage() {
   const createBucketMut = useCreateBucket();
   const deleteBucketMut = useDeleteBucket();
   const [search, setSearch] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
   const [newName, setNewName] = useState("");
-  const [error, setError] = useState("");
 
   const rows = useMemo(
     () => data.filter((row) => row.Name.toLowerCase().includes(search.toLowerCase())),
@@ -31,75 +32,74 @@ export default function BrowserPage() {
     try {
       await createBucketMut.mutateAsync(newName.trim());
       setNewName("");
+      setCreateOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("Create Failed"));
+      showError(getStoragesApiErrorMessage(err, t("Create Failed")));
     }
   };
 
-  const removeBucket = async (name: string) => {
-    if (!window.confirm(t("Are you sure you want to delete this bucket?"))) return;
-    try {
-      await deleteBucketMut.mutateAsync(name);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("Delete Failed"));
-    }
+  const removeBucket = (name: string) => {
+    showConfirm({
+      title: t("Delete"),
+      message: t("Are you sure you want to delete this bucket?"),
+      confirmText: t("Delete"),
+      cancelText: t("Cancel"),
+      onConfirm: () => {
+        void deleteBucketMut.mutateAsync(name).catch((err) => {
+          showError(getStoragesApiErrorMessage(err, t("Delete Failed")));
+        });
+      },
+    });
   };
 
   return (
     <PageFrame>
-      <PageHeader
-        icon={StackIcon}
-        title={t("Buckets")}
-        actions={
-          <Flex gap="2" wrap="wrap">
-            <TextField.Root value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
-            <TextField.Root value={newName} onChange={(e) => setNewName(e.target.value)} placeholder={t("Create Bucket")} />
-            <Button onClick={() => void createBucket()}>{t("Create Bucket")}</Button>
-            <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.BUCKETS)}>
-              {t("Refresh")}
-            </Button>
-          </Flex>
-        }
-      />
-      {error ? (
-        <Text color="red" size="2">
-          {error}
-        </Text>
-      ) : null}
+      <PageHeader icon={StackIcon} title={t("Buckets")} />
+      <Toolbar search={search} onSearchChange={setSearch} searchPlaceholder={t("Search")}>
+        <Button onClick={() => setCreateOpen(true)}>{t("Create Bucket")}</Button>
+        <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.BUCKETS)}>
+          {t("Refresh")}
+        </Button>
+      </Toolbar>
       <DataTable
         loading={isLoading}
         empty={t("No Buckets")}
+        emptyIcon={StackIcon}
         rows={rows}
         rowKey={(row) => row.Name}
+        onRowClick={(row) => navigate(`/browser/${encodeURIComponent(row.Name)}`)}
         columns={[
           {
             key: "Name",
             header: t("Bucket"),
-            render: (row) => (
-              <Button variant="ghost" onClick={() => navigate(`/browser/${encodeURIComponent(row.Name)}`)}>
-                {row.Name}
-              </Button>
-            ),
+            render: (row) => <Text weight="medium">{row.Name}</Text>,
           },
           { key: "CreationDate", header: t("Creation Date") },
           { key: "Count", header: t("Object Count") },
           { key: "Size", header: t("Size") },
-          {
-            key: "actions",
-            header: t("Actions"),
-            render: (row) => (
-              <Flex gap="2">
-                <Button size="1" variant="outline" onClick={() => navigate(`/buckets/${encodeURIComponent(row.Name)}`)}>
-                  {t("Settings")}
-                </Button>
-                <Button size="1" color="red" variant="outline" onClick={() => void removeBucket(row.Name)}>
-                  {t("Delete")}
-                </Button>
-              </Flex>
-            ),
-          },
+        ]}
+        actions={(row) => [
+          { label: t("Open"), onSelect: () => navigate(`/browser/${encodeURIComponent(row.Name)}`) },
+          { label: t("Settings"), onSelect: () => navigate(`/buckets/${encodeURIComponent(row.Name)}`) },
+          { label: t("Delete"), color: "red", onSelect: () => removeBucket(row.Name) },
         ]}
       />
+      <FormDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        title={t("Create Bucket")}
+        submitLabel={t("Create Bucket")}
+        cancelLabel={t("Cancel")}
+        submitting={createBucketMut.isPending}
+        onSubmit={createBucket}
+      >
+        <TextField.Root
+          value={newName}
+          onChange={(event) => setNewName(event.target.value)}
+          placeholder={t("Bucket")}
+          autoFocus
+        />
+      </FormDialog>
     </PageFrame>
   );
 }

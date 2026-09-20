@@ -25,6 +25,23 @@ export function useKmsKeys() {
   });
 }
 
+export function useKmsKeyDetails(keyId: string) {
+  const repos = useStorageRepositories();
+  return useQuery({
+    queryKey: [...STORAGES_QUERY_KEYS.kmsKeys, keyId] as const,
+    enabled: Boolean(keyId),
+    queryFn: () => repos.sse.getKeyDetails(keyId) as Promise<Record<string, unknown>>,
+  });
+}
+
+export function useKmsConfig() {
+  const repos = useStorageRepositories();
+  return useQuery({
+    queryKey: [...STORAGES_QUERY_KEYS.kmsStatus, "config"] as const,
+    queryFn: () => repos.sse.getConfiguration() as Promise<Record<string, unknown>>,
+  });
+}
+
 export function useStartKms() {
   const repos = useStorageRepositories();
   return useMutation({

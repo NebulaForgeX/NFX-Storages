@@ -1,15 +1,19 @@
-import { FileDescriptionIcon, HeartIcon } from "nfx-ui/icons";
+import { HeartIcon } from "nfx-ui/icons";
 import { useTranslation } from "react-i18next";
 
-import { Card } from "@radix-ui/themes";
-import { CardHeader, EmptyState, PageHeader } from "@/components";
+import { EmptyState, PageHeader, PropertyList } from "@/components";
 import { PageFrame } from "@/layouts";
 
 import { useLicense } from "@/hooks";
 
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+}
+
 export default function LicensePage() {
   const { t } = useTranslation("common");
   const { data, isLoading } = useLicense();
+  const license = asRecord(data);
 
   return (
     <PageFrame>
@@ -17,10 +21,13 @@ export default function LicensePage() {
       {isLoading ? (
         <EmptyState icon={HeartIcon} title={t("Loading")} />
       ) : (
-        <Card>
-          <CardHeader icon={<FileDescriptionIcon size={18} />} title={t("License Details")} />
-          <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(data ?? {}, null, 2)}</pre>
-        </Card>
+        <PropertyList
+          items={[
+            { label: t("Plan"), value: String(license.plan ?? "-") },
+            { label: t("Organization"), value: String(license.organization ?? "-") },
+            { label: t("Email"), value: String(license.email || "-") },
+          ]}
+        />
       )}
     </PageFrame>
   );

@@ -1,87 +1,69 @@
 import { CpuIcon } from "nfx-ui/icons";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, Flex, Text } from "@radix-ui/themes";
-import { PageHeader } from "@/components";
+import { Button } from "@radix-ui/themes";
+import { DataTable, PageHeader, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 
 import { useCancelPoolDecommission, useDecommissionPool, usePools } from "@/hooks";
-import { DataTable } from "@/components/DataTable";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 import { invalidateEventEmitter, invalidateEvents } from "@/events/invalidate";
+import { showConfirm, showError } from "@/stores/modal";
 
 export default function PoolsPage() {
   const { t } = useTranslation("common");
   const { data = [], isLoading } = usePools();
   const decommission = useDecommissionPool();
   const cancel = useCancelPoolDecommission();
-  const [error, setError] = useState("");
-
-  const offline = async (id: string) => {
-    if (!window.confirm(t("Are you sure you want to decommission this pool?"))) return;
-    try {
-      await decommission.mutateAsync(id);
-    } catch (err) {
-      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
-    }
-  };
-
-  const restore = async (id: string) => {
-    try {
-      await cancel.mutateAsync(id);
-    } catch (err) {
-      setError(getStoragesApiErrorMessage(err, t("Add Failed")));
-    }
-  };
 
   return (
     <PageFrame>
-      <PageHeader
-        icon={CpuIcon}
-        title={t("Storage Pools")}
-        actions={
-          <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.POOLS)}>
-            {t("Refresh")}
-          </Button>
-        }
-      />
-      {error ? <Text color="red">{error}</Text> : null}
+      <PageHeader icon={CpuIcon} title={t("Storage Pools")} />
+      <Toolbar>
+        <Button variant="outline" onClick={() => invalidateEventEmitter.emit(invalidateEvents.POOLS)}>
+          {t("Refresh")}
+        </Button>
+      </Toolbar>
       <DataTable
         loading={isLoading}
         empty={t("No Data")}
+        emptyIcon={CpuIcon}
         rows={data}
         rowKey={(row) => String(row.id ?? "pool-0")}
         columns={[
           { key: "id", header: t("Name"), render: (row) => String(row.id ?? "-") },
           { key: "status", header: t("Status"), render: (row) => String(row.status ?? "-") },
-          {
-            key: "disks",
-            header: t("Disks"),
-            render: (row) => (row.disks ?? []).join(", ") || "-",
-          },
-          {
-            key: "actions",
-            header: t("Actions"),
-            render: (row) => {
-              const id = String(row.id ?? "pool-0");
-              const decommissioning = row.status === "decommissioning";
-              return (
-                <Flex gap="2">
-                  {decommissioning ? (
-                    <Button size="1" variant="outline" onClick={() => void restore(id)}>
-                      {t("Cancel Decommission")}
-                    </Button>
-                  ) : (
-                    <Button size="1" color="red" variant="outline" onClick={() => void offline(id)}>
-                      {t("Decommission")}
-                    </Button>
-                  )}
-                </Flex>
-              );
-            },
-          },
+          { key: "disks", header: t("Disks"), render: (row) => (row.disks ?? []).join(", ") || "-" },
         ]}
+        actions={(row) => {
+          const id = String(row.id ?? "pool-0");
+          const decommissioning = row.status === "decommissioning";
+          return decommissioning
+            ? [
+                {
+                  label: t("Cancel Decommission"),
+                  onSelect: () => {
+                    void cancel.mutateAsync(id).catch((err) => showError(getStoragesApiErrorMessage(err, t("Add Failed"))));
+                  },
+                },
+              ]
+            : [
+                {
+                  label: t("Decommission"),
+                  color: "red",
+                  onSelect: () =>
+                    showConfirm({
+                      title: t("Decommission"),
+                      message: t("Are you sure you want to decommission this pool?"),
+                      confirmText: t("Decommission"),
+                      cancelText: t("Cancel"),
+                      onConfirm: () => {
+                        void decommission.mutateAsync(id).catch((err) => showError(getStoragesApiErrorMessage(err, t("Add Failed"))));
+                      },
+                    }),
+                },
+              ];
+        }}
       />
     </PageFrame>
   );
