@@ -8,7 +8,7 @@
 
 S3-compatible object storage in **Go**, with NAS-backed volumes, Identity login, and a React console.
 
-[中文文档 / Chinese](README.cn.md) | [Documentation](docs/)
+[中文文档 / Chinese](README.cn.md)
 
 </div>
 

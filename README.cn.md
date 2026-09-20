@@ -8,7 +8,7 @@
 
 **Go** 实现的 S3 兼容对象存储：对象在 NAS 卷上，登录走 Identity，控制台为 React。
 
-[English Documentation](README.md) | [文档](docs/)
+[English Documentation](README.md)
 
 </div>
 
