@@ -11,7 +11,7 @@ import {
   nfxUiViteAliases,
   nfxViteDefine,
   resolveNfxUiRoot,
-} from "./vite.nfx-ui";
+} from "./vite.nfx-ui.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname);

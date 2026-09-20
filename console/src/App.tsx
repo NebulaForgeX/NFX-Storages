@@ -4,7 +4,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router";
 import { useAuthStore } from "nfx-ui/stores";
 
 import { authRepository } from "@/apis/repositories";
-import { Main, Sidebar } from "@/layouts";
+import { Sidebar } from "@/layouts";
 import { ROUTES } from "@/navigations";
 import {
   AccessKeysPage,
@@ -59,8 +59,11 @@ function S3SessionGate() {
 export default function App() {
   return (
     <Routes>
-      <Route element={<Main />}>
-        <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
+      <Route element={<GuestRoute redirectTo={ROUTES.BROWSER} />}>
+        <Route index element={<LoginPage />} />
+        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+        <Route path={ROUTES.SIGNUP} element={<SignupPage />} />
+        <Route path={ROUTES.CONFIG} element={<ConfigPage />} />
       </Route>
 
       <Route element={<ProtectedRoute redirectTo={ROUTES.LOGIN} />}>
@@ -93,12 +96,6 @@ export default function App() {
             <Route path={ROUTES.USER_SETTINGS} element={<SettingsPage />} />
           </Route>
         </Route>
-      </Route>
-
-      <Route element={<GuestRoute redirectTo={ROUTES.BROWSER} />}>
-        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-        <Route path={ROUTES.SIGNUP} element={<SignupPage />} />
-        <Route path={ROUTES.CONFIG} element={<ConfigPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

@@ -59,6 +59,55 @@ export function nfxViteDefine(env: Record<string, string>): Record<string, strin
   );
 }
 
+/** Vite 8 Rolldown serves CJS `async-retry` without `export default`; wrap as ESM. */
+const NFX_ASYNC_RETRY_ID = "\0nfx-ui-async-retry";
+const NFX_ASYNC_RETRY_ESM = `export default function retry(fn, opts) {
+  return new Promise(function (resolve, reject) {
+    var options = opts || {};
+    if (!("randomize" in options)) options.randomize = true;
+    var retries = options.retries != null ? options.retries : 10;
+    var factor = options.factor != null ? options.factor : 2;
+    var minTimeout = options.minTimeout != null ? options.minTimeout : 1000;
+    var maxTimeout = options.maxTimeout != null ? options.maxTimeout : Infinity;
+    var randomize = options.randomize !== false;
+
+    function bail(err) {
+      reject(err || new Error("Aborted"));
+    }
+
+    function onError(err, num) {
+      if (err && err.bail) {
+        bail(err);
+        return;
+      }
+      if (num > retries) {
+        reject(err);
+        return;
+      }
+      if (options.onRetry) options.onRetry(err, num);
+      var noise = randomize ? Math.random() + 1 : 1;
+      var ms = Math.min(Math.round(noise * Math.max(minTimeout, 1) * Math.pow(factor, num - 1)), maxTimeout);
+      setTimeout(function () { runAttempt(num + 1); }, ms);
+    }
+
+    function runAttempt(num) {
+      var val;
+      try {
+        val = fn(bail, num);
+      } catch (err) {
+        onError(err, num);
+        return;
+      }
+      Promise.resolve(val).then(resolve).catch(function (err) {
+        onError(err, num);
+      });
+    }
+
+    runAttempt(1);
+  });
+}
+`;
+
 /**
  * Own `@/` resolution for both console and NFX-UI.
  * Must NOT use resolve.alias `@` → console src: Vite alias wins over plugins and breaks
@@ -106,9 +155,14 @@ export function nfxUiAtAliasPlugin(consoleRoot: string, nfxUiRoot: string): Plug
     name: "nfx-ui-at-alias",
     enforce: "pre",
     resolveId(id, importer) {
+      if (id === "async-retry") return NFX_ASYNC_RETRY_ID;
       if (!id.startsWith("@/")) return null;
       if (importer && isNfxUiImporter(importer)) return resolveUnder(pkgSrc, id);
       return resolveUnder(hostSrc, id);
+    },
+    load(id) {
+      if (id === NFX_ASYNC_RETRY_ID) return NFX_ASYNC_RETRY_ESM;
+      return null;
     },
   };
 }
@@ -136,7 +190,7 @@ export function nfxUiViteAliases(consoleRoot: string, nfxUiRoot: string): Alias[
   return aliases;
 }
 
-export const nfxUiOptimizeDepsExclude = ["nfx-ui", "templates"];
+export const nfxUiOptimizeDepsExclude = ["nfx-ui", "templates", "async-retry"];
 
 export const nfxUiDedupe = [
   "react",
