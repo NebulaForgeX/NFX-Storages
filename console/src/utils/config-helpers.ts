@@ -77,7 +77,7 @@ interface HostInfo {
 
 const STORAGE_KEY = 'nfxstorages-server-host'
 const DEFAULT_REGION = 'us-east-1'
-const API_PATH = '/nfxstorages/admin/v3'
+const API_PATH = '/nfx-storages/admin/v3'
 const CONFIG_PATH = '/config.json'
 const REQUEST_TIMEOUT = 5000
 
@@ -122,7 +122,7 @@ const isValidServerConfig = (config: unknown): config is ServerConfigResponse =>
  * @example
  * ```typescript
  * const config = createDefaultConfig('https://example.com:9000')
- * console.log(config.api.baseURL) // 'https://example.com:9000/nfxstorages/admin/v3'
+ * console.log(config.api.baseURL) // 'https://example.com:9000/nfx-storages/admin/v3'
  * ```
  */
 export const createDefaultConfig = (serverHost: string): SiteConfig => {

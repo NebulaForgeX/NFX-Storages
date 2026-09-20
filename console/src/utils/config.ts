@@ -16,12 +16,12 @@ const CACHE_DURATION = 60000;
 
 function loadRuntimeConfig(): SiteConfig | null {
   try {
-    const serverHost = import.meta.env.VITE_SERVER_HOST || import.meta.env.VITE_API_BASE_URL?.replace(/\/nfxstorages\/admin\/v3$/, "");
+    const serverHost = import.meta.env.VITE_SERVER_HOST || import.meta.env.VITE_API_BASE_URL?.replace(/\/nfx-storages\/admin\/v3$/, "");
     if (!serverHost) return null;
     return {
       serverHost,
       api: {
-        baseURL: import.meta.env.VITE_API_BASE_URL || `${serverHost}/nfxstorages/admin/v3`,
+        baseURL: import.meta.env.VITE_API_BASE_URL || `${serverHost}/nfx-storages/admin/v3`,
       },
       s3: {
         endpoint: import.meta.env.VITE_S3_ENDPOINT || serverHost,

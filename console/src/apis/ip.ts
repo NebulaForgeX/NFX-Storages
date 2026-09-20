@@ -4,10 +4,11 @@ export const URL_PATHS = {
   SYSTEM: {
     latest: "/system/system-state/latest",
     initialize: "/system/system-state/initialize",
-    i18nErrors: (lang: string) => `/system/i18n/errors/${lang}`,
+    locales: (lang: string) => `/system/locales/${lang}`,
+    messages: (lang: string) => `/system/messages/${lang}`,
   },
   ADMIN: {
-    sessionCredentials: "/nfxstorages/admin/v3/session/credentials",
+    sessionCredentials: "/admin/v3/session/credentials",
   },
 } as const;
 

@@ -34,6 +34,7 @@ services:
       traefik.http.routers.storages-s3-base-secure.tls: "true"
     volumes:
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
       - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
       - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
@@ -66,14 +67,20 @@ services:
       traefik.project: "nfx-storages"
       traefik.http.services.storages-admin-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-admin-base.entrypoints: web
-      traefik.http.routers.storages-admin-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ADMIN}`)
+      traefik.http.middlewares.nfx-storages-admin-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.storages-admin-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ADMIN}`)
+      traefik.http.routers.storages-admin-base.priority: "20"
+      traefik.http.routers.storages-admin-base.middlewares: nfx-storages-admin-gw
       traefik.http.routers.storages-admin-base.service: storages-admin-base
       traefik.http.routers.storages-admin-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-admin-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ADMIN}`)
+      traefik.http.routers.storages-admin-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ADMIN}`)
+      traefik.http.routers.storages-admin-base-secure.priority: "20"
+      traefik.http.routers.storages-admin-base-secure.middlewares: nfx-storages-admin-gw
       traefik.http.routers.storages-admin-base-secure.service: storages-admin-base
       traefik.http.routers.storages-admin-base-secure.tls: "true"
     volumes:
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
       - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
       - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
@@ -106,14 +113,20 @@ services:
       traefik.project: "nfx-storages"
       traefik.http.services.storages-object-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-object-base.entrypoints: web
-      traefik.http.routers.storages-object-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_OBJECT}`)
+      traefik.http.middlewares.nfx-storages-object-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.storages-object-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_OBJECT}`)
+      traefik.http.routers.storages-object-base.priority: "20"
+      traefik.http.routers.storages-object-base.middlewares: nfx-storages-object-gw
       traefik.http.routers.storages-object-base.service: storages-object-base
       traefik.http.routers.storages-object-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-object-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_OBJECT}`)
+      traefik.http.routers.storages-object-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_OBJECT}`)
+      traefik.http.routers.storages-object-base-secure.priority: "20"
+      traefik.http.routers.storages-object-base-secure.middlewares: nfx-storages-object-gw
       traefik.http.routers.storages-object-base-secure.service: storages-object-base
       traefik.http.routers.storages-object-base-secure.tls: "true"
     volumes:
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
       - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
       - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
@@ -146,14 +159,20 @@ services:
       traefik.project: "nfx-storages"
       traefik.http.services.storages-iam-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-iam-base.entrypoints: web
-      traefik.http.routers.storages-iam-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IAM}`)
+      traefik.http.middlewares.nfx-storages-iam-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.storages-iam-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_IAM}`)
+      traefik.http.routers.storages-iam-base.priority: "20"
+      traefik.http.routers.storages-iam-base.middlewares: nfx-storages-iam-gw
       traefik.http.routers.storages-iam-base.service: storages-iam-base
       traefik.http.routers.storages-iam-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-iam-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IAM}`)
+      traefik.http.routers.storages-iam-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_IAM}`)
+      traefik.http.routers.storages-iam-base-secure.priority: "20"
+      traefik.http.routers.storages-iam-base-secure.middlewares: nfx-storages-iam-gw
       traefik.http.routers.storages-iam-base-secure.service: storages-iam-base
       traefik.http.routers.storages-iam-base-secure.tls: "true"
     volumes:
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
       - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
       - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
@@ -186,14 +205,20 @@ services:
       traefik.project: "nfx-storages"
       traefik.http.services.storages-notify-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-notify-base.entrypoints: web
-      traefik.http.routers.storages-notify-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_NOTIFY}`)
+      traefik.http.middlewares.nfx-storages-notify-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.storages-notify-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_NOTIFY}`)
+      traefik.http.routers.storages-notify-base.priority: "20"
+      traefik.http.routers.storages-notify-base.middlewares: nfx-storages-notify-gw
       traefik.http.routers.storages-notify-base.service: storages-notify-base
       traefik.http.routers.storages-notify-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-notify-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_NOTIFY}`)
+      traefik.http.routers.storages-notify-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_NOTIFY}`)
+      traefik.http.routers.storages-notify-base-secure.priority: "20"
+      traefik.http.routers.storages-notify-base-secure.middlewares: nfx-storages-notify-gw
       traefik.http.routers.storages-notify-base-secure.service: storages-notify-base
       traefik.http.routers.storages-notify-base-secure.tls: "true"
     volumes:
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
       - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
       - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
@@ -226,14 +251,20 @@ services:
       traefik.project: "nfx-storages"
       traefik.http.services.storages-system-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-system-base.entrypoints: web
-      traefik.http.routers.storages-system-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.middlewares.nfx-storages-system-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.storages-system-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.storages-system-base.priority: "20"
+      traefik.http.routers.storages-system-base.middlewares: nfx-storages-system-gw
       traefik.http.routers.storages-system-base.service: storages-system-base
       traefik.http.routers.storages-system-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-system-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.storages-system-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.storages-system-base-secure.priority: "20"
+      traefik.http.routers.storages-system-base-secure.middlewares: nfx-storages-system-gw
       traefik.http.routers.storages-system-base-secure.service: storages-system-base
       traefik.http.routers.storages-system-base-secure.tls: "true"
     volumes:
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
       - ${STORAGES_VOLUME_0}:${STORAGES_VOLUME_0}
       - ${STORAGES_VOLUME_1}:${STORAGES_VOLUME_1}
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}

@@ -18,7 +18,8 @@ func NewRouter(app fiber.Router, v token.Verifier, h *Registry) *Router {
 
 func (r *Router) RegisterRoutes() {
 	g := r.app.Group("/system")
-	g.Get("/i18n/errors/:lang", r.handlers.I18n.GetErrorTranslations)
+	g.Get("/locales/:lang", r.handlers.I18n.GetErrorTranslations)
+	g.Get("/messages/:lang", r.handlers.I18n.GetMessageTranslations)
 	g.Get("/system-state/latest", r.handlers.App.Latest)
 	g.Post("/system-state/initialize", r.handlers.App.Initialize)
 }

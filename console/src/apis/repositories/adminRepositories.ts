@@ -65,6 +65,7 @@ export const systemRepository = {
   getSystemMetrics: () => createAdminApiClient().get("/metrics"),
   getLicense: () => createAdminApiClient().get("/license"),
   getErrorTranslations: systemApi.getErrorTranslations,
+  getMessageTranslations: systemApi.getMessageTranslations,
   getLatestSystemState: systemApi.getLatestSystemState,
   initializeSystem: systemApi.initializeSystem,
 };

@@ -12,6 +12,6 @@ func NewRouter(app fiber.Router, h *Registry) *Router {
 }
 
 func (r *Router) RegisterRoutes() {
-	g := r.app.Group("/nfxstorages/admin/v3")
+	g := r.app.Group("/admin/v3")
 	r.handlers.Admin.Register(g)
 }

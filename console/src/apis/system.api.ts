@@ -4,7 +4,12 @@ import { publicClient } from "./httpClients";
 import { URL_PATHS } from "./ip";
 
 export const getErrorTranslations = async (lang: string): Promise<Record<string, unknown>> => {
-  const { data } = await publicClient.get<Record<string, unknown>>(URL_PATHS.SYSTEM.i18nErrors(lang));
+  const { data } = await publicClient.get<Record<string, unknown>>(URL_PATHS.SYSTEM.locales(lang));
+  return data;
+};
+
+export const getMessageTranslations = async (lang: string): Promise<Record<string, unknown>> => {
+  const { data } = await publicClient.get<Record<string, unknown>>(URL_PATHS.SYSTEM.messages(lang));
   return data;
 };
 

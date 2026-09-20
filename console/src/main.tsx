@@ -23,10 +23,18 @@ void ensureDeviceIdStorage();
 void loadSiteConfig();
 
 async function onLoadExtraBundles(lng: LanguageEnum) {
+  const lang = lng.toString();
   try {
-    const bundle = await storageRepositories.system.getErrorTranslations(lng);
-    return { namespace: "errors", bundle: bundle as Record<string, unknown> };
-  } catch {
+    const [storageErrors, storageMessages] = await Promise.all([
+      storageRepositories.system.getErrorTranslations(lang),
+      storageRepositories.system.getMessageTranslations(lang),
+    ]);
+    const bundles = [];
+    if (storageErrors) bundles.push({ namespace: "errors", bundle: storageErrors as Record<string, unknown> });
+    if (storageMessages) bundles.push({ namespace: "messages", bundle: storageMessages as Record<string, unknown> });
+    return bundles.length > 0 ? bundles : null;
+  } catch (error) {
+    console.error("Failed to load product translation bundles", error);
     return null;
   }
 }
