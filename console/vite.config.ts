@@ -11,6 +11,8 @@ import {
   nfxUiOptimizeDepsExclude,
   nfxUiViteAliases,
   nfxViteDefine,
+  nfxConsoleBase,
+  nfxViteDevServer,
   resolveNfxUiRoot,
 } from "./vite.nfx-ui.ts";
 
@@ -21,14 +23,13 @@ const nfxUiRoot = resolveNfxUiRoot(root);
 export default defineConfig(({ mode, command }) => {
   const env = loadNfxConsoleEnv(root, mode);
   const port = Number(env.VITE_PORT) || 5173;
-  const base = (env.VITE_BASE_URL || "/").replace(/\/?$/, "/");
   const hasApiUrl = Boolean(env.VITE_API_URL);
   const proxyTarget = env.VITE_DEV_API_PROXY_TARGET || "http://192.168.1.64";
   const identityTarget = env.VITE_IDENTITY_API_URL || "http://192.168.1.64/nfx-identity";
 
   return {
     plugins: [nfxKillListenPortPlugin(port), nfxUiAtAliasPlugin(root, nfxUiRoot), react()],
-    base,
+    base: nfxConsoleBase(env),
     define: nfxViteDefine(env),
     resolve: {
       alias: nfxUiViteAliases(root, nfxUiRoot),
@@ -42,11 +43,10 @@ export default defineConfig(({ mode, command }) => {
     },
     optimizeDeps: {
       exclude: nfxUiOptimizeDepsExclude,
+      holdUntilCrawlEnd: false,
     },
     server: {
-      port,
-      strictPort: true,
-      host: "0.0.0.0",
+      ...nfxViteDevServer(env, port),
       fs: { allow: [root, nfxUiRoot] },
       ...(command === "serve" && !hasApiUrl
         ? {

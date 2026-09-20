@@ -52,6 +52,48 @@ export function resolveNfxUiRoot(consoleRoot: string): string {
   return path.resolve(consoleRoot, "node_modules/nfx-ui");
 }
 
+/** Public path on NFX-Edge, e.g. `/console/nfx-identity/`. */
+export function nfxConsoleBase(env: Record<string, string>): string {
+  let b = (env.VITE_BASE || "/").trim() || "/";
+  if (!b.startsWith("/")) b = `/${b}`;
+  if (!b.endsWith("/")) b += "/";
+  return b;
+}
+
+export function nfxPublicOrigin(env: Record<string, string>): string {
+  const raw = env.VITE_PUBLIC_ORIGIN?.trim();
+  if (raw) return raw.replace(/\/$/, "");
+  try {
+    return new URL(env.VITE_API_URL).origin;
+  } catch {
+    return "http://192.168.1.64";
+  }
+}
+
+/** Vite bind + HMR when the console is reached via Edge `:80` (`DOCKER=1`). */
+export function nfxViteDevServer(env: Record<string, string>, port: number) {
+  const origin = nfxPublicOrigin(env);
+  const u = new URL(origin);
+  const behindEdge = process.env.DOCKER === "1";
+  return {
+    port,
+    strictPort: true as const,
+    host: "0.0.0.0",
+    open: process.env.DOCKER !== "1",
+    allowedHosts: true as const,
+    ...(behindEdge
+      ? {
+          origin,
+          hmr: {
+            protocol: (u.protocol === "https:" ? "wss" : "ws") as "ws" | "wss",
+            host: u.hostname,
+            clientPort: u.port ? Number(u.port) : u.protocol === "https:" ? 443 : 80,
+          },
+        }
+      : {}),
+  };
+}
+
 export function nfxViteDefine(env: Record<string, string>): Record<string, string> {
   return Object.fromEntries(
     Object.entries(env)
@@ -191,14 +233,11 @@ export function nfxUiViteAliases(consoleRoot: string, nfxUiRoot: string): Alias[
   return aliases;
 }
 
-/** Free `port` before Vite binds (stale `npm run dev` / leftover node). */
+/** Free `port` before Vite binds (stale host `npm run dev`). Never run in Docker: `fuser -k` / SIGKILL hits this Vite. */
 export function killTcpPort(port: number): void {
+  if (process.env.DOCKER === "1") return;
   if (!Number.isInteger(port) || port < 1 || port > 65535) return;
-  try {
-    execFileSync("fuser", ["-k", `${port}/tcp`], { stdio: "ignore" });
-  } catch {
-    /* nothing listening, or already gone */
-  }
+  const skip = new Set([1, process.pid, process.ppid].filter((n) => Number.isInteger(n) && n > 0));
   try {
     const out = execFileSync("lsof", ["-nP", `-iTCP:${port}`, "-sTCP:LISTEN", "-t"], {
       encoding: "utf8",
@@ -206,24 +245,27 @@ export function killTcpPort(port: number): void {
     }).trim();
     for (const token of out.split(/\s+/).filter(Boolean)) {
       const pid = Number(token);
-      if (!Number.isInteger(pid) || pid <= 1 || pid === process.pid) continue;
+      if (!Number.isInteger(pid) || skip.has(pid)) continue;
       try {
-        process.kill(pid, "SIGKILL");
+        process.kill(pid, "SIGTERM");
       } catch {
         /* already gone */
       }
     }
   } catch {
-    /* nothing listening */
+    /* nothing listening, or lsof missing */
   }
 }
 
 export function nfxKillListenPortPlugin(port: number): Plugin {
-  const kill = () => killTcpPort(port);
   return {
     name: "nfx-kill-listen-port",
-    configureServer: kill,
-    configurePreviewServer: kill,
+    configureServer() {
+      killTcpPort(port);
+    },
+    configurePreviewServer() {
+      killTcpPort(port);
+    },
   };
 }
 

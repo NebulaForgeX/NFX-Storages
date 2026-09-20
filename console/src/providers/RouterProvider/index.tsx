@@ -49,8 +49,9 @@ function RouterEventsHandler({ children }: { children: ReactNode }) {
 }
 
 function RouterProvider({ children }: RouterProviderProps) {
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, "") || undefined;
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename === "/" ? undefined : basename}>
       <RouterEventsHandler>{children}</RouterEventsHandler>
     </BrowserRouter>
   );

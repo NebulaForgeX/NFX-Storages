@@ -23,6 +23,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-s3-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-s3-base.entrypoints: web
       traefik.http.routers.storages-s3-base.rule: Host(`${TRAEFIK_S3_HOST}`)
@@ -64,6 +65,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-admin-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-admin-base.entrypoints: web
       traefik.http.middlewares.nfx-storages-admin-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -110,6 +112,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-object-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-object-base.entrypoints: web
       traefik.http.middlewares.nfx-storages-object-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -156,6 +159,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-iam-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-iam-base.entrypoints: web
       traefik.http.middlewares.nfx-storages-iam-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -202,6 +206,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-notify-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-notify-base.entrypoints: web
       traefik.http.middlewares.nfx-storages-notify-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -248,6 +253,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-system-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.storages-system-base.entrypoints: web
       traefik.http.middlewares.nfx-storages-system-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -289,21 +295,21 @@ services:
         VITE_SERVER_HOST: ${VITE_SERVER_HOST}
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
         VITE_S3_ENDPOINT: ${VITE_S3_ENDPOINT}
-    ports:
-      - "${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
+        VITE_BASE: ${VITE_BASE}
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
+      traefik.docker.network: nfx-edge
       traefik.http.services.storages-console.loadbalancer.server.port: "${CONSOLE_PORT}"
       traefik.http.routers.storages-console.entrypoints: web
-      traefik.http.routers.storages-console.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
+      traefik.http.routers.storages-console.rule: PathPrefix(`/console/nfx-storages`)
       traefik.http.routers.storages-console.service: storages-console
-      traefik.http.routers.storages-console.priority: "1"
+      traefik.http.routers.storages-console.priority: "25"
       traefik.http.routers.storages-console-secure.entrypoints: websecure
-      traefik.http.routers.storages-console-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
+      traefik.http.routers.storages-console-secure.rule: PathPrefix(`/console/nfx-storages`)
       traefik.http.routers.storages-console-secure.service: storages-console
       traefik.http.routers.storages-console-secure.tls: "true"
-      traefik.http.routers.storages-console-secure.priority: "1"
+      traefik.http.routers.storages-console-secure.priority: "25"
     restart: always
     networks:
       - nfx-storages
