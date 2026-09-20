@@ -1,4 +1,4 @@
-import { EyeIcon, EyeOffIcon } from "nfx-ui/icons";
+import { Eye, EyeOff } from "lucide-react";
 import type { LoginFormData } from "nfx-ui/schemas";
 
 import { useState } from "react";
@@ -35,7 +35,7 @@ const LoginPasswordController = () => {
       >
         <TextField.Slot side="right">
           <IconButton type="button" variant="soft" size="1" color="gray" aria-label={t("form.passwordLabel")} onClick={() => setVisible((v) => !v)}>
-            <LucideIcon icon={visible ? EyeOffIcon : EyeIcon} size={16} />
+            <LucideIcon icon={visible ? EyeOff : Eye} size={16} />
           </IconButton>
         </TextField.Slot>
       </TextField.Root>
@@ -77,7 +77,7 @@ const SignupPasswordController = () => {
           >
             <TextField.Slot side="right">
               <IconButton type="button" variant="soft" size="1" color="gray" aria-label={t("passwordLabel")} onClick={() => setVisible((v) => !v)}>
-                <LucideIcon icon={visible ? EyeOffIcon : EyeIcon} size={16} />
+                <LucideIcon icon={visible ? EyeOff : Eye} size={16} />
               </IconButton>
             </TextField.Slot>
           </TextField.Root>
@@ -124,7 +124,7 @@ const SignupConfirmPasswordController = ({ label, placeholder }: SignupConfirmPa
           >
             <TextField.Slot side="right">
               <IconButton type="button" variant="soft" size="1" color="gray" aria-label={label ?? t("confirmLabel")} onClick={() => setVisible((v) => !v)}>
-                <LucideIcon icon={visible ? EyeOffIcon : EyeIcon} size={16} />
+                <LucideIcon icon={visible ? EyeOff : Eye} size={16} />
               </IconButton>
             </TextField.Slot>
           </TextField.Root>

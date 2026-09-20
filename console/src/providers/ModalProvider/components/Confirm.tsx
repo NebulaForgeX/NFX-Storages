@@ -1,4 +1,4 @@
-import { InfoCircleIcon } from "nfx-ui/icons";
+import { Info } from "lucide-react";
 import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
 import LucideIcon from "@/components/LucideIcon";
 import { hideModal, useModalStore } from "@/stores/modal";
@@ -34,7 +34,7 @@ const Confirm = () => {
       <Dialog.Content maxWidth="420px">
         <Flex direction="column" gap="3">
           <Flex align="center" gap="2">
-            <LucideIcon icon={InfoCircleIcon} size={20} />
+            <LucideIcon icon={Info} size={20} />
             <Dialog.Title mb="0">{title || "Confirm"}</Dialog.Title>
           </Flex>
           <Text as="p" color="gray" size="2">

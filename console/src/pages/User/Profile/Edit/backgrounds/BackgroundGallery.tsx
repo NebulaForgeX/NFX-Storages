@@ -1,4 +1,4 @@
-import { ArrowNarrowLeftIcon, RightChevron, CameraIcon, SaveIcon, TrashIcon } from "nfx-ui/icons";
+import { ArrowLeft, Camera, ChevronRight, Save, Trash2 } from "lucide-react";
 import type { Profile } from "nfx-ui/types";
 
 import { useRef } from "react";
@@ -43,11 +43,11 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
           </Flex>
           <Flex gap="2" wrap="wrap" align="center">
             <Button type="button" size="2" variant="soft" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
-              <LucideIcon icon={CameraIcon} size={14} />
+              <LucideIcon icon={Camera} size={14} />
               {atLimit ? t("backgroundUpload.full") : t("backgroundUpload.add")}
             </Button>
             <Button type="button" size="2" disabled={!dirty || uploading || confirming} loading={confirming} onClick={() => void confirmDrafts()}>
-              <LucideIcon icon={SaveIcon} size={14} />
+              <LucideIcon icon={Save} size={14} />
               {confirming ? t("backgroundUpload.confirming") : t("backgroundUpload.confirm")}
             </Button>
           </Flex>
@@ -103,7 +103,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                       onClick={() => moveDraft(draft.imageId, -1)}
                       aria-label={t("backgroundUpload.moveLeft")}
                     >
-                      <LucideIcon icon={ArrowNarrowLeftIcon} size={12} />
+                      <LucideIcon icon={ArrowLeft} size={12} />
                     </Button>
                     <Button
                       type="button"
@@ -114,10 +114,10 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                       onClick={() => moveDraft(draft.imageId, 1)}
                       aria-label={t("backgroundUpload.moveRight")}
                     >
-                      <LucideIcon icon={RightChevron} size={12} />
+                      <LucideIcon icon={ChevronRight} size={12} />
                     </Button>
                     <Button type="button" size="1" variant="soft" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
-                      <LucideIcon icon={TrashIcon} size={12} />
+                      <LucideIcon icon={Trash2} size={12} />
                     </Button>
                   </Flex>
                 </Box>

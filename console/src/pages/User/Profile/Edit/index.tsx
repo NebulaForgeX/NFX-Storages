@@ -1,4 +1,5 @@
-import { PenIcon, UploadIcon } from "nfx-ui/icons";
+import { PenIcon } from "nfx-ui/icons";
+import { Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { Avatar, Box, Button, Card, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { systemEventEmitter } from "nfx-ui/events";
@@ -76,7 +77,7 @@ function AvatarSection() {
 
   return (
     <Card size="2">
-      <Flex direction="column" gap="3">
+      <Flex direction="column" gap="5">
         <Box>
           <Text size="2" weight="bold">
             {t("avatar.title")}
@@ -94,7 +95,7 @@ function AvatarSection() {
           </Flex>
           <Flex gap="2" wrap="wrap" align="center">
             <Button size="2" variant="soft" disabled={busy} onClick={() => fileRef.current?.click()}>
-              <LucideIcon icon={UploadIcon} size={14} />
+              <LucideIcon icon={Upload} size={14} />
               {busy ? t("avatar.uploading") : t("avatar.choose")}
             </Button>
             <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
@@ -130,11 +131,10 @@ export default function ProfileEditPage() {
   return (
     <PageFrame>
       <PageHeader icon={PenIcon} title={t("title")} description={t("description")} />
-      <Flex direction="column" gap="3">
-        <AvatarSection />
-        {profile ? <BackgroundGallery profile={profile} /> : null}
-        <Card size="2">
-          <Flex direction="column" gap="3">
+      <AvatarSection />
+      {profile ? <BackgroundGallery profile={profile} /> : null}
+      <Card size="2">
+          <Flex direction="column" gap="5">
             <Box>
               <Text size="2" weight="bold">
                 {t("sections.basics.title")}
@@ -188,7 +188,6 @@ export default function ProfileEditPage() {
             </Flex>
           </Flex>
         </Card>
-      </Flex>
     </PageFrame>
   );
 }
