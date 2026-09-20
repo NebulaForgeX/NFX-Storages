@@ -2,34 +2,7 @@ import type { ReactNode } from "react";
 
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
-import {
-  Activity,
-  ArrowLeftRight,
-  Bell,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Contact,
-  Database,
-  FileKey,
-  FolderOpen,
-  HardDrive,
-  IdCard,
-  KeyRound,
-  Layers,
-  LayoutGrid,
-  LifeBuoy,
-  LogOut,
-  LucideIcon as LucideIconType,
-  Menu as MenuIcon,
-  Pencil,
-  Repeat,
-  Settings as SettingsIcon,
-  ShieldCheck,
-  UserRound,
-  Users,
-} from "lucide-react";
+import { AnimatedIcon, type AnimatedIconComponent, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, CpuIcon, DownChevron, FilledBellIcon, GaugeIcon, GearIcon, HeartIcon, LayersIcon, LockIcon, LogoutIcon, PassportIcon, PenIcon, RefreshIcon, RightChevron, ShieldCheck, Stack3Icon, StackIcon, UnorderedListIcon, UserIcon, UsersIcon } from "nfx-ui/icons";
 import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { AuthStore, clearAuth } from "nfx-ui/stores";
@@ -37,8 +10,6 @@ import { useTranslation } from "react-i18next";
 import { Menu, Sidebar as ProSidebar } from "react-pro-sidebar";
 import { Link, Outlet, useLocation } from "react-router";
 
-import { LucideIcon } from "@/components";
-import UserTopBar from "@/layouts/UserTopBar";
 import { ROUTES } from "@/navigations";
 import { buildImageUrl, resolveAccountDisplayName, safeNullable } from "@/utils";
 
@@ -56,13 +27,13 @@ function MenuLabel({ children, active = false }: { children: ReactNode; active?:
   );
 }
 
-function SectionTitle({ label, icon }: { label: string; icon: LucideIconType }) {
+function SectionTitle({ label, icon }: { label: string; icon: AnimatedIconComponent }) {
   return (
     <Flex align="center" justify="between" gap="2" className={styles.sectionTitle}>
       <Text as="span" size="2" weight="bold">
         {label}
       </Text>
-      <LucideIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
+      <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
     </Flex>
   );
 }
@@ -126,8 +97,8 @@ function OverviewSection({ collapsed, broken, onMobileClose }: SectionProps) {
   const active = location.pathname === ROUTES.BROWSER || location.pathname.startsWith(`${ROUTES.BROWSER}/`);
 
   return (
-    <Menu renderExpandIcon={({ open }) => <LucideIcon icon={open ? ChevronUp : ChevronDown} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
-      <MenuItem component={<Link to={ROUTES.BROWSER} />} icon={<LucideIcon icon={FolderOpen} size={18} />} active={active} onClick={() => broken && onMobileClose()}>
+    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
+      <MenuItem component={<Link to={ROUTES.BROWSER} />} icon={<AnimatedIcon icon={StackIcon} size={18} />} active={active} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={active}>{t("sidebar.browser")}</MenuLabel>
       </MenuItem>
     </Menu>
@@ -148,80 +119,80 @@ function MainMenuSection({ collapsed, broken, onMobileClose }: SectionProps) {
     {
       key: "profileOverview",
       to: ROUTES.USER_PROFILE_OVERVIEW,
-      icon: <LucideIcon icon={Contact} size={16} />,
+      icon: <AnimatedIcon icon={UserIcon} size={16} />,
       label: t("sidebar.profileOverview"),
     },
     {
       key: "profileEdit",
       to: ROUTES.USER_PROFILE_EDIT,
-      icon: <LucideIcon icon={Pencil} size={16} />,
+      icon: <AnimatedIcon icon={PenIcon} size={16} />,
       label: t("sidebar.profileEdit"),
     },
     {
       key: "profileIdentities",
       to: ROUTES.USER_PROFILE_IDENTITIES,
-      icon: <LucideIcon icon={IdCard} size={16} />,
+      icon: <AnimatedIcon icon={PassportIcon} size={16} />,
       label: t("sidebar.profileIdentities"),
     },
   ];
 
   const bucketSubItems = [
-    { key: "events", to: ROUTES.EVENTS, icon: <LucideIcon icon={Bell} size={16} />, label: t("sidebar.bucketEvents") },
-    { key: "replication", to: ROUTES.REPLICATION, icon: <LucideIcon icon={Repeat} size={16} />, label: t("sidebar.replication") },
-    { key: "lifecycle", to: ROUTES.LIFECYCLE, icon: <LucideIcon icon={Layers} size={16} />, label: t("sidebar.lifecycle") },
+    { key: "events", to: ROUTES.EVENTS, icon: <AnimatedIcon icon={FilledBellIcon} size={16} />, label: t("sidebar.bucketEvents") },
+    { key: "replication", to: ROUTES.REPLICATION, icon: <AnimatedIcon icon={RefreshIcon} size={16} />, label: t("sidebar.replication") },
+    { key: "lifecycle", to: ROUTES.LIFECYCLE, icon: <AnimatedIcon icon={LayersIcon} size={16} />, label: t("sidebar.lifecycle") },
   ];
 
   const isProfileChildActive = profileSubItems.some((item) => isActive(item.to));
   const isBucketChildActive = bucketSubItems.some((item) => isActive(item.to));
 
   return (
-    <Menu renderExpandIcon={({ open }) => <LucideIcon icon={open ? ChevronUp : ChevronDown} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
-      <SectionTitle label={t("sidebar.mainMenu")} icon={LayoutGrid} />
-      <SubMenu label={t("sidebar.profile")} icon={<LucideIcon icon={UserRound} size={18} />} open={profileOpen} onOpenChange={setProfileOpen} active={isProfileChildActive}>
+    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
+      <SectionTitle label={t("sidebar.mainMenu")} icon={LayersIcon} />
+      <SubMenu label={t("sidebar.profile")} icon={<AnimatedIcon icon={UserIcon} size={18} />} open={profileOpen} onOpenChange={setProfileOpen} active={isProfileChildActive}>
         {profileSubItems.map((item) => (
           <MenuItem key={item.key} component={<Link to={item.to} />} icon={item.icon} active={isActive(item.to)} onClick={() => broken && onMobileClose()}>
             <MenuLabel active={isActive(item.to)}>{item.label}</MenuLabel>
           </MenuItem>
         ))}
       </SubMenu>
-      <MenuItem component={<Link to={ROUTES.ACCESS_KEYS} />} icon={<LucideIcon icon={KeyRound} size={18} />} active={isActive(ROUTES.ACCESS_KEYS)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.ACCESS_KEYS} />} icon={<AnimatedIcon icon={LockIcon} size={18} />} active={isActive(ROUTES.ACCESS_KEYS)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.ACCESS_KEYS)}>{t("sidebar.accessKeys")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.POLICIES} />} icon={<LucideIcon icon={ShieldCheck} size={18} />} active={isActive(ROUTES.POLICIES)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.POLICIES} />} icon={<AnimatedIcon icon={ShieldCheck} size={18} />} active={isActive(ROUTES.POLICIES)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.POLICIES)}>{t("sidebar.policies")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.USERS} />} icon={<LucideIcon icon={Users} size={18} />} active={isActive(ROUTES.USERS)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.USERS} />} icon={<AnimatedIcon icon={UsersIcon} size={18} />} active={isActive(ROUTES.USERS)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.USERS)}>{t("sidebar.users")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.USER_GROUPS} />} icon={<LucideIcon icon={Users} size={18} />} active={isActive(ROUTES.USER_GROUPS)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.USER_GROUPS} />} icon={<AnimatedIcon icon={UsersIcon} size={18} />} active={isActive(ROUTES.USER_GROUPS)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.USER_GROUPS)}>{t("sidebar.userGroups")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.IMPORT_EXPORT} />} icon={<LucideIcon icon={ArrowLeftRight} size={18} />} active={isActive(ROUTES.IMPORT_EXPORT)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.IMPORT_EXPORT} />} icon={<AnimatedIcon icon={RefreshIcon} size={18} />} active={isActive(ROUTES.IMPORT_EXPORT)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.IMPORT_EXPORT)}>{t("sidebar.importExport")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.PERFORMANCE} />} icon={<LucideIcon icon={Activity} size={18} />} active={isActive(ROUTES.PERFORMANCE)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.PERFORMANCE} />} icon={<AnimatedIcon icon={GaugeIcon} size={18} />} active={isActive(ROUTES.PERFORMANCE)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.PERFORMANCE)}>{t("sidebar.performance")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.POOLS} />} icon={<LucideIcon icon={HardDrive} size={18} />} active={isActive(ROUTES.POOLS)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.POOLS} />} icon={<AnimatedIcon icon={CpuIcon} size={18} />} active={isActive(ROUTES.POOLS)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.POOLS)}>{t("sidebar.pools")}</MenuLabel>
       </MenuItem>
-      <SubMenu label={t("sidebar.bucketSetting")} icon={<LucideIcon icon={SettingsIcon} size={18} />} open={bucketOpen} onOpenChange={setBucketOpen} active={isBucketChildActive}>
+      <SubMenu label={t("sidebar.bucketSetting")} icon={<AnimatedIcon icon={GearIcon} size={18} />} open={bucketOpen} onOpenChange={setBucketOpen} active={isBucketChildActive}>
         {bucketSubItems.map((item) => (
           <MenuItem key={item.key} component={<Link to={item.to} />} icon={item.icon} active={isActive(item.to)} onClick={() => broken && onMobileClose()}>
             <MenuLabel active={isActive(item.to)}>{item.label}</MenuLabel>
           </MenuItem>
         ))}
       </SubMenu>
-      <MenuItem component={<Link to={ROUTES.TIERS} />} icon={<LucideIcon icon={HardDrive} size={18} />} active={isActive(ROUTES.TIERS)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.TIERS} />} icon={<AnimatedIcon icon={CpuIcon} size={18} />} active={isActive(ROUTES.TIERS)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.TIERS)}>{t("sidebar.tiers")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.EVENTS_TARGET} />} icon={<LucideIcon icon={Database} size={18} />} active={isActive(ROUTES.EVENTS_TARGET)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.EVENTS_TARGET} />} icon={<AnimatedIcon icon={Stack3Icon} size={18} />} active={isActive(ROUTES.EVENTS_TARGET)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.EVENTS_TARGET)}>{t("sidebar.eventsTarget")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.SSE} />} icon={<LucideIcon icon={FileKey} size={18} />} active={isActive(ROUTES.SSE)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.SSE} />} icon={<AnimatedIcon icon={LockIcon} size={18} />} active={isActive(ROUTES.SSE)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.SSE)}>{t("sidebar.sse")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.LICENSE} />} icon={<LucideIcon icon={LifeBuoy} size={18} />} active={isActive(ROUTES.LICENSE)} onClick={() => broken && onMobileClose()}>
+      <MenuItem component={<Link to={ROUTES.LICENSE} />} icon={<AnimatedIcon icon={HeartIcon} size={18} />} active={isActive(ROUTES.LICENSE)} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={isActive(ROUTES.LICENSE)}>{t("sidebar.license")}</MenuLabel>
       </MenuItem>
     </Menu>
@@ -234,11 +205,11 @@ function SettingsSection({ collapsed, broken, onMobileClose }: SectionProps) {
   const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   return (
-    <Menu renderExpandIcon={({ open }) => <LucideIcon icon={open ? ChevronUp : ChevronDown} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
-      <SectionTitle label={t("sidebar.settings")} icon={SettingsIcon} />
+    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
+      <SectionTitle label={t("sidebar.settings")} icon={GearIcon} />
       <MenuItem
         component={<Link to={ROUTES.USER_SETTINGS} />}
-        icon={<LucideIcon icon={SettingsIcon} size={18} />}
+        icon={<AnimatedIcon icon={GearIcon} size={18} />}
         active={isActive(ROUTES.USER_SETTINGS)}
         onClick={() => broken && onMobileClose()}
       >
@@ -344,7 +315,7 @@ function Sidebar() {
                   size="3"
                   className={styles.avatar}
                   src={avatarImageId ? buildImageUrl(avatarImageId) : undefined}
-                  fallback={<UserRound size={20} />}
+                  fallback={<UserIcon size={20} />}
                   alt=""
                   aria-hidden="true"
                 />
@@ -363,7 +334,7 @@ function Sidebar() {
                 aria-expanded={!collapsed}
                 onClick={() => (broken ? setToggled(false) : setCollapsed((value) => !value))}
               >
-                <LucideIcon icon={collapsed ? ChevronRight : ChevronLeft} size={14} />
+                <AnimatedIcon icon={collapsed ? RightChevron : ArrowNarrowLeftIcon} size={14} />
               </IconButton>
             </div>
 
@@ -381,7 +352,7 @@ function Sidebar() {
                 aria-label={t("sidebar.logout")}
                 title={collapsed ? t("sidebar.logout") : undefined}
               >
-                <LucideIcon icon={LogOut} size={18} />
+                <AnimatedIcon icon={LogoutIcon} size={18} />
                 {!collapsed && t("sidebar.logout")}
               </Button>
             </div>
@@ -392,10 +363,9 @@ function Sidebar() {
       <Flex direction="column" flexGrow="1" minWidth="0" inert={broken && toggled ? true : undefined} className={styles.content}>
         {broken ? (
           <IconButton variant="surface" color="gray" size="3" className={styles.mobileToggle} onClick={() => setToggled(true)} aria-label={t("sidebar.openMenu")}>
-            <LucideIcon icon={MenuIcon} size={18} />
+            <AnimatedIcon icon={UnorderedListIcon} size={18} />
           </IconButton>
         ) : null}
-        <UserTopBar />
         <Box flexGrow="1" minWidth="0" minHeight="0" className={styles.contentInner}>
           <Outlet />
         </Box>

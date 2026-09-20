@@ -115,8 +115,11 @@ export function nfxUiAtAliasPlugin(consoleRoot: string, nfxUiRoot: string): Plug
 
 export function nfxUiViteAliases(consoleRoot: string, nfxUiRoot: string): Alias[] {
   const nm = path.resolve(consoleRoot, "node_modules");
+  const src = path.resolve(nfxUiRoot, "src");
   const aliases: Alias[] = [
-    { find: /^nfx-ui\/(.*)/, replacement: path.resolve(nfxUiRoot, "src/$1") },
+    { find: /^nfx-ui\/icons$/, replacement: path.join(src, "animations/index.ts") },
+    { find: /^nfx-ui\/icons\/(.*)/, replacement: path.join(src, "animations/$1") },
+    { find: /^nfx-ui\/(.*)/, replacement: path.join(src, "$1") },
     { find: /^react$/, replacement: path.resolve(nm, "react") },
     { find: /^react-dom$/, replacement: path.resolve(nm, "react-dom") },
   ];

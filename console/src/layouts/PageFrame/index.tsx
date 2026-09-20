@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Container, Flex } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 
 import { safeStringable } from "@/utils";
 
@@ -15,7 +15,7 @@ type PageFrameProps = {
   className?: string;
   /** 最大宽度，数字按 px 处理；默认 1440px（覆盖 Container size="4" 的 1136px）。 */
   maxWidth?: number | string;
-  /** 全高布局（聊天 / 社交等）：去掉垂直 padding，锁定视口高度，仅内部滚动。 */
+  /** 全高布局（聊天 / 社交等）：去掉垂直 padding，锁定视口高度，仅内部滚动。配合 pageShell.shell。 */
   fullHeight?: boolean;
 };
 
@@ -29,13 +29,7 @@ function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDT
 
   return (
     <Container size="4" align="center" py={fullHeight ? "0" : "5"} width="100%" maxWidth={resolvedMaxWidth} className={frameClass || undefined}>
-      {fullHeight ? (
-        <Flex direction="column" flexGrow="1" minHeight="0" width="100%" height="100%" className={styles.fullHeightBody}>
-          {children}
-        </Flex>
-      ) : (
-        children
-      )}
+      {fullHeight ? <div className={styles.fullHeightBody}>{children}</div> : children}
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 import type { DataResponse } from "nfx-ui/types";
 
-import { publicClient } from "./httpClients";
+import { publicClient } from "./clients";
 import { URL_PATHS } from "./ip";
 
 export const getErrorTranslations = async (lang: string): Promise<Record<string, unknown>> => {

@@ -1,0 +1,43 @@
+.root {
+  position: relative;
+  min-height: 100%;
+}
+
+.page {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  overflow: clip;
+  background:
+    radial-gradient(circle at 12% 12%, color-mix(in oklab, var(--accent-9) 16%, transparent), transparent 32%),
+    radial-gradient(circle at 88% 18%, color-mix(in oklab, var(--red-9) 14%, transparent), transparent 30%),
+    radial-gradient(circle at 58% 92%, color-mix(in oklab, var(--amber-9) 12%, transparent), transparent 32%), var(--color-background);
+  color: var(--gray-12);
+}
+
+.page > :last-child {
+  z-index: 2;
+}
+
+.backgroundGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+.backgroundDotGrid {
+  --dot-grid-size: calc(var(--space-3) * 2.5);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-color: color-mix(in oklab, #1e293b 14%, transparent);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.26) 2px, transparent 0);
+  background-size: var(--dot-grid-size) var(--dot-grid-size);
+  background-position: 0 0;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.24) 48%, transparent 80%);
+}

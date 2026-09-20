@@ -124,8 +124,8 @@ tasks:
           echo "==> docker compose build $svc"
           sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build "$svc"
         done
-        echo "==> docker compose up"
-        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
+        echo "==> docker compose up{{if ne .ENV "secure"}} --watch{{end}}"
+        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{else}}--watch{{end}}
 
   run:rebuild:
     desc: "Force-rebuild (--no-cache) s3/admin/object/iam/notify/system + console (ENV=dev|secure)"
@@ -147,8 +147,8 @@ tasks:
           echo "==> docker compose build --no-cache $svc"
           sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build --no-cache "$svc"
         done
-        echo "==> docker compose up"
-        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
+        echo "==> docker compose up{{if ne .ENV "secure"}} --watch{{end}}"
+        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{else}}--watch{{end}}
 
   run:down:
     desc: "Stop the app stack (ENV=dev|secure)"

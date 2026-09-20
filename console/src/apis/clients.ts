@@ -1,102 +1,81 @@
-import { S3Client } from "@aws-sdk/client-s3";
-import type { DeserializeHandler, DeserializeHandlerArguments, DeserializeHandlerOutput } from "@aws-sdk/types";
+import type { InternalAxiosRequestConfig } from "axios";
 
-import ApiClient from "@/utils/api-client";
-import { AwsClient } from "@/utils/aws4fetch";
-import { ApiErrorHandler } from "@/utils/api-error-handler";
-import { AuthStore } from "@/stores/authStore";
-import { configManager } from "@/utils/config";
-import type { SiteConfig } from "@/types/config";
+import axios, { AxiosError } from "axios";
+import { AuthStore, clearAuth } from "nfx-ui/stores";
+import { refreshAuthTokens } from "nfx-ui/apis";
+import type { ApiErrorBody } from "nfx-ui/types";
 
-let cachedSiteConfig: SiteConfig | null = null;
+import { API_ENDPOINTS } from "@/apis/ip";
 
-export async function loadSiteConfig(): Promise<SiteConfig> {
-  cachedSiteConfig = await configManager.loadConfig();
-  return cachedSiteConfig;
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    _retry?: boolean;
+  }
 }
 
-export function getSiteConfig(): SiteConfig {
-  return cachedSiteConfig ?? configManager.getCurrentHostConfig();
+export const protectedClient = axios.create({
+  baseURL: API_ENDPOINTS.PURE,
+  timeout: 15000,
+});
+
+export const publicClient = axios.create({
+  baseURL: API_ENDPOINTS.PURE,
+  timeout: 15000,
+});
+
+protectedClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const accessToken = AuthStore.getState().accessToken;
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  return config;
+});
+
+function logApiError(error: AxiosError<ApiErrorBody>): void {
+  const errorData = error.response?.data;
+  if (errorData?.message) {
+    console.log("❌ API Error:", {
+      message: errorData.message,
+      errCode: errorData.errCode ?? (errorData as { err_code?: string }).err_code,
+      status: error.response?.status ?? errorData.status,
+      url: error.config?.url,
+    });
+  }
 }
 
-function getCredentials() {
-  return AuthStore.getState().credentials;
-}
-
-export function createAdminApiClient(): ApiClient {
-  const siteConfig = getSiteConfig();
-  const credentials = getCredentials();
-  const aws = new AwsClient({
-    accessKeyId: credentials.AccessKeyId || "",
-    secretAccessKey: credentials.SecretAccessKey || "",
-    sessionToken: credentials.SessionToken || "",
-    region: siteConfig.s3.region || "us-east-1",
-    service: "s3",
-  });
-  return new ApiClient(aws, {
-    baseUrl: siteConfig.api.baseURL,
-    headers: { "Content-Type": "application/json" },
-    errorHandler: new ApiErrorHandler({
-      onUnauthorized: async () => {
-        AuthStore.getState().clearAuth();
-        window.location.reload();
-      },
-    }),
-  });
-}
-
-interface S3Response {
-  response?: { body?: string };
-  [key: string]: unknown;
-}
-
-export function createS3Client(): S3Client {
-  const siteConfig = getSiteConfig();
-  const credentials = getCredentials();
-  const client = new S3Client({
-    endpoint: siteConfig.s3.endpoint,
-    region: siteConfig.s3.region || "us-east-1",
-    forcePathStyle: true,
-    requestChecksumCalculation: "WHEN_REQUIRED",
-    credentials: {
-      accessKeyId: credentials.AccessKeyId || "",
-      secretAccessKey: credentials.SecretAccessKey || "",
-      sessionToken: credentials.SessionToken || "",
-    },
-  });
-
-  client.middlewareStack.add(
-    (next: DeserializeHandler<any, any>) =>
-      async (args: DeserializeHandlerArguments<any>): Promise<DeserializeHandlerOutput<any>> => {
-        try {
-          const response = (await next(args)) as S3Response;
-          if (response.response?.body && typeof response.response.body === "string") {
-            const body = response.response.body.trim();
-            if (body.match(/^<\?xml[^>]*\?><[^>]*><\/[^>]*>$/)) {
-              const tagName = body.match(/<([^>]*)><\/\1>/)?.[1];
-              if (tagName) {
-                const propertyName = tagName.replace(/(?:^|_)([a-z])/g, (_, letter: string) => letter.toUpperCase());
-                return {
-                  response: response.response,
-                  [propertyName]: null,
-                } as unknown as DeserializeHandlerOutput<object>;
-              }
-            }
-          }
-          return response as DeserializeHandlerOutput<object>;
-        } catch (error: unknown) {
-          const err = error as { $metadata?: { httpStatusCode?: number }; Code?: string };
-          if (err?.$metadata?.httpStatusCode === 401) {
-            AuthStore.getState().clearAuth();
-            window.location.reload();
-            return { response: { statusCode: 401, headers: {} } } as DeserializeHandlerOutput<object>;
-          }
-          if (err?.Code) throw new Error(err.Code);
-          throw error;
+protectedClient.interceptors.response.use(
+  (response) => response,
+  async (error: unknown) => {
+    if (!(error instanceof AxiosError)) {
+      return Promise.reject(error);
+    }
+    logApiError(error);
+    if (error.response?.status === 401 && error.config && !error.config._retry) {
+      error.config._retry = true;
+      try {
+        const ok = await refreshAuthTokens("401");
+        if (!ok) throw error;
+        const newAccessToken = AuthStore.getState().accessToken;
+        if (newAccessToken && error.config.headers) {
+          error.config.headers.Authorization = `Bearer ${newAccessToken}`;
         }
-      },
-    { step: "deserialize", name: "handleXmlResponse" },
-  );
+        return protectedClient.request(error.config);
+      } catch (refreshError) {
+        clearAuth();
+        if (window.location.pathname !== "/auth/login") {
+          window.location.href = "/auth/login";
+        }
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  },
+);
 
-  return client;
-}
+publicClient.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (error instanceof AxiosError) {
+      logApiError(error);
+    }
+    return Promise.reject(error);
+  },
+);

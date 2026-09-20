@@ -1,16 +1,14 @@
-import type { LucideIcon as LucideIconComponent } from "lucide-react";
-
+import { CheckedIcon, InfoCircleIcon, XIcon } from "nfx-ui/icons";
+import type { AnimatedIconComponent } from "nfx-ui/icons";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
-import { CircleCheck, CircleX, Info } from "lucide-react";
-
 import { LucideIcon } from "@/components";
 import { hideModal, useModalStore } from "@/stores/modal";
 
-const TYPE_CONFIG: Record<string, { icon: LucideIconComponent; color: "green" | "red" | "blue" }> = {
-  success: { icon: CircleCheck, color: "green" },
-  error: { icon: CircleX, color: "red" },
-  info: { icon: Info, color: "blue" },
+const TYPE_CONFIG: Record<string, { icon: AnimatedIconComponent; color: "green" | "red" | "blue" }> = {
+  success: { icon: CheckedIcon, color: "green" },
+  error: { icon: XIcon, color: "red" },
+  info: { icon: InfoCircleIcon, color: "blue" },
 };
 
 const Base = () => {

@@ -1,7 +1,7 @@
+import { WorldIcon } from "nfx-ui/icons";
 import type { UserProfileEditFormData } from "nfx-ui/schemas";
 
 import { Flex, Select, Text } from "@radix-ui/themes";
-import { Languages } from "lucide-react";
 import { Language, LANGUAGE_VALUES, LanguageEnum } from "nfx-ui/enums";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -26,7 +26,7 @@ export const ProfileLanguageController = () => {
         <Flex direction="column" gap="1" width="100%">
           <Text as="label" size="2" weight="medium" htmlFor={field.name}>
             <Flex as="span" align="center" gap="1">
-              <LucideIcon icon={Languages} size={16} />
+              <LucideIcon icon={WorldIcon} size={16} />
               {t("edit.profileLanguage")}
             </Flex>
           </Text>

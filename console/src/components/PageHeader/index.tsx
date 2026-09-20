@@ -1,14 +1,12 @@
-import type { LucideIcon as LucideIconType } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
-
-import LucideIcon from "@/components/LucideIcon";
+import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
 
 export type PageHeaderProps = {
-  icon: LucideIconType;
+  icon: AnimatedIconComponent;
   title: string;
   description?: string;
   actions?: ReactNode;
@@ -30,7 +28,7 @@ export default function PageHeader({ icon, title, description, actions, density 
             height={isPanel ? "28px" : "48px"}
             className={`${styles.pageIcon} ${isPanel ? styles.panelIcon : ""}`}
           >
-            <LucideIcon icon={icon} size={isPanel ? 15 : 22} />
+            <AnimatedIcon icon={icon} size={isPanel ? 15 : 22} />
           </Flex>
           <Box minWidth="0">
             <Heading as="h1" size={isPanel ? "4" : "6"} mb={description ? "1" : "0"}>

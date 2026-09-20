@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Button, Card, DropdownMenu, Flex, Text } from "@radix-ui/themes";
+import { Avatar, Button, Card, DropdownMenu, Flex, IconButton, Text } from "@radix-ui/themes";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { APP_NAME } from "nfx-ui/config";
 import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
-import { AuthStore, clearAuth, setHeaderHeight, useAuthStore } from "nfx-ui/stores";
+import { AuthStore, clearAuth, openAsider, setHeaderHeight, useAuthStore, useLayoutStore } from "nfx-ui/stores";
 import { useTranslation } from "react-i18next";
 
 import { Logo, PreferencesPopover } from "@/components";
@@ -17,6 +18,7 @@ function Header() {
   const headerRef = useRef<Nullable<HTMLElement>>(null);
   const { t } = useTranslation("language");
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
+  const isAsiderOpen = useLayoutStore((state) => state.isAsiderOpen);
   const { data: accountInfo, profile } = useCurrentProfile();
   const [elevated, setElevated] = useState(false);
 
@@ -69,6 +71,17 @@ function Header() {
             <Logo variant="glassSquare" size="small" title={<Text className={styles.brandWord}>{APP_NAME}</Text>} subtitle="Storages" />
 
             <Flex align="center" gap="2" flexShrink="0">
+              <IconButton
+                id="header-mobile-menu-button"
+                variant="soft"
+                size="2"
+                aria-label={t("header.openMenu")}
+                aria-expanded={isAsiderOpen}
+                aria-controls="mobile-asider"
+                onClick={openAsider}
+              >
+                <HamburgerMenuIcon width={20} height={20} />
+              </IconButton>
               <PreferencesPopover />
 
               {isAuthValid ? (

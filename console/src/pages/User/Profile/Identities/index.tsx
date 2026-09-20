@@ -1,8 +1,8 @@
+import { UsersIcon } from "nfx-ui/icons";
 import type { Profile } from "nfx-ui/types";
 
 import { useState } from "react";
 import { Avatar, Badge, Box, Button, Card, Flex, Grid, Select, Text, TextField } from "@radix-ui/themes";
-import { Users } from "lucide-react";
 import { LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
 import {
   useChangePassword,
@@ -142,8 +142,7 @@ function EmailRow({
               <Box minWidth="0" flexGrow="1">
                 <TextField.Root size="2" value={nextEmail} onChange={(e) => setNextEmail(e.target.value)} />
               </Box>
-              <Button
-                size="1"
+              <Button size="1"
                 loading={updateEmail.isPending}
                 disabled={!nextEmail.trim() || nextEmail.trim() === item.email}
                 onClick={() => updateEmail.mutate({ emailId: item.id, email: nextEmail.trim() }, { onSuccess: () => setEditing(false) })}
@@ -163,8 +162,7 @@ function EmailRow({
               <Box minWidth="0" flexGrow="1">
                 <TextField.Root size="2" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("labels.verificationCode")} />
               </Box>
-              <Button
-                size="1"
+              <Button size="1"
                 loading={verify.isPending}
                 disabled={!code.trim()}
                 onClick={() => verify.mutate({ emailId: item.id, verificationCode: code.trim() }, { onSuccess: () => setCode("") })}
@@ -300,8 +298,7 @@ function PasswordSection() {
           </Flex>
         </Flex>
         <Flex align="center" justify="end" gap="3" py="2">
-          <Button
-            size="2"
+          <Button size="2"
             loading={changePassword.isPending}
             disabled={!canSubmit}
             onClick={() =>
@@ -410,8 +407,7 @@ function ProfilesSection() {
                       </Button>
                     )}
                     {isCommunity ? (
-                      <Button
-                        size="1"
+                      <Button size="1"
                         variant="soft"
                         color="red"
                         disabled={isCurrent || atFloor || busy}
@@ -463,8 +459,7 @@ function ProfilesSection() {
                   </Select.Content>
                 </Select.Root>
               </Box>
-              <Button
-                size="2"
+              <Button size="2"
                 loading={createProfile.isPending}
                 disabled={!displayName.trim()}
                 onClick={() => createProfile.mutate({ displayName: displayName.trim(), profileLanguage }, { onSuccess: () => setDisplayName("") })}
@@ -513,7 +508,7 @@ export default function ProfileIdentitiesPage() {
   const { t } = useTranslation("pages.User.Profile.Identities");
   return (
     <PageFrame>
-      <PageHeader icon={Users} title={t("title")} description={t("description")} />
+      <PageHeader icon={UsersIcon} title={t("title")} description={t("description")} />
       <Suspense loadingText={t("labels.loading")}>
         <IdentitiesBody />
       </Suspense>

@@ -1,5 +1,5 @@
+import { UserIcon } from "nfx-ui/icons";
 import { Avatar, Box, Button, Card, Flex, Grid, Text } from "@radix-ui/themes";
-import { Contact } from "lucide-react";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -38,7 +38,7 @@ export default function ProfileOverviewPage() {
   return (
     <PageFrame>
       <PageHeader
-        icon={Contact}
+        icon={UserIcon}
         title={t("title")}
         description={t("description")}
         actions={

@@ -5,7 +5,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { VerificationCodeOtp } from "../../components/VerificationCodeOtp";
-import styles from "./styles.module.css";
+import styles from "./s.module.css";
 
 export type SignupVerificationCodeControllerProps = Record<string, never>;
 

@@ -9,9 +9,9 @@ import { LanguageEnum } from "nfx-ui/enums";
 import { LanguageProvider, ThemeProvider } from "nfx-ui/providers";
 import { ensureDeviceIdStorage } from "nfx-ui/stores";
 
-import { loadSiteConfig } from "@/apis/clients";
+import { loadSiteConfig } from "@/apis/s3";
 import { storageRepositories } from "@/apis/repositories";
-import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
+import { getBuiltinI18nBundles } from "@/assets/language";
 import { syncDocumentLogo } from "@/constants";
 import { DataProvider, ModalProvider, QueryProvider, RouterProvider } from "@/providers";
 

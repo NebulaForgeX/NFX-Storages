@@ -5,7 +5,7 @@ import { Flex } from "@radix-ui/themes";
 import { normalizeVerificationCode } from "nfx-ui/utils";
 import { unstable_OneTimePasswordField as OneTimePasswordField } from "radix-ui";
 
-import styles from "./styles.module.css";
+import styles from "./s.module.css";
 
 const DEFAULT_SLOT_COUNT = 6;
 

@@ -27,7 +27,7 @@ import {
   BucketVersioningStatus,
 } from "@aws-sdk/client-s3";
 
-import { createAdminApiClient, createS3Client } from "@/apis/clients";
+import { createAdminApiClient, createS3Client } from "@/apis/s3";
 
 export const bucketRepository = {
   listBuckets: () => createS3Client().send(new ListBucketsCommand({})),

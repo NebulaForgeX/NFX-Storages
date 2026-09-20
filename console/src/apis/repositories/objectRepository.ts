@@ -16,7 +16,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl as signUrl } from "@aws-sdk/s3-request-presigner";
 
-import { createS3Client } from "@/apis/clients";
+import { createS3Client } from "@/apis/s3";
 
 export function objectRepository(bucket: string) {
   const client = () => createS3Client();

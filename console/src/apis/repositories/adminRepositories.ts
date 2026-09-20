@@ -1,4 +1,4 @@
-import { createAdminApiClient } from "@/apis/clients";
+import { createAdminApiClient } from "@/apis/s3";
 import * as systemApi from "@/apis/system.api";
 
 export const usersRepository = {

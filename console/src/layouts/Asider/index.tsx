@@ -1,6 +1,7 @@
+import { AnimatedIcon, HomeIcon, LogoutIcon, RightChevron, UserIcon } from "nfx-ui/icons";
+
 import { useEffect, useRef } from "react";
 import { Avatar, Box, Button, Card, Flex, IconButton, Text } from "@radix-ui/themes";
-import { ChevronRight, Home, LogOut, UserRound } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { clearAuth, closeAsider, useAuthStore, useLayoutStore } from "nfx-ui/stores";
@@ -105,14 +106,14 @@ function Asider() {
               <Logo title={APP_NAME} subtitle="Live local map" />
             )}
             <IconButton ref={closeButtonRef} variant="soft" size="2" aria-label={t("header.closeMenu")} onClick={closeAsider}>
-              <ChevronRight size={14} />
+              <AnimatedIcon icon={RightChevron} size={14} />
             </IconButton>
           </Flex>
 
           <Flex asChild direction="column" gap="3" pb="5" className={styles.nav}>
             <nav>
               <button type="button" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
-                <Home size={18} aria-hidden="true" />
+                <AnimatedIcon icon={HomeIcon} size={18} aria-hidden="true" />
                 <Text as="span" size="3">
                   {t("header.home")}
                 </Text>
@@ -132,7 +133,7 @@ function Asider() {
                     routerEventEmitter.navigate({ to: ROUTES.PROFILE });
                   }}
                 >
-                  <UserRound size={18} aria-hidden="true" />
+                  <AnimatedIcon icon={UserIcon} size={18} aria-hidden="true" />
                   {t("header.profile")}
                 </Button>
                 <Button
@@ -145,7 +146,7 @@ function Asider() {
                     routerEventEmitter.navigate({ to: ROUTES.LOGIN });
                   }}
                 >
-                  <LogOut size={18} aria-hidden="true" />
+                  <AnimatedIcon icon={LogoutIcon} size={18} aria-hidden="true" />
                   {t("header.logout")}
                 </Button>
               </>

@@ -1,12 +1,16 @@
-import type { LucideIcon as LucideIconComponent, LucideProps } from "lucide-react";
+import type { AnimatedIconComponent } from "nfx-ui/icons";
 
-export type LucideIconProps = LucideProps & {
-  icon: LucideIconComponent;
+export type LucideIconProps = {
+  icon: AnimatedIconComponent;
+  size?: number | string;
+  strokeWidth?: number;
+  className?: string;
+  color?: string;
 };
 
-/** Lucide wrapper: inherits parent `color` via currentColor. Use for hero, cards, map pins, sidebar nav (18px+). */
-function LucideIcon({ icon: Icon, color = "currentColor", strokeWidth = 2, "aria-hidden": ariaHidden = true, ...props }: LucideIconProps) {
-  return <Icon color={color} strokeWidth={strokeWidth} aria-hidden={ariaHidden} {...props} />;
+/** Static nfx-ui icon. File name matches PulsoLink; hover animation belongs on AnimatedIcon, not here. */
+function LucideIcon({ icon: Icon, size = 18, strokeWidth = 1.75, className, color = "currentColor" }: LucideIconProps) {
+  return <Icon size={size} strokeWidth={strokeWidth} className={className} color={color} />;
 }
 
 LucideIcon.displayName = "LucideIcon";

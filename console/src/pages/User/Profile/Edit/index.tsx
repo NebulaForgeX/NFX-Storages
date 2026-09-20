@@ -1,6 +1,6 @@
+import { PenIcon, UploadIcon } from "nfx-ui/icons";
 import { useRef, useState } from "react";
 import { Avatar, Box, Button, Card, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
-import { Pencil, Upload } from "lucide-react";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useConfirmImageUpload, useConfirmProfileAvatar, useCurrentProfile, useDeleteImage, usePatchProfile, usePrepareImageUpload } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
@@ -94,7 +94,7 @@ function AvatarSection() {
           </Flex>
           <Flex gap="2" wrap="wrap" align="center">
             <Button size="2" variant="soft" disabled={busy} onClick={() => fileRef.current?.click()}>
-              <LucideIcon icon={Upload} size={14} />
+              <LucideIcon icon={UploadIcon} size={14} />
               {busy ? t("avatar.uploading") : t("avatar.choose")}
             </Button>
             <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
@@ -129,7 +129,7 @@ export default function ProfileEditPage() {
 
   return (
     <PageFrame>
-      <PageHeader icon={Pencil} title={t("title")} description={t("description")} />
+      <PageHeader icon={PenIcon} title={t("title")} description={t("description")} />
       <Flex direction="column" gap="3">
         <AvatarSection />
         {profile ? <BackgroundGallery profile={profile} /> : null}
@@ -168,8 +168,7 @@ export default function ProfileEditPage() {
               <TextField.Root size="2" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("labels.website")} />
             </Flex>
             <Flex align="center" justify="end" gap="3" py="2">
-              <Button
-                size="2"
+              <Button size="2"
                 loading={patch.isPending}
                 disabled={!profile}
                 onClick={() => {

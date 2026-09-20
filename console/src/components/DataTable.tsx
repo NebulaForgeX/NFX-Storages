@@ -1,6 +1,6 @@
+import { MailFilledIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
-import { Inbox } from "lucide-react";
 import { Table } from "@radix-ui/themes";
 import { EmptyState } from "@/components";
 
@@ -20,10 +20,10 @@ interface DataTableProps<T> {
 
 export function DataTable<T>({ columns, rows, rowKey, empty, loading }: DataTableProps<T>) {
   if (loading) {
-    return <EmptyState icon={Inbox} title={empty ?? "Loading..."} />;
+    return <EmptyState icon={MailFilledIcon} title={empty ?? "Loading..."} />;
   }
   if (!rows.length) {
-    return <EmptyState icon={Inbox} title={empty ?? "No data"} />;
+    return <EmptyState icon={MailFilledIcon} title={empty ?? "No data"} />;
   }
   return (
     <Table.Root variant="surface">

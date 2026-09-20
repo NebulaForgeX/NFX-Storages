@@ -2,7 +2,7 @@ import { ApiAuthRepository } from "nfx-ui/apis";
 import { AuthStore as IdentityAuthStore } from "nfx-ui/stores";
 
 import { URL_PATHS } from "@/apis/ip";
-import { protectedClient } from "@/apis/httpClients";
+import { protectedClient } from "@/apis/clients";
 import { AuthStore } from "@/stores/authStore";
 import type { SessionCredentials } from "@/stores/authStore";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";

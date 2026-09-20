@@ -282,19 +282,27 @@ services:
     build:
       context: ./console
       dockerfile: Dockerfile
-      target: prod
+      target: dev
       args:
         VITE_API_URL: ${VITE_API_URL}
         VITE_IDENTITY_API_URL: ${VITE_IDENTITY_API_URL}
         VITE_SERVER_HOST: ${VITE_SERVER_HOST}
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
         VITE_S3_ENDPOINT: ${VITE_S3_ENDPOINT}
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_IDENTITY_API_URL: ${VITE_IDENTITY_API_URL}
+      VITE_SERVER_HOST: ${VITE_SERVER_HOST}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+      VITE_S3_ENDPOINT: ${VITE_S3_ENDPOINT}
+      VITE_PORT: ${VITE_PORT}
+      DOCKER: "1"
     ports:
-      - "${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
+      - "${CONSOLE_EXTERNAL_PORT}:${VITE_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-storages"
-      traefik.http.services.storages-console.loadbalancer.server.port: "${CONSOLE_PORT}"
+      traefik.http.services.storages-console.loadbalancer.server.port: "${VITE_PORT}"
       traefik.http.routers.storages-console.entrypoints: web
       traefik.http.routers.storages-console.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
       traefik.http.routers.storages-console.service: storages-console
@@ -304,6 +312,20 @@ services:
       traefik.http.routers.storages-console-secure.service: storages-console
       traefik.http.routers.storages-console-secure.tls: "true"
       traefik.http.routers.storages-console-secure.priority: "1"
+    develop:
+      watch:
+        - action: sync
+          path: ./console
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+        - action: rebuild
+          path: ./console/package.json
+        - action: rebuild
+          path: ./console/package-lock.json
+        - action: rebuild
+          path: ./console/Dockerfile
     networks:
       - nfx-storages
       - nfx-edge
