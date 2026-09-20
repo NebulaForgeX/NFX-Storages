@@ -17,32 +17,32 @@ export type PageHeaderProps = {
 export default function PageHeader({ icon, title, description, actions, density = "panel" }: PageHeaderProps) {
   const isPanel = density === "panel";
   return (
-    <Flex asChild align="start" justify="between" gap="3" wrap="wrap" mb={isPanel ? "3" : "5"}>
+    <Flex asChild align="start" justify="between" gap="4" wrap="wrap" mb="0" className={styles.wrap}>
       <header>
-        <Flex align="center" gap={isPanel ? "3" : "4"} minWidth="0">
+        <Flex align="center" gap={isPanel ? "4" : "5"} minWidth="0">
           <Flex
             align="center"
             justify="center"
             flexShrink="0"
-            width={isPanel ? "28px" : "48px"}
-            height={isPanel ? "28px" : "48px"}
+            width={isPanel ? "32px" : "48px"}
+            height={isPanel ? "32px" : "48px"}
             className={`${styles.pageIcon} ${isPanel ? styles.panelIcon : ""}`}
           >
-            <AnimatedIcon icon={icon} size={isPanel ? 15 : 22} />
+            <AnimatedIcon icon={icon} size={isPanel ? 16 : 22} />
           </Flex>
           <Box minWidth="0">
-            <Heading as="h1" size={isPanel ? "4" : "6"} mb={description ? "1" : "0"}>
+            <Heading as="h1" size={isPanel ? "5" : "6"} mb={description ? "1" : "0"}>
               {title}
             </Heading>
             {description ? (
-              <Text as="p" size="1" color="gray">
+              <Text as="p" size="2" color="gray">
                 {description}
               </Text>
             ) : null}
           </Box>
         </Flex>
         {actions ? (
-          <Flex gap="2" wrap="wrap" align="center">
+          <Flex gap="3" wrap="wrap" align="center">
             {actions}
           </Flex>
         ) : null}

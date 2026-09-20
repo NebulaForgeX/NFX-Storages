@@ -1,4 +1,4 @@
-import { CameraIcon, Cloud1Icon, RefreshIcon, SaveIcon, TrashIcon, XIcon } from "nfx-ui/icons";
+import { Camera, Cloud, RefreshCw, Save, Trash2, X } from "lucide-react";
 import type { DragEndEvent } from "@dnd-kit/core";
 import type { Profile } from "nfx-ui/types";
 import type { CSSProperties } from "react";
@@ -75,7 +75,7 @@ const SortableBackgroundItem = ({ draft, onRemove, removeLabel }: SortableBackgr
         aria-label={removeLabel}
         title={removeLabel}
       >
-        <LucideIcon icon={TrashIcon} size={14} />
+        <LucideIcon icon={Trash2} size={14} />
       </IconButton>
 
       {isBusy ? (
@@ -94,7 +94,7 @@ const SortableBackgroundItem = ({ draft, onRemove, removeLabel }: SortableBackgr
 
       {isFailed ? (
         <Text as="span" size="1" weight="bold" className={`${styles.statusPill} ${styles.statusFailed}`}>
-          <LucideIcon icon={XIcon} size={12} />
+          <LucideIcon icon={X} size={12} />
           {t("backgroundUpload.status.failed")}
         </Text>
       ) : null}
@@ -131,7 +131,7 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
       <Flex align="start" justify="between" gap="3" wrap="wrap" mb="4">
         <Flex direction="column" gap="1" minWidth="0">
           <Flex align="center" gap="1">
-            <LucideIcon icon={CameraIcon} size={16} />
+            <LucideIcon icon={Camera} size={16} />
             <Text size="2" weight="medium">
               {t("backgroundUpload.label")}
             </Text>
@@ -145,11 +145,11 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
 
         <Flex align="center" gap="2" wrap="wrap">
           <Button type="button" variant="outline" size="2" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
-            {uploading ? <ResetIcon /> : <LucideIcon icon={CameraIcon} size={16} />}
+            {uploading ? <ResetIcon /> : <LucideIcon icon={Camera} size={16} />}
             {atLimit ? t("backgroundUpload.full") : t("backgroundUpload.add")}
           </Button>
           <Button type="button" variant="soft" size="2" disabled={!dirty || uploading || confirming} onClick={confirmDrafts}>
-            {confirming ? <Spinner /> : <LucideIcon icon={SaveIcon} size={16} />}
+            {confirming ? <Spinner /> : <LucideIcon icon={Save} size={16} />}
             {confirming ? t("backgroundUpload.confirming") : t("backgroundUpload.confirm")}
           </Button>
         </Flex>
@@ -174,11 +174,11 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
             <span className={styles.addContent}>
               <span className={styles.addIconWrap}>
                 {uploading ? (
-                  <LucideIcon icon={RefreshIcon} size={24} className={styles.spin} />
+                  <LucideIcon icon={RefreshCw} size={24} className={styles.spin} />
                 ) : drafts.length === 0 ? (
-                  <LucideIcon icon={Cloud1Icon} size={24} />
+                  <LucideIcon icon={Cloud} size={24} />
                 ) : (
-                  <LucideIcon icon={CameraIcon} size={24} />
+                  <LucideIcon icon={Camera} size={24} />
                 )}
               </span>
               <Text as="span" size="2" className={styles.addTitle}>

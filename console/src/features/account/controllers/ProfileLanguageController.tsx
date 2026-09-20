@@ -1,4 +1,4 @@
-import { WorldIcon } from "nfx-ui/icons";
+import { Globe } from "lucide-react";
 import type { UserProfileEditFormData } from "nfx-ui/schemas";
 
 import { Flex, Select, Text } from "@radix-ui/themes";
@@ -26,7 +26,7 @@ export const ProfileLanguageController = () => {
         <Flex direction="column" gap="1" width="100%">
           <Text as="label" size="2" weight="medium" htmlFor={field.name}>
             <Flex as="span" align="center" gap="1">
-              <LucideIcon icon={WorldIcon} size={16} />
+              <LucideIcon icon={Globe} size={16} />
               {t("edit.profileLanguage")}
             </Flex>
           </Text>

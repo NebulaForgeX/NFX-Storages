@@ -1,9 +1,13 @@
 import type { RadixAppearance } from "nfx-ui/themes";
 
-export const LOGO_LIGHT = "/logo.svg";
-export const LOGO_DARK = "/logo.svg";
-export const LOGO_LIGHT_ICO = "/favicon.ico";
-export const LOGO_DARK_ICO = "/favicon.ico";
+function publicUrl(file: string): string {
+  return `${import.meta.env.BASE_URL}${file.replace(/^\//, "")}`;
+}
+
+export const LOGO_LIGHT = publicUrl("logo.svg");
+export const LOGO_DARK = publicUrl("logo.svg");
+export const LOGO_LIGHT_ICO = publicUrl("favicon.ico");
+export const LOGO_DARK_ICO = publicUrl("favicon.ico");
 
 export const getLogoSrc = (appearance: RadixAppearance): string => (appearance === "dark" ? LOGO_DARK : LOGO_LIGHT);
 

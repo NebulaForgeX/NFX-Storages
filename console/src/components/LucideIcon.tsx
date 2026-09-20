@@ -1,16 +1,16 @@
-import type { AnimatedIconComponent } from "nfx-ui/icons";
+import type { LucideIcon as LucideGlyph } from "lucide-react";
 
 export type LucideIconProps = {
-  icon: AnimatedIconComponent;
+  icon: LucideGlyph;
   size?: number | string;
   strokeWidth?: number;
   className?: string;
   color?: string;
 };
 
-/** Static nfx-ui icon. File name matches PulsoLink; hover animation belongs on AnimatedIcon, not here. */
-function LucideIcon({ icon: Icon, size = 18, strokeWidth = 1.75, className, color = "currentColor" }: LucideIconProps) {
-  return <Icon size={size} strokeWidth={strokeWidth} className={className} color={color} />;
+/** Static lucide-react glyph. Hover animation belongs on AnimatedIcon, as in HLEducation. */
+function LucideIcon({ icon: Icon, size = 18, strokeWidth = 1.75, className = "", color = "currentColor" }: LucideIconProps) {
+  return <Icon size={size} strokeWidth={strokeWidth} className={className} color={color} aria-hidden />;
 }
 
 LucideIcon.displayName = "LucideIcon";
