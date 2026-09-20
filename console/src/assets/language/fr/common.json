@@ -890,5 +890,6 @@
   "Plan": "Offre",
   "Organization": "Organisation",
   "Email": "E-mail",
-  "Drop files to upload": "Déposez des fichiers pour les téléverser"
+  "Drop files to upload": "Déposez des fichiers pour les téléverser",
+  "Mount endpoint": "Monter le point de terminaison"
 }

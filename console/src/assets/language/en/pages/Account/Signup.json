@@ -1,13 +1,14 @@
 {
   "title": "Create account",
-  "brand": {
-    "access": "{{name}} access",
-    "title": "Enter volumes, buckets, and object space."
-  },
-  "heroFooter": "One Account becomes Storages console access — never a second signup.",
-  "pageEyebrow": "Create Account",
-  "pageTitle": "Join {{name}}",
-  "pageSubtitle": "Verify your email, set a password, and open the Storages console.",
+  "path": "s3://storages/accounts/new",
+  "pageEyebrow": "Provision volume",
+  "pageTitle": "Open a new account key",
+  "pageSubtitle": "Email, code, then password — the same order as creating a bucket.",
+  "stepEmail": "Email",
+  "stepCode": "Code",
+  "stepPassword": "Password",
+  "emptyBucket": "Empty bucket",
+  "emptyHint": "No objects yet. This key unlocks the console.",
   "emailLabel": "Email",
   "emailPlaceholder": "you@example.com",
   "emailHint": "We send a 6-character code to this address.",
