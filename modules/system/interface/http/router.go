@@ -17,9 +17,19 @@ func NewRouter(app fiber.Router, v token.Verifier, h *Registry) *Router {
 }
 
 func (r *Router) RegisterRoutes() {
-	g := r.app.Group("/system")
-	g.Get("/locales/:lang", r.handlers.I18n.GetErrorTranslations)
-	g.Get("/messages/:lang", r.handlers.I18n.GetMessageTranslations)
-	g.Get("/system-state/latest", r.handlers.App.Latest)
-	g.Post("/system-state/initialize", r.handlers.App.Initialize)
+	system := r.app.Group("/system")
+	r.RegisterLocalesGroup(system)
+	r.RegisterSystemStateGroup(system)
+}
+
+func (r *Router) RegisterLocalesGroup(system fiber.Router) {
+	locales := system.Group("/locales")
+	locales.Get("/:lang", r.handlers.I18n.GetErrorTranslations)
+	messages := system.Group("/messages")
+	messages.Get("/:lang", r.handlers.I18n.GetMessageTranslations)
+}
+
+func (r *Router) RegisterSystemStateGroup(system fiber.Router) {
+	system.Get("/system-state/latest", r.handlers.App.Latest)
+	system.Post("/system-state/initialize", r.handlers.App.Initialize)
 }

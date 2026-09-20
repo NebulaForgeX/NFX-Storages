@@ -14,7 +14,15 @@ func NewRouter(app fiber.Router, h *Registry) *Router {
 }
 
 func (r *Router) RegisterRoutes() {
+	r.RegisterHealthGroup()
+	r.RegisterS3Group()
+}
+
+func (r *Router) RegisterHealthGroup() {
 	r.app.Get("/health", func(c fiber.Ctx) error { return c.JSON(map[string]any{"ok": true}) })
+}
+
+func (r *Router) RegisterS3Group() {
 	r.app.All("/", r.handlers.S3.Handle)
 	r.app.All("/*", r.handlers.S3.Handle)
 }

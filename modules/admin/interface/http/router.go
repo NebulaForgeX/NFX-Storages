@@ -12,6 +12,10 @@ func NewRouter(app fiber.Router, h *Registry) *Router {
 }
 
 func (r *Router) RegisterRoutes() {
+	r.RegisterAdminGroup()
+}
+
+func (r *Router) RegisterAdminGroup() {
 	g := r.app.Group("/admin/v3")
 	r.handlers.Admin.Register(g)
 }
