@@ -8,6 +8,8 @@
 
 **Go** 实现的 S3 兼容对象存储：对象在 NAS 卷上，登录走 Identity，控制台为 React。
 
+> 部署、网络、配置与安全的详细说明见 [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation)。
+
 [English Documentation](README.md)
 
 </div>
