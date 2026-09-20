@@ -1,6 +1,6 @@
 {
   "title": "编辑资料",
-  "description": "修改会同步到所有读取此资料的家族产品。",
+  "description": "修改会同步到所有读取此资料的 NFX 控制台。",
   "empty": {
     "title": "无法加载资料",
     "description": "请先加载资料后再编辑公开信息。"
@@ -11,7 +11,7 @@
   "labels": {
     "displayName": "显示名称",
     "bio": "简介",
-    "city": "城市",
+    "city": "所在地",
     "website": "网站"
   },
   "sections": {

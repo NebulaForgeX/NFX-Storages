@@ -2,12 +2,12 @@
   "title": "Créer un compte",
   "brand": {
     "access": "Accès {{name}}",
-    "title": "Créez l'identité qui relie tout."
+    "title": "Entrez dans volumes, seaux et espace objet."
   },
-  "heroFooter": "Un Account devient l'accès produit pour Near, Loop et le reste de Pulso — jamais un second signup.",
+  "heroFooter": "Un Account devient l'accès à la console Storages — jamais un second signup.",
   "pageEyebrow": "Créer un compte",
   "pageTitle": "Rejoindre {{name}}",
-  "pageSubtitle": "Vérifiez l'e-mail, choisissez un mot de passe, ouvrez la maison urbaine.",
+  "pageSubtitle": "Vérifiez l'e-mail, choisissez un mot de passe, ouvrez la console Storages.",
   "emailLabel": "E-mail",
   "emailPlaceholder": "vous@exemple.com",
   "emailHint": "Nous envoyons un code à 6 caractères à cette adresse.",

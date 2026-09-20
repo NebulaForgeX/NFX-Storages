@@ -1,6 +1,6 @@
 {
   "title": "Edit profile",
-  "description": "Changes sync to every Family Product that reads this Profile.",
+  "description": "Changes sync to every NFX console that reads this Profile.",
   "empty": {
     "title": "Profile unavailable",
     "description": "Load your profile to edit public details."
@@ -11,7 +11,7 @@
   "labels": {
     "displayName": "Display name",
     "bio": "Bio",
-    "city": "City",
+    "city": "Location",
     "website": "Website"
   },
   "sections": {

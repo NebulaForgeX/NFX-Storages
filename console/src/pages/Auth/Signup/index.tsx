@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { LucideIcon } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
-import AuthShell from "@/pages/Account/shared/AuthShell";
+import AuthShell from "@/pages/Auth/shared/AuthShell";
 
 import styles from "./s.module.css";
 

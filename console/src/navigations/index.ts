@@ -4,7 +4,6 @@ const routeMap = defineRouter({
   HOME: "/",
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
-  LOGIN_GITHUB_CALLBACK: "/auth/login/github/callback",
 
   USER: "/user",
   USER_OVERVIEW: "/user/overview",

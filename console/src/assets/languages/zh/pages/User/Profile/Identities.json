@@ -68,7 +68,7 @@
     },
     "communityProfiles": {
       "title": "社区身份",
-      "description": "可再创建一个城市角色。权威身份需审核授予。"
+      "description": "可再创建一个 Profile。权威身份需审核授予。"
     }
   }
 }

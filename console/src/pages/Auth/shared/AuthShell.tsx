@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { Box, Button, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import gsap from "gsap";
-import { ArrowLeft, Fingerprint, Link2, Users } from "lucide-react";
+import { ArrowLeft, FolderLock, HardDrive, Share2 } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { useTranslation } from "react-i18next";
 
@@ -23,25 +23,6 @@ export type AuthShellProps = {
   children: ReactNode;
 };
 
-function CityDistrictBlocks() {
-  const districts = [
-    { key: "identity", label: "Identity" },
-    { key: "forger", label: "Forger" },
-    { key: "link", label: "NFX" },
-  ] as const;
-  return (
-    <Grid columns="3" gap="3" className={`${styles.districtRail} js-auth-lift`} aria-hidden>
-      {districts.map((d) => (
-        <Flex key={d.key} direction="column" justify="end" align="start" p="3" minHeight="88px" className={`${styles.districtBlock} js-node`}>
-          <Text size="1" weight="bold" className={styles.districtLabel}>
-            {d.label}
-          </Text>
-        </Flex>
-      ))}
-    </Grid>
-  );
-}
-
 export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, children }: AuthShellProps) {
   const { t } = useTranslation("pages.Account.AuthShell");
   const pageRef = useRef<HTMLDivElement>(null);
@@ -49,43 +30,25 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
       gsap.set(".js-glow", { autoAlpha: 0 });
-      gsap.set(".js-auth-hero", { autoAlpha: 0, x: -40 });
-      gsap.set(".js-auth-lift", { autoAlpha: 0, y: 36 });
-      gsap.set(".js-auth-card", { autoAlpha: 0, y: 28 });
+      gsap.set(".js-auth-hero", { autoAlpha: 0, y: 24 });
+      gsap.set(".js-auth-lift", { autoAlpha: 0, y: 20 });
+      gsap.set(".js-auth-card", { autoAlpha: 0, y: 18 });
       gsap.set(".js-auth-stagger", { autoAlpha: 0, y: 20 });
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.to(".js-glow", { autoAlpha: 1, duration: 0.55 })
-        .to(".js-auth-hero", { autoAlpha: 1, x: 0, duration: 0.85 }, "-=0.25")
-        .to(".js-auth-lift", { autoAlpha: 1, y: 0, duration: 0.75, stagger: 0.12 }, "-=0.45")
-        .to(".js-auth-card", { autoAlpha: 1, y: 0, duration: 0.7 }, "-=0.5")
+      tl.to(".js-glow", { autoAlpha: 1, duration: 0.6 })
+        .to(".js-auth-hero", { autoAlpha: 1, y: 0, duration: 0.7 }, "-=0.3")
+        .to(".js-auth-lift", { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, "-=0.4")
+        .to(".js-auth-card", { autoAlpha: 1, y: 0, duration: 0.6 }, "-=0.45")
         .to(".js-auth-stagger", { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, "-=0.35");
-
-      gsap.to(".js-node", {
-        y: -6,
-        duration: 1.6,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        stagger: 0.2,
-      });
     },
     { scope: pageRef },
   );
 
   const pillars = [
-    {
-      icon: Fingerprint,
-      title: t("pillarIdentityTitle"),
-      body: t("pillarIdentityBody"),
-    },
-    {
-      icon: Users,
-      title: t("pillarCommunityTitle"),
-      body: t("pillarCommunityBody"),
-    },
-    { icon: Link2, title: t("pillarLinkTitle"), body: t("pillarLinkBody") },
+    { icon: HardDrive, title: t("pillarIdentityTitle"), body: t("pillarIdentityBody") },
+    { icon: FolderLock, title: t("pillarCommunityTitle"), body: t("pillarCommunityBody") },
+    { icon: Share2, title: t("pillarLinkTitle"), body: t("pillarLinkBody") },
   ] as const;
 
   return (
@@ -93,21 +56,19 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
       <main>
         <Box className={styles.backdrop} aria-hidden />
         <Box className={`${styles.glow} js-glow`} aria-hidden />
-
-        <Grid columns={{ initial: "1", md: "0.95fr 1.05fr" }} width="100%" minHeight="100dvh">
-          <Flex direction="column" justify="between" gap="5" p={{ initial: "5", md: "6" }} className={`${styles.heroPanel} js-auth-hero`}>
+        <Grid columns={{ initial: "1", md: "1fr 1fr" }} width="100%" minHeight="100dvh">
+          <Flex direction="column" justify="between" gap="6" p={{ initial: "5", md: "7" }} className={`${styles.heroPanel} js-auth-hero`}>
             <Flex align="center" gap="3" className="js-auth-lift">
               <Logo variant="glassSquare" size="large" alt={`${APP_NAME} logo`} />
               <Flex direction="column" gap="1" minWidth="0">
                 <Text size="3" weight="bold">
                   {APP_NAME}
                 </Text>
-                <Text size="1" style={{ opacity: 0.8 }}>
-                  City home
+                <Text size="1" className={styles.brandHome}>
+                  {t("brandHome")}
                 </Text>
               </Flex>
             </Flex>
-
             <Flex direction="column" gap="4" className="js-auth-lift">
               {brandEyebrow ? (
                 <Text size="1" weight="bold" className={styles.brandEyebrow}>
@@ -118,10 +79,7 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
                 {brandTitle}
               </Heading>
             </Flex>
-
-            <CityDistrictBlocks />
-
-            <Flex direction="column" gap="3" maxWidth="420px" className="js-auth-lift">
+            <Flex direction="column" gap="3" maxWidth="440px" className="js-auth-lift">
               {pillars.map((pillar) => (
                 <Flex key={pillar.title} align="start" gap="3" p="3" className={styles.pillar}>
                   <Flex align="center" justify="center" width="36px" height="36px" flexShrink="0" className={styles.pillarIcon}>
@@ -138,12 +96,10 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
                 </Flex>
               ))}
             </Flex>
-
             <Text size="2" className={`${styles.heroFooter} js-auth-lift`}>
               {heroFooter}
             </Text>
           </Flex>
-
           <Flex align="center" justify="center" p={{ initial: "5", md: "6" }} className={styles.formPanel} position="relative">
             <Flex align="center" gap="2" position="absolute" top="4" right="4" className={styles.formToolbar}>
               <PreferencesPopover />
@@ -152,7 +108,6 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
                 {t("backHome")}
               </Button>
             </Flex>
-
             <Card size="4" className={`${styles.card} js-auth-card`}>
               <Box>{children}</Box>
             </Card>

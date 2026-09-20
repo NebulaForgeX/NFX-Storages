@@ -1,9 +1,10 @@
 {
-  "pillarIdentityTitle": "Identity",
-  "pillarIdentityBody": "Un Account porte qui vous êtes dans toute la famille Pulso.",
-  "pillarCommunityTitle": "Community",
-  "pillarCommunityBody": "Les profils vous relient aux personnes et aux lieux de la ville.",
-  "pillarLinkTitle": "Link",
-  "pillarLinkBody": "La clé partagée qui ouvre Near, Loop et chaque produit.",
+  "brandHome": "Stockage objet",
+  "pillarIdentityTitle": "Volumes",
+  "pillarIdentityBody": "Votre Account NFX ouvre volumes, seaux et espace objet.",
+  "pillarCommunityTitle": "ACL",
+  "pillarCommunityBody": "Verrou par dossier : qui lit, qui écrit — visible tout de suite.",
+  "pillarLinkTitle": "Partage",
+  "pillarLinkBody": "Une connexion. La console Storages reconnaît cette clé.",
   "backHome": "Accueil"
 }

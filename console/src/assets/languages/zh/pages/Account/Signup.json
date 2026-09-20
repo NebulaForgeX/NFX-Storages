@@ -2,12 +2,12 @@
   "title": "创建账号",
   "brand": {
     "access": "{{name}} 通行",
-    "title": "创建连接一切的身份。"
+    "title": "进入卷、桶与对象空间。"
   },
-  "heroFooter": "一个 Account 即 Near、Loop 与整个 Pulso 的产品通行——无需二次注册。",
+  "heroFooter": "一份 Account 即 Storages 控制台通行——无需二次注册。",
   "pageEyebrow": "创建账号",
   "pageTitle": "加入 {{name}}",
-  "pageSubtitle": "验证邮箱、设置密码，打开城市之家。",
+  "pageSubtitle": "验证邮箱、设置密码，打开 Storages 控制台。",
   "emailLabel": "邮箱",
   "emailPlaceholder": "you@example.com",
   "emailHint": "我们会向此地址发送 6 位验证码。",

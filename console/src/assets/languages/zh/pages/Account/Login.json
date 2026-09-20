@@ -2,13 +2,13 @@
   "title": "登录",
   "brand": {
     "access": "{{name}} 通行",
-    "title": "Identity. Community. Link."
+    "title": "进入卷、桶与对象空间。"
   },
-  "heroFooter": "登录一次。用同一个 Account 进入 Near、Loop 与整个 Pulso。",
+  "heroFooter": "登录一次。同一份 Account 进入 Storages 控制台。",
   "form": {
     "welcomeBack": "欢迎回来",
     "title": "登录 {{name}}",
-    "subtitle": "继续你的城市之家 Account——先身份，再产品。",
+    "subtitle": "继续你的 NFX Account——先身份，再存储。",
     "emailLabel": "邮箱",
     "emailPlaceholder": "you@example.com",
     "passwordLabel": "密码",
@@ -25,15 +25,15 @@
   "selectProfile": {
     "eyebrow": "选择身份",
     "title": "用哪个 Profile 继续？",
-    "subtitle": "一个 Account 可以持有多个城市身份。",
+    "subtitle": "一个 Account 可以持有多个 Profile。",
     "back": "返回登录",
     "kind": {
-      "community": "Community",
-      "authority": "Authority"
+      "authority": "Authority",
+      "forger": "Forger"
     },
     "kindHint": {
-      "community": "日常城市在场",
-      "authority": "审核与角色"
+      "authority": "审核与角色",
+      "forger": "日常使用"
     },
     "roles": {
       "pulser": "脉搏者",
@@ -45,7 +45,8 @@
       "supporter": "支持员",
       "auditor": "审计员",
       "administrator": "管理员",
-      "owner": "所有者"
+      "owner": "所有者",
+      "forger": "Forger"
     }
   }
 }

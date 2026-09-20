@@ -1,6 +1,6 @@
 {
   "title": "Préférences",
-  "description": "Thème, carte, événements, facturation, confidentialité sociale et notifications système — synchronisés dans la famille Pulso.",
+  "description": "Thème, langue et notifications — synchronisés entre les consoles NFX.",
   "empty": {
     "title": "Aucune préférence chargée",
     "description": "Les réglages de thème et de langue apparaîtront ici."
@@ -44,7 +44,7 @@
     },
     "language": {
       "title": "Langue",
-      "description": "Langue d'interface pour PulsoLink et les produits de la famille."
+      "description": "Langue d'interface partagée par les consoles NFX."
     },
     "billingReceipt": {
       "title": "Reçu de facturation",

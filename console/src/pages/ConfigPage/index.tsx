@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { ROUTES } from "@/navigations";
-import AuthShell from "@/pages/Account/shared/AuthShell";
+import AuthShell from "@/pages/Auth/shared/AuthShell";
 import { useHostConfigStore } from "@/stores/hostConfigStore";
 
 export default function ConfigPage() {

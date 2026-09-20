@@ -1,9 +1,10 @@
 {
-  "pillarIdentityTitle": "Identity",
-  "pillarIdentityBody": "One Account holds who you are across the Pulso family.",
-  "pillarCommunityTitle": "Community",
-  "pillarCommunityBody": "Profiles connect you to people and places in the city.",
-  "pillarLinkTitle": "Link",
-  "pillarLinkBody": "The shared key that opens Near, Loop, and every product.",
+  "brandHome": "Object store",
+  "pillarIdentityTitle": "Volumes",
+  "pillarIdentityBody": "Your NFX Account opens volumes, buckets, and object space.",
+  "pillarCommunityTitle": "ACL",
+  "pillarCommunityBody": "Folder-level lock: who can read, who can write — visible now.",
+  "pillarLinkTitle": "Share",
+  "pillarLinkBody": "Sign in once. The Storages console trusts this key.",
   "backHome": "Home"
 }

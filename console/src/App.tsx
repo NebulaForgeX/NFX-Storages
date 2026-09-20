@@ -13,7 +13,6 @@ import {
   ConfigPage,
   EventsPage,
   EventsTargetPage,
-  GitHubCallbackPage,
   ImportExportPage,
   LicensePage,
   LifecyclePage,
@@ -102,7 +101,6 @@ export default function App() {
         <Route path={ROUTES.CONFIG} element={<ConfigPage />} />
       </Route>
 
-      <Route path={ROUTES.LOGIN_GITHUB_CALLBACK} element={<GitHubCallbackPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

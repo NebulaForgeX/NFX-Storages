@@ -1,9 +1,10 @@
 {
-  "pillarIdentityTitle": "Identity",
-  "pillarIdentityBody": "一个 Account 承载你在整个 Pulso 家族中的身份。",
-  "pillarCommunityTitle": "Community",
-  "pillarCommunityBody": "Profile 把你与城市里的人与地方连在一起。",
-  "pillarLinkTitle": "Link",
-  "pillarLinkBody": "打开 Near、Loop 与所有产品的共享钥匙。",
+  "brandHome": "对象存储",
+  "pillarIdentityTitle": "卷",
+  "pillarIdentityBody": "用 NFX Account 进入卷、桶与对象空间。",
+  "pillarCommunityTitle": "权限",
+  "pillarCommunityBody": "文件夹级锁定：谁能读、谁能写，当场可见。",
+  "pillarLinkTitle": "共享",
+  "pillarLinkBody": "签发一次，Storages 控制台认这把钥匙。",
   "backHome": "返回首页"
 }

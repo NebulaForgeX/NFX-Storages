@@ -1,6 +1,6 @@
 {
   "title": "Profile",
-  "description": "Public identity used across Family Products.",
+  "description": "Public identity used across NFX consoles.",
   "empty": {
     "title": "No profile data",
     "description": "Your public profile details will appear here."
@@ -10,7 +10,7 @@
   },
   "labels": {
     "bio": "Bio",
-    "city": "City",
+    "city": "Location",
     "country": "Country",
     "website": "Website",
     "timezone": "Timezone",

@@ -1,6 +1,6 @@
 {
   "title": "个人资料",
-  "description": "在家族产品中共用的公开身份。",
+  "description": "在 NFX 各控制台共用的公开身份。",
   "empty": {
     "title": "暂无资料",
     "description": "你的公开资料详情将显示在这里。"
@@ -10,7 +10,7 @@
   },
   "labels": {
     "bio": "简介",
-    "city": "城市",
+    "city": "所在地",
     "country": "国家/地区",
     "website": "网站",
     "timezone": "时区",

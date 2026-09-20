@@ -1,6 +1,6 @@
 {
   "title": "偏好设置",
-  "description": "主题、地图、活动、账单、社交隐私与系统通知——在 Pulso 家族产品间同步。",
+  "description": "主题、界面与系统通知——在 NFX 各控制台间同步。",
   "empty": {
     "title": "尚未加载偏好",
     "description": "主题与语言设置将显示在这里。"
@@ -44,7 +44,7 @@
     },
     "language": {
       "title": "语言",
-      "description": "PulsoLink 与家族产品共用的界面语言。"
+      "description": "NFX 各控制台共用的界面语言。"
     },
     "billingReceipt": {
       "title": "账单回执",

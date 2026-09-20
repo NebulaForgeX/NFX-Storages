@@ -2,13 +2,13 @@
   "title": "Sign in",
   "brand": {
     "access": "{{name}} access",
-    "title": "Identity. Community. Link."
+    "title": "Enter volumes, buckets, and object space."
   },
-  "heroFooter": "Sign in once. Carry the same Account into Near, Loop, and every Pulso product.",
+  "heroFooter": "Sign in once. Carry the same Account into the Storages console.",
   "form": {
     "welcomeBack": "Welcome back",
     "title": "Sign in to {{name}}",
-    "subtitle": "Continue with your city-home Account — identity first, products next.",
+    "subtitle": "Continue with your NFX Account — identity first, storage next.",
     "emailLabel": "Email",
     "emailPlaceholder": "you@example.com",
     "passwordLabel": "Password",
@@ -25,15 +25,15 @@
   "selectProfile": {
     "eyebrow": "Choose identity",
     "title": "Which Profile continues?",
-    "subtitle": "Your Account can hold more than one city identity.",
+    "subtitle": "Your Account can hold more than one Profile.",
     "back": "Back to sign in",
     "kind": {
-      "community": "Community",
-      "authority": "Authority"
+      "authority": "Authority",
+      "forger": "Forger"
     },
     "kindHint": {
-      "community": "Everyday city presence",
-      "authority": "Moderation & roles"
+      "authority": "Moderation & roles",
+      "forger": "Everyday use"
     },
     "roles": {
       "pulser": "Pulser",
@@ -45,7 +45,8 @@
       "supporter": "Supporter",
       "auditor": "Auditor",
       "administrator": "Administrator",
-      "owner": "Owner"
+      "owner": "Owner",
+      "forger": "Forger"
     }
   }
 }

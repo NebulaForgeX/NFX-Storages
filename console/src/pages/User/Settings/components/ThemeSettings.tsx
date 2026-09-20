@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Badge, Box, Button, Card, Flex, Grid, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
 import { Check, RotateCcw, Save } from "lucide-react";
+import { APP_NAME } from "nfx-ui/config";
 import { AccentColorEnum, AppearanceEnum, GrayColorEnum, LanguageEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
 import { useBaseLabel, useSyncPreference } from "nfx-ui/hooks";
 import { usePreferenceStore } from "nfx-ui/stores";
@@ -232,7 +233,7 @@ export default function ThemeSettings() {
             <Card size="2">
               <Flex direction="column" gap="3">
                 <Flex align="center" justify="between">
-                  <Heading size="4">PulsoLink</Heading>
+                  <Heading size="4">{APP_NAME}</Heading>
                   <Badge size="1">{t("labels.previewBadge")}</Badge>
                 </Flex>
                 <Flex gap="2" wrap="wrap">

@@ -1,6 +1,6 @@
 {
   "title": "Profil",
-  "description": "Identité publique utilisée dans les produits de la famille.",
+  "description": "Identité publique utilisée dans les consoles NFX.",
   "empty": {
     "title": "Aucune donnée de profil",
     "description": "Les détails de votre profil public apparaîtront ici."
@@ -10,7 +10,7 @@
   },
   "labels": {
     "bio": "Bio",
-    "city": "Ville",
+    "city": "Localité",
     "country": "Pays",
     "website": "Site web",
     "timezone": "Fuseau horaire",

@@ -2,13 +2,13 @@
   "title": "Connexion",
   "brand": {
     "access": "Accès {{name}}",
-    "title": "Identity. Community. Link."
+    "title": "Entrez dans volumes, seaux et espace objet."
   },
-  "heroFooter": "Connectez-vous une fois. Portez le même Account dans Near, Loop et toute la famille Pulso.",
+  "heroFooter": "Connectez-vous une fois. Le même Account ouvre la console Storages.",
   "form": {
     "welcomeBack": "Bon retour",
     "title": "Connexion à {{name}}",
-    "subtitle": "Continuez avec votre Account maison urbaine — l'identité d'abord.",
+    "subtitle": "Continuez avec votre Account NFX — l'identité d'abord.",
     "emailLabel": "E-mail",
     "emailPlaceholder": "vous@exemple.com",
     "passwordLabel": "Mot de passe",
@@ -25,15 +25,15 @@
   "selectProfile": {
     "eyebrow": "Choisir l'identité",
     "title": "Quel Profile continuer ?",
-    "subtitle": "Votre Account peut porter plusieurs identités urbaines.",
+    "subtitle": "Votre Account peut porter plusieurs Profile.",
     "back": "Retour à la connexion",
     "kind": {
-      "community": "Community",
-      "authority": "Authority"
+      "authority": "Authority",
+      "forger": "Forger"
     },
     "kindHint": {
-      "community": "Présence urbaine quotidienne",
-      "authority": "Modération et rôles"
+      "authority": "Modération et rôles",
+      "forger": "Usage quotidien"
     },
     "roles": {
       "pulser": "Pulser",
@@ -45,7 +45,8 @@
       "supporter": "Support",
       "auditor": "Auditeur",
       "administrator": "Administrateur",
-      "owner": "Propriétaire"
+      "owner": "Propriétaire",
+      "forger": "Forger"
     }
   }
 }

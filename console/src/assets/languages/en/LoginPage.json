@@ -14,9 +14,5 @@
   "noAccount": "No account?",
   "registerNow": "Register now",
   "hasAccount": "Have an account?",
-  "signInNow": "Sign in",
-  "githubCallback": "GitHub sign-in",
-  "githubCallbackHint": "Completing GitHub authorization…",
-  "githubCallbackFailed": "GitHub sign-in failed",
-  "githubMissingCode": "GitHub did not return an authorization code"
+  "signInNow": "Sign in"
 }

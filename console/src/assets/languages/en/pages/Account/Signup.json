@@ -2,12 +2,12 @@
   "title": "Create account",
   "brand": {
     "access": "{{name}} access",
-    "title": "Create the identity that links everything."
+    "title": "Enter volumes, buckets, and object space."
   },
-  "heroFooter": "One Account becomes Product Access for Near, Loop, and the rest of Pulso — never a second signup.",
+  "heroFooter": "One Account becomes Storages console access — never a second signup.",
   "pageEyebrow": "Create Account",
   "pageTitle": "Join {{name}}",
-  "pageSubtitle": "Verify your email, set a password, and open the city home.",
+  "pageSubtitle": "Verify your email, set a password, and open the Storages console.",
   "emailLabel": "Email",
   "emailPlaceholder": "you@example.com",
   "emailHint": "We send a 6-character code to this address.",

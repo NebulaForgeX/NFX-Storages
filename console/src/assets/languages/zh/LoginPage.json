@@ -14,9 +14,5 @@
   "noAccount": "没有账号？",
   "registerNow": "立即注册",
   "hasAccount": "已有账号？",
-  "signInNow": "立即登录",
-  "githubCallback": "GitHub 登录",
-  "githubCallbackHint": "正在完成 GitHub 授权…",
-  "githubCallbackFailed": "GitHub 登录失败",
-  "githubMissingCode": "GitHub 未返回授权码"
+  "signInNow": "立即登录"
 }

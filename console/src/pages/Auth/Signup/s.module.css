@@ -1,5 +1,5 @@
 .kicker {
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--accent-11);
+  color: var(--color-primary);
 }

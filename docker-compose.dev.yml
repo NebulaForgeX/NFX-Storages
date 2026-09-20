@@ -43,6 +43,7 @@ services:
     networks:
       - nfx-storages
       - nfx-edge
+      - nfx-stack
 
   admin-base:
     image: nfx-storages-admin-base:dev
@@ -82,6 +83,7 @@ services:
     networks:
       - nfx-storages
       - nfx-edge
+      - nfx-stack
 
   object-base:
     image: nfx-storages-object-base:dev
@@ -121,6 +123,7 @@ services:
     networks:
       - nfx-storages
       - nfx-edge
+      - nfx-stack
 
   iam-base:
     image: nfx-storages-iam-base:dev
@@ -160,6 +163,7 @@ services:
     networks:
       - nfx-storages
       - nfx-edge
+      - nfx-stack
 
   notify-base:
     image: nfx-storages-notify-base:dev
@@ -199,6 +203,7 @@ services:
     networks:
       - nfx-storages
       - nfx-edge
+      - nfx-stack
 
   system-base:
     image: nfx-storages-system-base:dev
@@ -238,6 +243,7 @@ services:
     networks:
       - nfx-storages
       - nfx-edge
+      - nfx-stack
 
   console:
     image: nfx-storages-console:dev
@@ -278,3 +284,6 @@ networks:
   nfx-edge:
     external: true
     name: nfx-edge
+  nfx-stack:
+    external: true
+    name: nfx-stack

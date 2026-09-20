@@ -1,6 +1,6 @@
 {
   "title": "Modifier le profil",
-  "description": "Les changements se synchronisent avec tous les produits de la famille qui lisent ce profil.",
+  "description": "Les changements se synchronisent avec toutes les consoles NFX qui lisent ce profil.",
   "empty": {
     "title": "Profil indisponible",
     "description": "Chargez votre profil pour modifier les détails publics."
@@ -11,7 +11,7 @@
   "labels": {
     "displayName": "Nom d'affichage",
     "bio": "Bio",
-    "city": "Ville",
+    "city": "Localité",
     "website": "Site web"
   },
   "sections": {

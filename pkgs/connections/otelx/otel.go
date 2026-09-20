@@ -3,6 +3,8 @@ package otelx
 import (
 	"context"
 	"errors"
+	"net/url"
+	"strings"
 
 	"nfxstorages/pkgs/env"
 
@@ -34,6 +36,7 @@ func Init(ctx context.Context, cfg Config, serviceName string, e env.Env) (Shutd
 	if cfg.Endpoint == "" {
 		return noop, errors.New("otelx: endpoint is required when enabled")
 	}
+	cfg.Endpoint, cfg.Insecure = grpcDialTarget(cfg.Endpoint, cfg.Insecure)
 
 	res, err := resource.New(ctx,
 		resource.WithAttributes(
@@ -121,6 +124,24 @@ func Init(ctx context.Context, cfg Config, serviceName string, e env.Env) (Shutd
 		}
 		return errors.Join(errs...)
 	}, nil
+}
+
+// grpcDialTarget returns host:port for OTLP gRPC WithEndpoint.
+// A URL like http://host:4317 is stripped so the exporter does not treat the
+// scheme as part of the authority (which yields "too many colons in address").
+func grpcDialTarget(raw string, insecure bool) (string, bool) {
+	raw = strings.TrimSpace(raw)
+	if raw == "" || !strings.Contains(raw, "://") {
+		return raw, insecure
+	}
+	u, err := url.Parse(raw)
+	if err != nil || u.Host == "" {
+		return raw, insecure
+	}
+	if u.Scheme == "http" {
+		insecure = true
+	}
+	return u.Host, insecure
 }
 
 func traceOpts(cfg Config) []otlptracegrpc.Option {

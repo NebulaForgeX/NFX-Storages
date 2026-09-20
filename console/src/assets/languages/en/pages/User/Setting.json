@@ -1,6 +1,6 @@
 {
   "title": "Preferences",
-  "description": "Theme, map, events, billing, social privacy, and system notifications — synced across Pulso family products.",
+  "description": "Theme, language, and system notifications — synced across NFX consoles.",
   "empty": {
     "title": "No preferences loaded",
     "description": "Theme and language settings will appear here."
@@ -44,7 +44,7 @@
     },
     "language": {
       "title": "Language",
-      "description": "Interface language for PulsoLink and shared family products."
+      "description": "Interface language shared by NFX consoles."
     },
     "billingReceipt": {
       "title": "Billing receipt",
