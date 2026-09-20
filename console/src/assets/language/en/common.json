@@ -890,5 +890,6 @@
   "Plan": "Plan",
   "Organization": "Organization",
   "Email": "Email",
-  "Drop files to upload": "Drop files to upload"
+  "Drop files to upload": "Drop files to upload",
+  "Mount endpoint": "Mount endpoint"
 }

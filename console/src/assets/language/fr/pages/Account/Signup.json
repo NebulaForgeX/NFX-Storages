@@ -1,13 +1,14 @@
 {
   "title": "Créer un compte",
-  "brand": {
-    "access": "Accès {{name}}",
-    "title": "Entrez dans volumes, seaux et espace objet."
-  },
-  "heroFooter": "Un Account devient l'accès à la console Storages — jamais un second signup.",
-  "pageEyebrow": "Créer un compte",
-  "pageTitle": "Rejoindre {{name}}",
-  "pageSubtitle": "Vérifiez l'e-mail, choisissez un mot de passe, ouvrez la console Storages.",
+  "path": "s3://storages/accounts/new",
+  "pageEyebrow": "Provisionner un volume",
+  "pageTitle": "Ouvrir une nouvelle clé de compte",
+  "pageSubtitle": "E-mail, code, mot de passe — le même ordre que créer un seau.",
+  "stepEmail": "E-mail",
+  "stepCode": "Code",
+  "stepPassword": "Mot de passe",
+  "emptyBucket": "Seau vide",
+  "emptyHint": "Aucun objet. Cette clé ouvre la console.",
   "emailLabel": "E-mail",
   "emailPlaceholder": "vous@exemple.com",
   "emailHint": "Nous envoyons un code à 6 caractères à cette adresse.",

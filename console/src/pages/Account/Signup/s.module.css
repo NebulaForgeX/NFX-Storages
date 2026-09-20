@@ -1,5 +1,127 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--gray-12);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--gray-a5);
+}
+
+.path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+.body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 220px;
+  min-height: 0;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 28px 0 28px 24px;
+  border-right: 1px solid var(--gray-a5);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 14px 16px 14px 0;
+  color: var(--gray-11);
+}
+
+.stepCurrent {
+  color: var(--gray-12);
+  border-right: 2px solid var(--color-primary);
+}
+
+.index {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+.formPane {
+  padding: 40px 48px;
+  max-width: 560px;
+}
+
 .kicker {
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--color-primary);
+}
+
+.bucket {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  border-left: 1px dashed var(--gray-a6);
+  background: var(--color-bg-2);
+}
+
+.bucketGlyph {
+  width: 88px;
+  height: 72px;
+  border: 2px solid var(--color-primary);
+  border-top-width: 10px;
+  position: relative;
+}
+
+.bucketGlyph::after {
+  content: "";
+  position: absolute;
+  inset: 14px 10px 10px;
+  border: 1px dashed var(--gray-a7);
+}
+
+@media (max-width: 960px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+
+  .steps {
+    flex-direction: row;
+    border-right: 0;
+    border-bottom: 1px solid var(--gray-a5);
+    padding: 12px 16px;
+  }
+
+  .step {
+    flex: 1;
+    border-right: 0;
+    padding: 8px;
+  }
+
+  .stepCurrent {
+    border-right: 0;
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .bucket {
+    display: none;
+  }
+
+  .formPane {
+    padding: 24px;
+  }
 }

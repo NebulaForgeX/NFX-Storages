@@ -1,13 +1,14 @@
 {
   "title": "创建账号",
-  "brand": {
-    "access": "{{name}} 通行",
-    "title": "进入卷、桶与对象空间。"
-  },
-  "heroFooter": "一份 Account 即 Storages 控制台通行——无需二次注册。",
-  "pageEyebrow": "创建账号",
-  "pageTitle": "加入 {{name}}",
-  "pageSubtitle": "验证邮箱、设置密码，打开 Storages 控制台。",
+  "path": "s3://storages/accounts/new",
+  "pageEyebrow": "开通卷",
+  "pageTitle": "签发一把新账号密钥",
+  "pageSubtitle": "邮箱、验证码、密码——和建桶一样的顺序。",
+  "stepEmail": "邮箱",
+  "stepCode": "验证码",
+  "stepPassword": "密码",
+  "emptyBucket": "空桶",
+  "emptyHint": "还没有对象。这把钥匙打开控制台。",
   "emailLabel": "邮箱",
   "emailPlaceholder": "you@example.com",
   "emailHint": "我们会向此地址发送 6 位验证码。",

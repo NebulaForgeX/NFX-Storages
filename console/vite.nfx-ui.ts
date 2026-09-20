@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import type { Alias, Plugin } from "vite";
@@ -188,6 +189,42 @@ export function nfxUiViteAliases(consoleRoot: string, nfxUiRoot: string): Alias[
     aliases.push({ find: "lucide-react/icons", replacement: lucideIcons });
   }
   return aliases;
+}
+
+/** Free `port` before Vite binds (stale `npm run dev` / leftover node). */
+export function killTcpPort(port: number): void {
+  if (!Number.isInteger(port) || port < 1 || port > 65535) return;
+  try {
+    execFileSync("fuser", ["-k", `${port}/tcp`], { stdio: "ignore" });
+  } catch {
+    /* nothing listening, or already gone */
+  }
+  try {
+    const out = execFileSync("lsof", ["-nP", `-iTCP:${port}`, "-sTCP:LISTEN", "-t"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    for (const token of out.split(/\s+/).filter(Boolean)) {
+      const pid = Number(token);
+      if (!Number.isInteger(pid) || pid <= 1 || pid === process.pid) continue;
+      try {
+        process.kill(pid, "SIGKILL");
+      } catch {
+        /* already gone */
+      }
+    }
+  } catch {
+    /* nothing listening */
+  }
+}
+
+export function nfxKillListenPortPlugin(port: number): Plugin {
+  const kill = () => killTcpPort(port);
+  return {
+    name: "nfx-kill-listen-port",
+    configureServer: kill,
+    configurePreviewServer: kill,
+  };
 }
 
 export const nfxUiOptimizeDepsExclude = ["nfx-ui", "templates", "async-retry"];

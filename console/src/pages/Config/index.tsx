@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
+import { Button, Heading, Text, TextField } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
+import { PreferencesPopover } from "@/components";
 import { ROUTES } from "@/navigations";
-import AuthShell from "@/pages/Account/shared/AuthShell";
+import { AuthMotionRoot } from "@/pages/Account/shared/AuthChrome";
 import { useHostConfigStore } from "@/stores/hostConfigStore";
+
+import styles from "./s.module.css";
 
 export default function ConfigPage() {
   const { t } = useTranslation("common");
@@ -34,38 +37,55 @@ export default function ConfigPage() {
   };
 
   return (
-    <AuthShell brandEyebrow="NFX Storage" brandTitle={t("Server Configuration")} heroFooter={t("Please configure your NFX Storages server address")}>
-      <Flex direction="column" gap="4">
-        <Heading as="h2" size="5">
-          {t("Server Address")}
-        </Heading>
-        <TextField.Root
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder={t("Please enter server address (e.g., http://localhost:9000)")}
-        />
-        {error ? (
-          <Text size="2" color="red">
-            {error}
+    <AuthMotionRoot className={styles.page}>
+      <header className={styles.bar}>
+        <span className={styles.mount} data-auth-motion>
+          {t("Mount endpoint")}
+        </span>
+        <PreferencesPopover />
+      </header>
+      <div className={styles.body}>
+        <div className={styles.endpoint} data-auth-motion>
+          <Heading as="h1" size="5">
+            {t("Server Configuration")}
+          </Heading>
+          <Text size="2" color="gray">
+            {t("Please configure your NFX Storages server address")}
           </Text>
-        ) : null}
-        <Flex gap="2">
-          <Button onClick={save}>{t("Save Configuration")}</Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              resetServerHost();
-              setValue("");
-            }}
-          >
-            {t("Reset")}
-          </Button>
-          <Button type="button" variant="ghost" onClick={() => navigate(ROUTES.LOGIN)}>
-            {t("Skip")}
-          </Button>
-        </Flex>
-      </Flex>
-    </AuthShell>
+          <span className={styles.prefix}>s3://endpoint</span>
+          <TextField.Root
+            size="3"
+            radius="none"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={t("Please enter server address (e.g., http://localhost:9000)")}
+          />
+          {error ? (
+            <Text size="2" color="red">
+              {error}
+            </Text>
+          ) : null}
+          <div className={styles.actions}>
+            <Button onClick={save} radius="none">
+              {t("Save Configuration")}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              radius="none"
+              onClick={() => {
+                resetServerHost();
+                setValue("");
+              }}
+            >
+              {t("Reset")}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => navigate(ROUTES.LOGIN)}>
+              {t("Skip")}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </AuthMotionRoot>
   );
 }

@@ -892,5 +892,6 @@
   "Plan": "套餐",
   "Organization": "组织",
   "Email": "邮箱",
-  "Drop files to upload": "拖放文件以上传"
+  "Drop files to upload": "拖放文件以上传",
+  "Mount endpoint": "挂载端点"
 }

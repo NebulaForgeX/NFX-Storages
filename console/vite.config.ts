@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 
 import {
   loadNfxConsoleEnv,
+  nfxKillListenPortPlugin,
   nfxUiAtAliasPlugin,
   nfxUiDedupe,
   nfxUiOptimizeDepsExclude,
@@ -26,7 +27,7 @@ export default defineConfig(({ mode, command }) => {
   const identityTarget = env.VITE_IDENTITY_API_URL || "http://192.168.1.64/nfx-identity";
 
   return {
-    plugins: [nfxUiAtAliasPlugin(root, nfxUiRoot), react()],
+    plugins: [nfxKillListenPortPlugin(port), nfxUiAtAliasPlugin(root, nfxUiRoot), react()],
     base,
     define: nfxViteDefine(env),
     resolve: {
@@ -44,6 +45,7 @@ export default defineConfig(({ mode, command }) => {
     },
     server: {
       port,
+      strictPort: true,
       host: "0.0.0.0",
       fs: { allow: [root, nfxUiRoot] },
       ...(command === "serve" && !hasApiUrl
@@ -59,6 +61,7 @@ export default defineConfig(({ mode, command }) => {
     },
     preview: {
       port,
+      strictPort: true,
       host: "0.0.0.0",
     },
   };
