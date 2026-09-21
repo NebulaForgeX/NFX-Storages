@@ -5,7 +5,6 @@ import (
 	"time"
 
 	adminapp "nfxstorages/modules/admin/application/admin"
-	systemapp "nfxstorages/modules/admin/application/system"
 	adminhandler "nfxstorages/modules/admin/interface/http/handler"
 	"nfxstorages/pkgs/fiberx"
 	"nfxstorages/pkgs/fiberx/middleware"
@@ -17,7 +16,6 @@ import (
 )
 
 type httpDeps interface {
-	AppSvc() *systemapp.Service
 	AdminSvc() *adminapp.Service
 	UserTokenVerifier() token.Verifier
 	ErrorsLangsPath() string
@@ -30,13 +28,13 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		BodyLimit: 64 * 1024 * 1024,
 	})
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
-		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Amz-Date", "X-Amz-Content-Sha256", "X-Amz-Security-Token", "X-Requested-With"},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Amz-Date", "X-Amz-Content-Sha256", "X-Amz-Security-Token", "X-Requested-With"},
 		AllowCredentials: false, MaxAge: 3600,
 	}))
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
 	admin := adminhandler.NewAdminHandler(d.AdminSvc())
-	NewRouter(app, NewRegistry(d.AppSvc(), admin, d.ErrorsLangsPath())).RegisterRoutes()
+	NewRouter(app, NewRegistry(admin, d.ErrorsLangsPath())).RegisterRoutes()
 	return app
 }

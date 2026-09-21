@@ -18,4 +18,6 @@ func (r *Router) RegisterRoutes() {
 func (r *Router) RegisterAdminGroup() {
 	g := r.app.Group("/admin/v3")
 	r.handlers.Admin.Register(g)
+	g.Get("/locales/:lang", r.handlers.I18n.GetErrorTranslations)
+	g.Get("/messages/:lang", r.handlers.I18n.GetMessageTranslations)
 }

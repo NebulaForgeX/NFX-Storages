@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import { accessKeysRepository } from "./adminRepositories";
 import { authRepository } from "./authRepository";
 import { bucketRepository } from "./bucketRepository";
-import { eventsTargetRepository, groupsRepository, iamExportRepository, policiesRepository, poolsRepository, sseRepository, systemRepository, tiersRepository, usersRepository } from "./adminRepositories";
+import { adminRepository, eventsTargetRepository, groupsRepository, iamExportRepository, policiesRepository, poolsRepository, sseRepository, systemRepository, tiersRepository, usersRepository } from "./adminRepositories";
 import { objectRepository } from "./objectRepository";
 
 export const storageRepositories = {
@@ -14,6 +14,7 @@ export const storageRepositories = {
   groups: groupsRepository,
   policies: policiesRepository,
   accessKeys: accessKeysRepository,
+  admin: adminRepository,
   system: systemRepository,
   eventsTarget: eventsTargetRepository,
   tiers: tiersRepository,
@@ -32,6 +33,7 @@ export function useStorageRepositories() {
 
 export {
   accessKeysRepository,
+  adminRepository,
   authRepository,
   bucketRepository,
   eventsTargetRepository,

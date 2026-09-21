@@ -1,17 +1,14 @@
 package http
 
 import (
-	adminhandler "nfxstorages/modules/admin/interface/http/handler"
-	systemapp "nfxstorages/modules/admin/application/system"
 	"nfxstorages/modules/admin/interface/http/handler"
 )
 
 type Registry struct {
-	App   *handler.SystemHandler
-	Admin *adminhandler.AdminHandler
+	Admin *handler.AdminHandler
 	I18n  *handler.I18nHandler
 }
 
-func NewRegistry(sys *systemapp.Service, admin *adminhandler.AdminHandler, langs string) *Registry {
-	return &Registry{App: handler.NewSystemHandler(sys), Admin: admin, I18n: handler.NewI18nHandler(langs)}
+func NewRegistry(admin *handler.AdminHandler, langs string) *Registry {
+	return &Registry{Admin: admin, I18n: handler.NewI18nHandler(langs)}
 }

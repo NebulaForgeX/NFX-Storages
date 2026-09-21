@@ -66,7 +66,6 @@ type GRPCClientConfig struct {
 	IAMAddr    string `koanf:"iam_addr"`
 	AdminAddr  string `koanf:"admin_addr"`
 	NotifyAddr string `koanf:"notify_addr"`
-	SystemAddr string `koanf:"system_addr"`
 }
 
 type ServerConfig struct {

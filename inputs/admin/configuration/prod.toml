@@ -71,7 +71,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "nfxstorages-system"
+        group_id = "nfxstorages-admin"
         initial_offset = "latest"
         session_timeout_ms = 10000
         heartbeat_interval_ms = 3000
@@ -80,12 +80,12 @@
         return_errors = true
 
     [kafka.producer_topics]
-        system = "nfxstorages.system"
-        system_poison = "nfxstorages.system_poison"
+        admin = "nfxstorages.admin"
+        admin_poison = "nfxstorages.admin_poison"
 
     [kafka.consumer_topics]
-        system = "nfxstorages.system"
-        system_poison = "nfxstorages.system_poison"
+        admin = "nfxstorages.admin"
+        admin_poison = "nfxstorages.admin_poison"
 
     [kafka.security]
         enabled = true
@@ -111,7 +111,6 @@
     iam_addr = "${GRPC_HOST_IAM}:${GRPC_PORT_IAM}"
     admin_addr = "${GRPC_HOST_ADMIN}:${GRPC_PORT_ADMIN}"
     notify_addr = "${GRPC_HOST_NOTIFY}:${GRPC_PORT_NOTIFY}"
-    system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
 
 [otel]
     enabled = true

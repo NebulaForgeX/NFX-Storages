@@ -7,14 +7,11 @@ import (
 
 	"google.golang.org/grpc"
 	authconn "nfxstorages/connections/auth"
-	resourceApp "nfxstorages/modules/notify/application/resource"
-	systemapp "nfxstorages/modules/notify/application/system"
-	notifyapp "nfxstorages/modules/notify/application/notify"
-	"nfxstorages/modules/notify/config"
-	systemstateQuery "nfxstorages/modules/notify/infrastructure/query/systemstate"
-	systemstateRepo "nfxstorages/modules/notify/infrastructure/repository/systemstate"
 	iamapp "nfxstorages/modules/iam/application/iam"
 	iaminfra "nfxstorages/modules/iam/infrastructure/iam"
+	notifyapp "nfxstorages/modules/notify/application/notify"
+	resourceApp "nfxstorages/modules/notify/application/resource"
+	"nfxstorages/modules/notify/config"
 	"nfxstorages/pkgs/cachex"
 	"nfxstorages/pkgs/connections/otelx"
 	"nfxstorages/pkgs/health"
@@ -33,7 +30,6 @@ type Dependencies struct {
 	kafkaConfig         *kafkax.Config
 	busPublisher        *eventbus.BusPublisher
 	otelShutdown        otelx.ShutdownFunc
-	appSvc              *systemapp.Service
 	resourceSvc         *resourceApp.Service
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
@@ -70,13 +66,13 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	provider := servertoken.NewProvider(
 		&servertoken.HMACSigner{Key: []byte(cfg.Token.SecretKey)},
 		cfg.Token.Issuer,
-		"system",
+		"notify",
 	)
 	identityClient, err := authconn.Dial(authconn.GRPCConfig{
 		Addr:           cfg.GRPCClient.AuthAddr,
 		TokenSecretKey: cfg.Token.SecretKey,
 		TokenIssuer:    cfg.Token.Issuer,
-		CallerService:  "system",
+		CallerService:  "notify",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("dial identity auth: %w", err)
@@ -96,7 +92,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier: userTokenVerifier, serverTokenVerifier: serverTokenVerifier, errorsLangsPath: errorsLangsPath,
 		identityAuth: identityClient,
 	}
-	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
 	d.notifySvc = notifyapp.New(iamapp.New(iaminfra.New(postgres.DB())))
 	_ = provider
 	return d, nil
@@ -117,7 +112,6 @@ func (d *Dependencies) Cleanup() {
 	}
 }
 
-func (d *Dependencies) AppSvc() *systemapp.Service           { return d.appSvc }
 func (d *Dependencies) ResourceSvc() *resourceApp.Service    { return d.resourceSvc }
 func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }

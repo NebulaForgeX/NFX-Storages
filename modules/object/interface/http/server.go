@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"time"
 
-	systemapp "nfxstorages/modules/object/application/system"
 	"nfxstorages/pkgs/fiberx"
 	"nfxstorages/pkgs/fiberx/middleware"
 	"nfxstorages/pkgs/httpx"
@@ -15,9 +14,7 @@ import (
 )
 
 type httpDeps interface {
-	AppSvc() *systemapp.Service
 	UserTokenVerifier() token.Verifier
-	ErrorsLangsPath() string
 }
 
 func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
@@ -26,12 +23,12 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		ReadTimeout: 30 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 120 * time.Second,
 	})
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
-		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "X-Api-Key", "X-Request-ID"},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "X-Api-Key", "X-Request-ID"},
 		AllowCredentials: false, ExposeHeaders: []string{"Content-Length", "Content-Type"}, MaxAge: 3600,
 	}))
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
-	NewRouter(app, d.UserTokenVerifier(), NewRegistry(d.AppSvc(), d.ErrorsLangsPath())).RegisterRoutes()
+	NewRouter(app, d.UserTokenVerifier(), NewRegistry()).RegisterRoutes()
 	return app
 }
