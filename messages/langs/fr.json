@@ -1,6 +1,30 @@
 {
+  "BUCKET_ENCRYPTION_ENABLED": {
+    "title": "Chiffrement activé",
+    "body": "Le chiffrement du bucket a été activé"
+  },
+  "BUCKET_ENCRYPTION_REMOVED": {
+    "title": "Chiffrement retiré",
+    "body": "Le chiffrement du bucket a été retiré"
+  },
+  "BUCKET_POLICY_SAVED": {
+    "title": "Politique enregistrée",
+    "body": "La politique du bucket a été enregistrée"
+  },
+  "IAM_EXPORTED": {
+    "title": "IAM exporté",
+    "body": "La configuration IAM a été exportée"
+  },
+  "IAM_IMPORTED": {
+    "title": "IAM importé",
+    "body": "La configuration IAM a été importée"
+  },
+  "OBJECT_LOCK_ENABLED": {
+    "title": "Verrouillage d'objet activé",
+    "body": "Le verrouillage d'objet a été activé"
+  },
   "STORAGES_VOLUME_ALERT": {
     "title": "Alerte de volume de stockage",
-    "body": "Un volume de stockage signale un état anormal."
+    "body": "Un volume de stockage signale un état anormal"
   }
 }

@@ -16,6 +16,7 @@ import {
   useSetObjectLock,
 } from "@/hooks";
 import { showConfirm, showError, showSuccess } from "@/stores/modal";
+import { getCommandMessage } from "@/utils";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
 
 import { EventsPanel } from "./panels/EventsPanel";
@@ -97,7 +98,7 @@ export default function BucketsPage() {
           </Tabs.Content>
           <Tabs.Content value="policy" style={{ paddingTop: 12 }}>
             <Toolbar>
-              <Button onClick={() => void run(() => setPolicy.mutateAsync({ bucket, policy }), t("Save"))}>{t("Save")}</Button>
+              <Button onClick={() => void run(() => setPolicy.mutateAsync({ bucket, policy }), getCommandMessage("BUCKET_POLICY_SAVED", t("Save")))}>{t("Save")}</Button>
             </Toolbar>
             <TextArea value={policy} onChange={(event) => setPolicyText(event.target.value)} rows={16} style={{ width: "100%" }} />
           </Tabs.Content>
@@ -128,7 +129,7 @@ export default function BucketsPage() {
                 <TextField.Root value={lockDays} onChange={(event) => setLockDays(event.target.value)} placeholder={t("Days")} />
                 <Button
                   onClick={() =>
-                    void run(() => setObjectLock.mutateAsync({ bucket, mode: lockMode, days: Number(lockDays) || 1 }), t("Enabled"))
+                    void run(() => setObjectLock.mutateAsync({ bucket, mode: lockMode, days: Number(lockDays) || 1 }), getCommandMessage("OBJECT_LOCK_ENABLED", t("Enabled")))
                   }
                 >
                   {t("Enabled")}
@@ -141,7 +142,7 @@ export default function BucketsPage() {
             <Box pt="3">
             <Flex gap="2" align="center">
               <Text>{t("Algorithm")}: {data.encryptionAlgorithm || t("Disabled")}</Text>
-              <Button onClick={() => void run(() => setEncryption.mutateAsync(bucket), t("Enabled"))}>{t("Enabled")}</Button>
+              <Button onClick={() => void run(() => setEncryption.mutateAsync(bucket), getCommandMessage("BUCKET_ENCRYPTION_ENABLED", t("Enabled")))}>{t("Enabled")}</Button>
               {data.encryptionAlgorithm ? (
                 <Button
                   color="red"
@@ -153,7 +154,7 @@ export default function BucketsPage() {
                       confirmText: t("Delete"),
                       cancelText: t("Cancel"),
                       onConfirm: () => {
-                        void run(() => deleteEncryption.mutateAsync(bucket));
+                        void run(() => deleteEncryption.mutateAsync(bucket), getCommandMessage("BUCKET_ENCRYPTION_REMOVED"));
                       },
                     })
                   }

@@ -1,6 +1,30 @@
 {
+  "BUCKET_ENCRYPTION_ENABLED": {
+    "title": "Encryption enabled",
+    "body": "Bucket encryption has been enabled"
+  },
+  "BUCKET_ENCRYPTION_REMOVED": {
+    "title": "Encryption removed",
+    "body": "Bucket encryption has been removed"
+  },
+  "BUCKET_POLICY_SAVED": {
+    "title": "Policy saved",
+    "body": "The bucket policy has been saved"
+  },
+  "IAM_EXPORTED": {
+    "title": "IAM exported",
+    "body": "IAM configuration has been exported"
+  },
+  "IAM_IMPORTED": {
+    "title": "IAM imported",
+    "body": "IAM configuration has been imported"
+  },
+  "OBJECT_LOCK_ENABLED": {
+    "title": "Object lock enabled",
+    "body": "Object lock has been enabled"
+  },
   "STORAGES_VOLUME_ALERT": {
     "title": "Storage volume alert",
-    "body": "A storage volume reported an unhealthy state."
+    "body": "A storage volume reported an unhealthy state"
   }
 }
