@@ -120,9 +120,11 @@ export default function ThemeSettings() {
               {RADIX_ACCENT_VALUES.map((c) => {
                 const active = draft.accent === c;
                 return (
-                  <button
+                  <Button
                     key={c}
                     type="button"
+                    variant="outline"
+                    color="gray"
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ accent: c })}
@@ -130,7 +132,7 @@ export default function ThemeSettings() {
                     style={{ background: swatchVar(c) }}
                   >
                     {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
-                  </button>
+                  </Button>
                 );
               })}
             </Flex>
@@ -143,9 +145,11 @@ export default function ThemeSettings() {
               {RADIX_GRAY_VALUES.map((c) => {
                 const active = draft.gray === c;
                 return (
-                  <button
+                  <Button
                     key={c}
                     type="button"
+                    variant="outline"
+                    color="gray"
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ gray: c })}
@@ -153,7 +157,7 @@ export default function ThemeSettings() {
                     style={{ background: swatchVar(c) }}
                   >
                     {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
-                  </button>
+                  </Button>
                 );
               })}
             </Flex>
@@ -238,7 +242,7 @@ export default function ThemeSettings() {
                 </Flex>
                 <Flex gap="2" wrap="wrap">
                   <Button size="2">{t("labels.previewSolid")}</Button>
-                  <Button size="2" variant="soft">
+                  <Button size="2" variant="outline">
                     {t("labels.previewSoft")}
                   </Button>
                 </Flex>
@@ -277,7 +281,7 @@ export default function ThemeSettings() {
               {t("labels.unsavedChanges")}
             </Text>
           ) : null}
-          <Button type="button" variant="soft" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
+          <Button type="button" variant="outline" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
             <LucideIcon icon={RefreshCw} size={14} />
             {t("actions.reset")}
           </Button>

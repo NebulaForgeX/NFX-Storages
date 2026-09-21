@@ -3,7 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 
-import { Button, Flex, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { DataTable, FormDialog, PageHeader, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 
@@ -116,7 +116,8 @@ export default function ObjectBrowserPage() {
   return (
     <PageFrame>
       <PageHeader icon={StackIcon} title={bucket} description={prefix || "/"} />
-      <Flex gap="1" wrap="wrap" mb="3" align="center">
+      <Box pb="3">
+      <Flex gap="1" wrap="wrap" align="center">
         {crumbs.map((crumb, index) => (
           <Flex key={crumb.href} gap="1" align="center">
             {index > 0 ? <Text color="gray">/</Text> : null}
@@ -126,6 +127,7 @@ export default function ObjectBrowserPage() {
           </Flex>
         ))}
       </Flex>
+      </Box>
       <Toolbar search={search} onSearchChange={setSearch} searchPlaceholder={t("Search")}>
         <input ref={fileRef} type="file" multiple hidden onChange={(event) => void uploadFiles(event.target.files)} />
         <Button onClick={() => fileRef.current?.click()}>{t("Upload File")}</Button>

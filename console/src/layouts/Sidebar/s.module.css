@@ -29,9 +29,13 @@
 .header {
   position: relative;
   flex-shrink: 0;
-  margin: 0 20px;
-  padding: 21px 0 22px;
+  margin-inline: 20px;
+}
+.headerHairline {
   border-bottom: 1px solid var(--gray-a4);
+}
+.headerPy {
+  padding-block: 21px 22px;
 }
 .toggle {
   position: absolute !important;
@@ -102,19 +106,31 @@
 .menuArea {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 8px 20px 12px;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--gray-a5) transparent;
 }
+.menuAreaPx {
+  padding-inline: 20px;
+}
+.menuAreaPy {
+  padding-block: 8px 12px;
+}
 .menuAreaCollapsed {
   overflow-y: auto;
 }
-.sectionTitle {
-  margin: 19px 0 9px;
-  padding: 20px 10px 0;
+.sectionTitleHairline {
   border-top: 1px solid var(--gray-a4);
+}
+.sectionTitleY {
+  margin-block: 19px 9px;
+  padding-block: 20px 0;
+}
+.sectionTitleX {
+  padding-inline: 10px;
+}
+.sectionTitle {
   color: var(--gray-11);
   text-transform: uppercase;
 }
@@ -196,12 +212,17 @@
 .footer {
   flex-shrink: 0;
   margin-top: auto;
-  padding: 10px 20px 20px;
+}
+.footerPx {
+  padding-inline: 20px;
+}
+.footerPy {
+  padding-block: 10px 20px;
 }
 .logout {
   width: 100%;
   height: 40px !important;
-  padding: 0 10px !important;
+  padding-inline: 10px !important;
   gap: 10px !important;
   justify-content: flex-start !important;
   background: transparent !important;
@@ -247,7 +268,7 @@
   pointer-events: none;
 }
 .menuBadge {
-  padding: 0 5px;
+  padding-inline: 5px;
   border-radius: var(--radius-full);
   background: var(--accent-a3);
   color: var(--accent-11);
@@ -278,15 +299,21 @@
 }
 
 .menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-content > ul) {
-  padding: 1px 0 7px;
+  padding-block: 1px 7px;
 }
 .menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
   visibility: hidden;
 }
 
+.menuAreaCollapsed .sectionTitleY {
+  padding-block: 16px 0;
+  margin-block: 17px 9px;
+}
+.menuAreaCollapsed .sectionTitleX {
+  padding-inline: 0;
+  margin-inline: -8px;
+}
 .menuAreaCollapsed .sectionTitle {
-  padding: 16px 0 0;
-  margin: 17px -8px 9px;
   text-align: center;
   justify-content: center;
 }
@@ -325,7 +352,7 @@
   min-width: 156px;
   max-width: min(260px, calc(100vw - 24px));
   max-height: var(--radix-popover-content-available-height);
-  padding: 5px 0 !important;
+  padding-block: 5px !important;
   border: 1px solid var(--gray-a5);
   border-radius: var(--radius-4);
   background: var(--color-panel-solid);

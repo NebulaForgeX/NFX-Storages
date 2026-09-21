@@ -128,7 +128,8 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
 
   return (
     <Card size="3" className={styles.root}>
-      <Flex align="start" justify="between" gap="3" wrap="wrap" mb="4">
+      <Box pb="4">
+      <Flex align="start" justify="between" gap="3" wrap="wrap">
         <Flex direction="column" gap="1" minWidth="0">
           <Flex align="center" gap="1">
             <LucideIcon icon={Camera} size={16} />
@@ -148,12 +149,13 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
             {uploading ? <ResetIcon /> : <LucideIcon icon={Camera} size={16} />}
             {atLimit ? t("backgroundUpload.full") : t("backgroundUpload.add")}
           </Button>
-          <Button type="button" variant="soft" size="2" disabled={!dirty || uploading || confirming} onClick={confirmDrafts}>
+          <Button type="button" variant="outline" size="2" disabled={!dirty || uploading || confirming} onClick={confirmDrafts}>
             {confirming ? <Spinner /> : <LucideIcon icon={Save} size={16} />}
             {confirming ? t("backgroundUpload.confirming") : t("backgroundUpload.confirm")}
           </Button>
         </Flex>
       </Flex>
+      </Box>
 
       <input
         ref={fileInputRef}
@@ -168,10 +170,14 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
         }}
       />
 
-      <Flex ref={uploadSurfaceRef} align="stretch" gap="3" className={styles.uploadSurface}>
-        <Flex asChild align="center" justify="center" p="2" flexShrink="0" className={`${styles.addTile} ${atLimit ? styles.addTileDisabled : ""}`}>
-          <button type="button" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
-            <span className={styles.addContent}>
+      <Box ref={uploadSurfaceRef} className={styles.uploadSurface}>
+        <Box className={styles.uploadSurfacePy}>
+      <Flex align="stretch" gap="3">
+        <Flex asChild align="center" justify="center" flexShrink="0" className={`${styles.addTile} ${atLimit ? styles.addTileDisabled : ""}`}>
+          <Button type="button" variant="ghost" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
+            <Box px="2" width="100%" height="100%">
+              <Box py="2" height="100%">
+                <span className={styles.addContent}>
               <span className={styles.addIconWrap}>
                 {uploading ? (
                   <LucideIcon icon={RefreshCw} size={24} className={styles.spin} />
@@ -190,8 +196,10 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
                       ? t("backgroundUpload.dropTitle")
                       : t("backgroundUpload.add")}
               </Text>
-            </span>
-          </button>
+                </span>
+              </Box>
+            </Box>
+          </Button>
         </Flex>
 
         {drafts.length > 0 ? (
@@ -206,6 +214,8 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
           </DndContext>
         ) : null}
       </Flex>
+        </Box>
+      </Box>
 
       {drafts.length > 1 ? (
         <Text as="p" size="1" color="gray" mt="2">

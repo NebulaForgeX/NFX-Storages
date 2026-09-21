@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
-import { Button, Flex, Select, Switch, Tabs, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Box, Button, Flex, Select, Switch, Tabs, Text, TextArea, TextField } from "@radix-ui/themes";
 import { DataTable, EmptyState, PageHeader, PropertyList, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 import {
@@ -102,7 +102,8 @@ export default function BucketsPage() {
             <TextArea value={policy} onChange={(event) => setPolicyText(event.target.value)} rows={16} style={{ width: "100%" }} />
           </Tabs.Content>
           <Tabs.Content value="versioning" style={{ paddingTop: 12 }}>
-            <Flex direction="column" gap="3" mt="3">
+            <Box pt="3">
+            <Flex direction="column" gap="3">
               <Flex align="center" gap="3">
                 <Text>{t("Versioning")}</Text>
                 <Switch
@@ -134,9 +135,11 @@ export default function BucketsPage() {
                 </Button>
               </Flex>
             </Flex>
+            </Box>
           </Tabs.Content>
           <Tabs.Content value="encryption" style={{ paddingTop: 12 }}>
-            <Flex gap="2" align="center" mt="3">
+            <Box pt="3">
+            <Flex gap="2" align="center">
               <Text>{t("Algorithm")}: {data.encryptionAlgorithm || t("Disabled")}</Text>
               <Button onClick={() => void run(() => setEncryption.mutateAsync(bucket), t("Enabled"))}>{t("Enabled")}</Button>
               {data.encryptionAlgorithm ? (
@@ -159,6 +162,7 @@ export default function BucketsPage() {
                 </Button>
               ) : null}
             </Flex>
+            </Box>
           </Tabs.Content>
           <Tabs.Content value="tags" style={{ paddingTop: 12 }}>
             <Toolbar>

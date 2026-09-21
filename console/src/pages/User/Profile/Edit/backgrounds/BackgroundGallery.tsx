@@ -32,17 +32,18 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
             {t("backgroundUpload.hint")}
           </Text>
         </Box>
-        <Flex align="center" justify="between" gap="3" py="2">
-          <Flex minWidth="0" flexGrow="1">
-            <Text size="1" color="gray">
-              {t("backgroundUpload.queueSummary", {
-                done: completedCount,
-                total: MAX_PROFILE_BACKGROUNDS,
-              })}
-            </Text>
-          </Flex>
-          <Flex gap="2" wrap="wrap" align="center">
-            <Button type="button" size="2" variant="soft" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
+        <Box py="2">
+          <Flex align="center" justify="between" gap="3">
+            <Flex minWidth="0" flexGrow="1">
+              <Text size="1" color="gray">
+                {t("backgroundUpload.queueSummary", {
+                  done: completedCount,
+                  total: MAX_PROFILE_BACKGROUNDS,
+                })}
+              </Text>
+            </Flex>
+            <Flex gap="2" wrap="wrap" align="center">
+            <Button type="button" size="2" variant="outline" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
               <LucideIcon icon={Camera} size={14} />
               {atLimit ? t("backgroundUpload.full") : t("backgroundUpload.add")}
             </Button>
@@ -52,6 +53,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
             </Button>
           </Flex>
         </Flex>
+        </Box>
 
         <input
           ref={fileInputRef}
@@ -97,7 +99,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     <Button
                       type="button"
                       size="1"
-                      variant="soft"
+                      variant="outline"
                       color="gray"
                       disabled={busy || failed || index === 0}
                       onClick={() => moveDraft(draft.imageId, -1)}
@@ -108,7 +110,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     <Button
                       type="button"
                       size="1"
-                      variant="soft"
+                      variant="outline"
                       color="gray"
                       disabled={busy || failed || index === drafts.length - 1}
                       onClick={() => moveDraft(draft.imageId, 1)}
@@ -116,7 +118,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     >
                       <LucideIcon icon={ChevronRight} size={12} />
                     </Button>
-                    <Button type="button" size="1" variant="soft" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
+                    <Button type="button" size="1" variant="outline" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
                       <LucideIcon icon={Trash2} size={12} />
                     </Button>
                   </Flex>

@@ -16,7 +16,18 @@
     "showPassword": "显示密码",
     "hidePassword": "隐藏密码",
     "rememberMe": "记住我",
-    "submit": "登录"
+    "submit": "登录",
+    "phoneLabel": "手机",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "邮箱",
+    "channelPhone": "手机",
+    "validation": {
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "邮箱格式不正确",
+      "phoneRequired": "请输入手机号",
+      "phoneInvalid": "手机号格式不正确",
+      "passwordRequired": "请输入密码"
+    }
   },
   "promo": {
     "newTo": "还没有 {{name}}？",
@@ -29,11 +40,11 @@
     "back": "返回登录",
     "kind": {
       "authority": "Authority",
-      "forger": "Forger"
+      "community": "Community"
     },
     "kindHint": {
       "authority": "审核与角色",
-      "forger": "日常使用"
+      "community": "日常使用"
     },
     "roles": {
       "pulser": "脉搏者",

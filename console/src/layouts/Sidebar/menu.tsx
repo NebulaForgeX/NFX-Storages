@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { MenuItemProps, SubMenuProps } from "react-pro-sidebar";
 
 import { createContext, isValidElement, useContext, useEffect, useRef, useState } from "react";
-import { Popover, Tooltip } from "@radix-ui/themes";
+import { IconButton, Popover, Tooltip } from "@radix-ui/themes";
 import { Menu, MenuItem as ProMenuItem, SubMenu as ProSubMenu } from "react-pro-sidebar";
 
 import styles from "./s.module.css";
@@ -60,9 +60,10 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
     <li className="ps-menuitem-root">
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger>
-          <button
+          <IconButton
             ref={trigger}
             type="button"
+            variant="ghost"
             className={`${styles.collapsedSubmenuTrigger} ${active ? styles.collapsedSubmenuCurrent : open ? styles.collapsedSubmenuActive : ""}`}
             aria-label={labelText(label)}
             aria-expanded={open}
@@ -82,7 +83,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
             }}
           >
             {icon}
-          </button>
+          </IconButton>
         </Popover.Trigger>
         <Popover.Content
           ref={content}

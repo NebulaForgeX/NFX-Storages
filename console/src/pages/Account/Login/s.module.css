@@ -1,18 +1,18 @@
 .page {
   display: grid;
   grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
-  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   width: 100%;
   background: var(--color-bg);
   color: var(--gray-12);
 }
 
 .rack {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 28px 24px;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
   border-right: 1px solid var(--gray-a5);
   background:
     repeating-linear-gradient(
@@ -25,10 +25,18 @@
   background-size: 48px 100%;
 }
 
+.rackPx {
+  padding-inline: 24px;
+  height: 100%;
+}
+
+.rackPy {
+  padding-block: 28px;
+  height: 100%;
+}
+
 .rackBrand {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  min-width: 0;
 }
 
 .path {
@@ -39,9 +47,7 @@
 }
 
 .meter {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  min-width: 0;
 }
 
 .meterTrack {
@@ -67,12 +73,12 @@
   text-align: left;
   font-weight: 600;
   color: var(--gray-11);
-  padding: 8px 0;
+  padding-block: 8px;
   border-bottom: 1px solid var(--gray-a5);
 }
 
 .bayTable td {
-  padding: 10px 0;
+  padding-block: 10px;
   border-bottom: 1px solid var(--gray-a4);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -88,23 +94,30 @@
 .session {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
-  padding: 20px 28px 40px;
+  min-height: 0;
+  height: 100dvh;
   background: var(--color-bg-2);
+}
+
+.sessionPx {
+  padding-inline: 28px;
+  flex: 1;
+  min-height: 0;
+}
+
+.sessionPy {
+  padding-block: 20px 40px;
+  height: 100%;
+  min-height: 0;
 }
 
 .sessionBody {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  min-height: 0;
 }
 
 .strip {
   width: min(100%, 380px);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .kicker {
@@ -114,17 +127,28 @@
 }
 
 .profileRow {
+  height: auto;
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--gray-a5);
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+}
+
+.profileRowPy {
+  padding-block: 10px;
+  width: 100%;
+}
+
+.profileRowGrid {
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
-  width: 100%;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--gray-a5);
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-  color: inherit;
 }
 
 .profileRow:hover:not(:disabled) {
@@ -152,6 +176,10 @@
   border: 0;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 @media (max-width: 900px) {
   .page {
     grid-template-columns: 1fr;
@@ -159,8 +187,13 @@
 
   .rack {
     min-height: auto;
+    height: auto;
     border-right: 0;
     border-bottom: 1px solid var(--gray-a5);
+  }
+
+  .session {
+    height: auto;
   }
 
   .sessionBody {

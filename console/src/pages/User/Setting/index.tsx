@@ -1,7 +1,7 @@
 import { GearIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
-import { Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader, Suspense } from "@/components";
@@ -12,14 +12,16 @@ import { SystemSettings, ThemeSettings } from "./components";
 function SettingsSection({ id, title, description, children }: { id: string; title: string; description: string; children: ReactNode }) {
   return (
     <Section size="1" py="0" aria-labelledby={id}>
-      <Flex direction="column" gap="1" mb="3">
-        <Heading as="h2" id={id} size="4">
-          {title}
-        </Heading>
-        <Text as="p" size="2" color="gray">
-          {description}
-        </Text>
-      </Flex>
+      <Box pb="3">
+        <Flex direction="column" gap="1">
+          <Heading as="h2" id={id} size="4">
+            {title}
+          </Heading>
+          <Text as="p" size="2" color="gray">
+            {description}
+          </Text>
+        </Flex>
+      </Box>
       {children}
     </Section>
   );

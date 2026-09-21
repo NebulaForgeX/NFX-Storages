@@ -5,7 +5,6 @@
   left: 0;
   z-index: 30;
   width: 100%;
-  padding: var(--space-3) var(--space-4);
   pointer-events: none;
   background: linear-gradient(180deg, color-mix(in oklab, var(--color-background) 92%, transparent), transparent);
 }

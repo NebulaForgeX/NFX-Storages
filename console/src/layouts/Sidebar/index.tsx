@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, CpuIcon, DownChevron, FilledBellIcon, GaugeIcon, GearIcon, HeartIcon, LayersIcon, LockIcon, LogoutIcon, PassportIcon, PenIcon, RefreshIcon, RightChevron, ShieldCheck, Stack3Icon, StackIcon, UnorderedListIcon, UserIcon, UsersIcon } from "nfx-ui/icons";
+import { ProfileKindEnum } from "nfx-ui/enums";
 import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { AuthStore, clearAuth } from "nfx-ui/stores";
@@ -29,12 +30,18 @@ function MenuLabel({ children, active = false }: { children: ReactNode; active?:
 
 function SectionTitle({ label, icon }: { label: string; icon: AnimatedIconComponent }) {
   return (
-    <Flex align="center" justify="between" gap="2" className={styles.sectionTitle}>
-      <Text as="span" size="2" weight="bold">
-        {label}
-      </Text>
-      <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
-    </Flex>
+    <Box className={styles.sectionTitleHairline}>
+      <Box className={styles.sectionTitleY}>
+        <Box className={styles.sectionTitleX}>
+          <Flex align="center" justify="between" gap="2" className={styles.sectionTitle}>
+            <Text as="span" size="2" weight="bold">
+              {label}
+            </Text>
+            <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
+          </Flex>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
@@ -310,7 +317,9 @@ function Sidebar() {
         >
           <Flex direction="column" height="100%" minHeight="0" className={styles.sidebar}>
             <div className={styles.header}>
-              <button type="button" className={styles.accountCard} aria-label={displayName}>
+              <div className={styles.headerHairline}>
+                <div className={styles.headerPy}>
+              <Button type="button" variant="ghost" className={styles.accountCard} aria-label={displayName}>
                 <Avatar
                   size="3"
                   className={styles.avatar}
@@ -321,13 +330,13 @@ function Sidebar() {
                 />
                 {!collapsed && (
                   <span className={styles.accountInfo}>
-                    <span className={styles.accountRole}>{t(kind === "authority" ? "sidebar.profileAuthority" : "sidebar.profileForger")}</span>
+                    <span className={styles.accountRole}>{t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}</span>
                     <span className={styles.accountName}>{displayName}</span>
                   </span>
                 )}
-              </button>
+              </Button>
               <IconButton
-                variant="soft"
+                variant="outline"
                 size="1"
                 className={styles.toggle}
                 aria-label={collapsed ? t("sidebar.expand") : t("sidebar.collapse")}
@@ -336,15 +345,23 @@ function Sidebar() {
               >
                 <AnimatedIcon icon={collapsed ? RightChevron : ArrowNarrowLeftIcon} size={14} />
               </IconButton>
+                </div>
+              </div>
             </div>
 
-            <Box flexGrow="1" minHeight="0" py="2" className={`${styles.menuArea} ${collapsed ? styles.menuAreaCollapsed : ""}`}>
+            <Box flexGrow="1" minHeight="0" className={`${styles.menuArea} ${collapsed ? styles.menuAreaCollapsed : ""}`}>
+              <Box className={styles.menuAreaPx}>
+                <Box className={styles.menuAreaPy}>
               <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
               <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
               <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
+                </Box>
+              </Box>
             </Box>
 
             <div className={`${styles.footer} ${collapsed ? styles.footerCollapsed : ""}`}>
+              <div className={styles.footerPx}>
+                <div className={styles.footerPy}>
               <Button
                 variant="ghost"
                 className={`${styles.logout} ${collapsed ? styles.logoutCollapsed : ""}`}
@@ -355,6 +372,8 @@ function Sidebar() {
                 <AnimatedIcon icon={LogoutIcon} size={18} />
                 {!collapsed && t("sidebar.logout")}
               </Button>
+                </div>
+              </div>
             </div>
           </Flex>
         </ProSidebar>

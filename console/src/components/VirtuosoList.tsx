@@ -182,21 +182,27 @@ function VirtuosoListComponent<T>({
     if (hasNextPage) {
       if (loadingIndicator) return <>{loadingIndicator}</>;
       return (
-        <Flex align="center" justify="center" py="8">
-          <Text size="2" color="gray">
-            {isFetchingNextPage ? loadingMoreText : ""}
-          </Text>
-        </Flex>
+        <Box py="8">
+          <Flex align="center" justify="center">
+            <Text size="2" color="gray">
+              {isFetchingNextPage ? loadingMoreText : ""}
+            </Text>
+          </Flex>
+        </Box>
       );
     }
     if (dataLength === 0) return null;
     if (endOfListIndicator) return <>{endOfListIndicator}</>;
     return (
-      <Flex align="center" justify="center" py="8" mt="3" style={{ borderTop: "1px solid var(--gray-a7)" }}>
-        <Text as="span" size="2" color="gray" style={footerEndLabelStyle}>
-          {endOfListText}
-        </Text>
-      </Flex>
+      <Box style={{ borderTop: "1px solid var(--gray-a7)" }}>
+        <Box mt="3" py="8">
+          <Flex align="center" justify="center">
+            <Text as="span" size="2" color="gray" style={footerEndLabelStyle}>
+              {endOfListText}
+            </Text>
+          </Flex>
+        </Box>
+      </Box>
     );
   }, [dataLength, endOfListIndicator, endOfListText, hasNextPage, isFetchingNextPage, loadingIndicator, loadingMoreText]);
 

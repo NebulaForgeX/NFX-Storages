@@ -28,8 +28,12 @@ function CampfireArt() {
         <div className={`${campfireStyles.flame} ${campfireStyles.flameRight}`} />
       </div>
       <div className={campfireStyles.logs}>
-        <div className={campfireStyles.log} />
-        <div className={campfireStyles.log} />
+        <div className={campfireStyles.logsPx}>
+          <div className={campfireStyles.logsRow}>
+            <div className={campfireStyles.log} />
+            <div className={campfireStyles.log} />
+          </div>
+        </div>
       </div>
       <div className={campfireStyles.embers}>
         <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0 }} />

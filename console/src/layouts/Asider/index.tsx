@@ -77,7 +77,7 @@ function Asider() {
     <>
       <div className={`${styles.overlay} ${isAsiderOpen ? styles.overlayOpen : ""}`} role="presentation" onClick={closeAsider} aria-hidden={!isAsiderOpen} />
 
-      <Flex asChild direction="column" gap="6" p="6" className={`${styles.sidebar} ${isAsiderOpen ? styles.sidebarOpen : ""}`}>
+      <Box asChild className={`${styles.sidebar} ${isAsiderOpen ? styles.sidebarOpen : ""}`}>
         <aside
           id="mobile-asider"
           ref={sidebarRef}
@@ -87,7 +87,12 @@ function Asider() {
           aria-hidden={!isAsiderOpen}
           inert={!isAsiderOpen ? true : undefined}
         >
-          <Flex align="center" justify="between" gap="3" className={styles.sidebarHeader}>
+          <Box className={styles.sidebarPx}>
+            <Box className={styles.sidebarPy}>
+              <Flex direction="column" gap="6" height="100%">
+                <Box className={styles.sidebarHeader}>
+                  <Box className={styles.sidebarHeaderPy}>
+                    <Flex align="center" justify="between" gap="3">
             {isAuthValid ? (
               <Card size="1" className={styles.accountCard}>
                 <Flex align="center" gap="3">
@@ -105,28 +110,34 @@ function Asider() {
             ) : (
               <Logo title={APP_NAME} subtitle="Live local map" />
             )}
-            <IconButton ref={closeButtonRef} variant="soft" size="2" aria-label={t("header.closeMenu")} onClick={closeAsider}>
+            <IconButton ref={closeButtonRef} variant="outline" size="2" aria-label={t("header.closeMenu")} onClick={closeAsider}>
               <AnimatedIcon icon={RightChevron} size={14} />
             </IconButton>
-          </Flex>
+                    </Flex>
+                  </Box>
+                </Box>
 
-          <Flex asChild direction="column" gap="3" pb="5" className={styles.nav}>
+          <Box className={styles.navHairline}>
+          <Box pb="5">
+          <Flex asChild direction="column" gap="3" className={styles.nav}>
             <nav>
-              <button type="button" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
+              <Button type="button" variant="ghost" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
                 <AnimatedIcon icon={HomeIcon} size={18} aria-hidden="true" />
                 <Text as="span" size="3">
                   {t("header.home")}
                 </Text>
-              </button>
+              </Button>
             </nav>
           </Flex>
+          </Box>
+          </Box>
 
           <Flex direction="column" gap="3" className={styles.actions}>
             {isAuthValid ? (
               <>
                 <Button
                   className={styles.wideButton}
-                  variant="soft"
+                  variant="outline"
                   size="2"
                   onClick={() => {
                     closeAsider();
@@ -138,7 +149,7 @@ function Asider() {
                 </Button>
                 <Button
                   className={`${styles.wideButton} ${styles.logout}`}
-                  variant="soft"
+                  variant="outline"
                   size="2"
                   onClick={() => {
                     clearAuth();
@@ -152,11 +163,11 @@ function Asider() {
               </>
             ) : (
               <>
-                <PreferencesPopover triggerVariant="soft" />
+                <PreferencesPopover triggerVariant="outline" />
 
                 <Button
                   className={styles.wideButton}
-                  variant="soft"
+                  variant="outline"
                   size="2"
                   onClick={() => {
                     closeAsider();
@@ -179,8 +190,11 @@ function Asider() {
               </>
             )}
           </Flex>
+              </Flex>
+            </Box>
+          </Box>
         </aside>
-      </Flex>
+      </Box>
     </>
   );
 }

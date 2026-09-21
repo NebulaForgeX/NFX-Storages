@@ -49,9 +49,13 @@
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+.logsPx {
+  padding-inline: calc(0.8 * var(--cf-unit));
+}
+.logsRow {
   display: flex;
   justify-content: space-between;
-  padding: 0 calc(0.8 * var(--cf-unit));
 }
 
 .log {

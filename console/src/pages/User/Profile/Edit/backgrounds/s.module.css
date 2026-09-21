@@ -22,7 +22,7 @@
   background: color-mix(in oklab, var(--gray-12) 70%, transparent);
   color: var(--gray-1);
   border-radius: var(--radius-2);
-  padding: 0 6px;
+  padding-inline: 6px;
   line-height: 1.4;
 }
 

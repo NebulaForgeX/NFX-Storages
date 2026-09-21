@@ -6,6 +6,8 @@
   width: 100%;
   min-width: 0;
   overflow-x: auto;
+}
+.uploadSurfacePy {
   padding-bottom: 2px;
 }
 
@@ -143,7 +145,7 @@
   z-index: 2;
   min-width: 21px;
   height: 21px;
-  padding: 0 6px;
+  padding-inline: 6px;
   border-radius: 999px;
   color: #fff;
   background: var(--black-a8);
@@ -196,7 +198,7 @@
   gap: 4px;
   min-width: 0;
   height: 22px;
-  padding: 0 7px;
+  padding-inline: 7px;
   border-radius: 999px;
   overflow: hidden;
   color: #fff;

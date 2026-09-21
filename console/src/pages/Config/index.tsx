@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Heading, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
@@ -38,14 +38,24 @@ export default function ConfigPage() {
 
   return (
     <AuthMotionRoot className={styles.page}>
-      <header className={styles.bar}>
-        <span className={styles.mount} data-auth-motion>
-          {t("Mount endpoint")}
-        </span>
-        <PreferencesPopover />
-      </header>
-      <div className={styles.body}>
-        <div className={styles.endpoint} data-auth-motion>
+      <Box className={styles.bar}>
+        <Box className={styles.barPx}>
+          <Box className={styles.barPy}>
+            <Flex asChild align="center" justify="between" gap="4">
+              <header>
+                <span className={styles.mount} data-auth-motion>
+                  {t("Mount endpoint")}
+                </span>
+                <PreferencesPopover />
+              </header>
+            </Flex>
+          </Box>
+        </Box>
+      </Box>
+      <Box className={styles.body}>
+        <Box className={styles.bodyPx}>
+          <Box className={styles.bodyPy}>
+            <Flex direction="column" gap="4" className={styles.endpoint} data-auth-motion>
           <Heading as="h1" size="5">
             {t("Server Configuration")}
           </Heading>
@@ -65,27 +75,29 @@ export default function ConfigPage() {
               {error}
             </Text>
           ) : null}
-          <div className={styles.actions}>
-            <Button onClick={save} radius="none">
-              {t("Save Configuration")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              radius="none"
-              onClick={() => {
-                resetServerHost();
-                setValue("");
-              }}
-            >
-              {t("Reset")}
-            </Button>
-            <Button type="button" variant="ghost" onClick={() => navigate(ROUTES.LOGIN)}>
-              {t("Skip")}
-            </Button>
-          </div>
-        </div>
-      </div>
+            <Flex gap="2" wrap="wrap">
+              <Button onClick={save} radius="none">
+                {t("Save Configuration")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                radius="none"
+                onClick={() => {
+                  resetServerHost();
+                  setValue("");
+                }}
+              >
+                {t("Reset")}
+              </Button>
+              <Button type="button" variant="ghost" onClick={() => navigate(ROUTES.LOGIN)}>
+                {t("Skip")}
+              </Button>
+            </Flex>
+            </Flex>
+          </Box>
+        </Box>
+      </Box>
     </AuthMotionRoot>
   );
 }

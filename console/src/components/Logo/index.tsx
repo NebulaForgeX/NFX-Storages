@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { useResolvedAppearance } from "nfx-ui/hooks";
 
@@ -26,8 +26,9 @@ function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, var
 
   return (
     <Flex asChild align="center" gap="3" width="fit-content">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         className={logoClasses}
         aria-label={typeof title === "string" ? title : APP_NAME}
         onClick={() => {
@@ -55,7 +56,7 @@ function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, var
             )}
           </Flex>
         )}
-      </button>
+      </Button>
     </Flex>
   );
 }

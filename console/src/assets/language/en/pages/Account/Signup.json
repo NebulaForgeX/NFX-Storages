@@ -24,5 +24,15 @@
   "rememberMe": "Remember me",
   "submit": "Create Account",
   "hasAccount": "Already have an account?",
-  "signIn": "Sign in"
+  "signIn": "Sign in",
+  "validation": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email",
+    "codeRequired": "Verification code is required",
+    "codeInvalid": "Enter the 6-character code",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 8 characters",
+    "confirmRequired": "Confirm your password",
+    "passwordMismatch": "Passwords do not match"
+  }
 }

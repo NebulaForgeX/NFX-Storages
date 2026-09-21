@@ -4,11 +4,13 @@ import { Checkbox, Flex, Text } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+type LoginRememberFields = { rememberMe?: boolean };
+
 export type LoginRememberControllerProps = Record<string, never>;
 
 const LoginRememberController = () => {
   const { t } = useTranslation("pages.Account.Login");
-  const { control } = useFormContext<LoginFormData>();
+  const { control } = useFormContext<LoginRememberFields>();
 
   return (
     <Controller
