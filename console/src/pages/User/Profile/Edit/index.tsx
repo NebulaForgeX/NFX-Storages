@@ -86,23 +86,25 @@ function AvatarSection() {
             {t("avatar.hint")}
           </Text>
         </Box>
-        <Flex align="center" justify="between" gap="3" py="2">
-          <Flex align="center" gap="3" minWidth="0" flexGrow="1">
-            <Avatar size="5" radius="full" src={src} fallback={initial} />
-            <Text size="2" color="gray">
-              {t("avatar.pickHint")}
-            </Text>
+        <Box py="2">
+          <Flex align="center" justify="between" gap="3">
+            <Flex align="center" gap="3" minWidth="0" flexGrow="1">
+              <Avatar size="5" radius="full" src={src} fallback={initial} />
+              <Text size="2" color="gray">
+                {t("avatar.pickHint")}
+              </Text>
+            </Flex>
+            <Flex gap="2" wrap="wrap" align="center">
+              <Button size="2" variant="outline" disabled={busy} onClick={() => fileRef.current?.click()}>
+                <LucideIcon icon={Upload} size={14} />
+                {busy ? t("avatar.uploading") : t("avatar.choose")}
+              </Button>
+              <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
+                {confirmUpload.isPending ? t("avatar.confirming") : t("avatar.confirm")}
+              </Button>
+            </Flex>
           </Flex>
-          <Flex gap="2" wrap="wrap" align="center">
-            <Button size="2" variant="soft" disabled={busy} onClick={() => fileRef.current?.click()}>
-              <LucideIcon icon={Upload} size={14} />
-              {busy ? t("avatar.uploading") : t("avatar.choose")}
-            </Button>
-            <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
-              {confirmUpload.isPending ? t("avatar.confirming") : t("avatar.confirm")}
-            </Button>
-          </Flex>
-        </Flex>
+        </Box>
         <input
           ref={fileRef}
           type="file"
@@ -167,7 +169,8 @@ export default function ProfileEditPage() {
               </Text>
               <TextField.Root size="2" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("labels.website")} />
             </Flex>
-            <Flex align="center" justify="end" gap="3" py="2">
+            <Box py="2">
+              <Flex align="center" justify="end" gap="3">
               <Button size="2"
                 loading={patch.isPending}
                 disabled={!profile}
@@ -186,6 +189,7 @@ export default function ProfileEditPage() {
                 {t("actions.saveChanges")}
               </Button>
             </Flex>
+            </Box>
           </Flex>
         </Card>
     </PageFrame>

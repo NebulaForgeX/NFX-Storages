@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./s.module.css";
 
 export type PreferencesPopoverProps = {
-  triggerVariant?: "soft" | "outline";
+  triggerVariant?: "outline" | "ghost";
 };
 
 function swatchVar(color: AccentColorEnum | GrayColorEnum): string {
@@ -34,7 +34,7 @@ const RADIUS_CORNER: Record<RadiusEnum, string> = {
   [RadiusEnum.FULL]: styles.radiusFull,
 };
 
-function PreferencesPopover({ triggerVariant = "soft" }: PreferencesPopoverProps) {
+function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverProps) {
   const { t } = useTranslation("language");
   const themePreference = usePreferenceStore((s) => s.theme);
   const currentLanguage = usePreferenceStore((s) => s.language);
@@ -66,7 +66,7 @@ function PreferencesPopover({ triggerVariant = "soft" }: PreferencesPopoverProps
                   <Button
                     key={c}
                     type="button"
-                    variant="soft"
+                    variant="outline"
                     color="gray"
                     aria-label={c}
                     aria-pressed={active}
@@ -92,7 +92,7 @@ function PreferencesPopover({ triggerVariant = "soft" }: PreferencesPopoverProps
                   <Button
                     key={c}
                     type="button"
-                    variant="soft"
+                    variant="outline"
                     color="gray"
                     aria-label={c}
                     aria-pressed={active}

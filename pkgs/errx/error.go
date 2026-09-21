@@ -57,7 +57,7 @@ func (e *Error) WithCause(err error) *Error {
 	if errors.As(err, &inner) {
 		return inner
 	}
-	return &Error{Code: e.Code, Message: e.Message, Cause: err}
+	return &Error{Kind: e.Kind, Code: e.Code, Message: e.Message, Cause: err}
 }
 
 func (e *Error) Error() string {

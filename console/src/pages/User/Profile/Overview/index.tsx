@@ -56,19 +56,21 @@ export default function ProfileOverviewPage() {
                 <img src={buildImageUrl(coverId)} alt="" className={styles.coverImage} />
               </Box>
             ) : null}
-            <Flex align="center" gap="3" py="2">
-              <Flex align="center" gap="3" minWidth="0" flexGrow="1">
-                <Avatar size="4" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-                <Flex direction="column" gap="1" minWidth="0">
-                  <Text size="3" weight="bold">
-                    {name}
-                  </Text>
-                  <Text size="1" color="gray">
-                    {kind}
-                  </Text>
+            <Box py="2">
+              <Flex align="center" gap="3">
+                <Flex align="center" gap="3" minWidth="0" flexGrow="1">
+                  <Avatar size="4" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+                  <Flex direction="column" gap="1" minWidth="0">
+                    <Text size="3" weight="bold">
+                      {name}
+                    </Text>
+                    <Text size="1" color="gray">
+                      {kind}
+                    </Text>
+                  </Flex>
                 </Flex>
               </Flex>
-            </Flex>
+            </Box>
             <Grid columns={{ initial: "1", sm: "2", md: "3" }} gap="4">
               <Info label={t("labels.bio")} value={safeStringable(profile?.bio)} />
               <Info label={t("labels.city")} value={safeStringable(profile?.city)} />

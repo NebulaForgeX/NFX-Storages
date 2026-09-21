@@ -16,7 +16,18 @@
     "showPassword": "Afficher",
     "hidePassword": "Masquer",
     "rememberMe": "Se souvenir de moi",
-    "submit": "Se connecter"
+    "submit": "Se connecter",
+    "phoneLabel": "Téléphone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "E-mail",
+    "channelPhone": "Téléphone",
+    "validation": {
+      "emailRequired": "L'e-mail est requis",
+      "emailInvalid": "Entrez un e-mail valide",
+      "phoneRequired": "Le téléphone est requis",
+      "phoneInvalid": "Entrez un numéro valide",
+      "passwordRequired": "Le mot de passe est requis"
+    }
   },
   "promo": {
     "newTo": "Nouveau sur {{name}} ?",
@@ -29,11 +40,11 @@
     "back": "Retour à la connexion",
     "kind": {
       "authority": "Authority",
-      "forger": "Forger"
+      "community": "Community"
     },
     "kindHint": {
       "authority": "Modération et rôles",
-      "forger": "Usage quotidien"
+      "community": "Usage quotidien"
     },
     "roles": {
       "pulser": "Pulser",

@@ -24,5 +24,15 @@
   "rememberMe": "记住我",
   "submit": "创建账号",
   "hasAccount": "已有账号？",
-  "signIn": "登录"
+  "signIn": "登录",
+  "validation": {
+    "emailRequired": "请输入邮箱",
+    "emailInvalid": "邮箱格式不正确",
+    "codeRequired": "请输入验证码",
+    "codeInvalid": "请输入 6 位验证码",
+    "passwordRequired": "请输入密码",
+    "passwordMin": "密码至少 8 位",
+    "confirmRequired": "请确认密码",
+    "passwordMismatch": "两次密码不一致"
+  }
 }

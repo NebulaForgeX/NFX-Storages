@@ -16,7 +16,18 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "rememberMe": "Remember me",
-    "submit": "Sign in"
+    "submit": "Sign in",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "Email",
+    "channelPhone": "Phone",
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email",
+      "phoneRequired": "Phone is required",
+      "phoneInvalid": "Enter a valid phone number",
+      "passwordRequired": "Password is required"
+    }
   },
   "promo": {
     "newTo": "New to {{name}}?",
@@ -29,11 +40,11 @@
     "back": "Back to sign in",
     "kind": {
       "authority": "Authority",
-      "forger": "Forger"
+      "community": "Community"
     },
     "kindHint": {
       "authority": "Moderation & roles",
-      "forger": "Everyday use"
+      "community": "Everyday use"
     },
     "roles": {
       "pulser": "Pulser",

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 
 export interface CardHeaderProps {
   icon: ReactNode;
@@ -10,7 +10,8 @@ export interface CardHeaderProps {
 
 function CardHeader({ icon, title, description }: CardHeaderProps) {
   return (
-    <Flex gap="3" align="start" mb="4">
+    <Box pb="4">
+    <Flex gap="3" align="start">
       <Flex
         align="center"
         justify="center"
@@ -36,6 +37,7 @@ function CardHeader({ icon, title, description }: CardHeaderProps) {
         ) : null}
       </Flex>
     </Flex>
+    </Box>
   );
 }
 

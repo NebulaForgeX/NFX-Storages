@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 export type EmptyStateProps = {
@@ -12,7 +12,9 @@ export type EmptyStateProps = {
 
 export default function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <Flex direction="column" align="center" justify="center" gap="3" py="9" px="4">
+    <Box px="4">
+      <Box py="9">
+        <Flex direction="column" align="center" justify="center" gap="3">
       {icon ? (
         <Flex
           align="center"
@@ -36,7 +38,9 @@ export default function EmptyState({ icon, title, description, action }: EmptySt
           {description}
         </Text>
       ) : null}
-      {action}
-    </Flex>
+          {action}
+        </Flex>
+      </Box>
+    </Box>
   );
 }

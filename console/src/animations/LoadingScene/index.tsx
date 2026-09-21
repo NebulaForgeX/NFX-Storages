@@ -78,8 +78,12 @@ function FireArt({ size }: { size: LoadingSceneSize }) {
 /** Loading illustration — goo blobs or fire (mirrors EmptyScene variant pattern). */
 export function LoadingScene({ variant = LoadingSceneVariantEnum.GOO, size = "medium", className }: LoadingSceneProps) {
   return (
-    <div className={[styles.scene, className].filter(Boolean).join(" ")} aria-hidden>
-      {variant === LoadingSceneVariantEnum.FIRE ? <FireArt size={size} /> : <GooArt size={size} />}
+    <div className={[styles.scenePx, className].filter(Boolean).join(" ")} aria-hidden>
+      <div className={styles.scenePy}>
+        <div className={styles.scene}>
+          {variant === LoadingSceneVariantEnum.FIRE ? <FireArt size={size} /> : <GooArt size={size} />}
+        </div>
+      </div>
     </div>
   );
 }

@@ -39,10 +39,11 @@ export function Inspector({ title, onClose, children, actions, closeLabel = "Clo
     <Box
       width="360px"
       flexShrink="0"
-      pl="4"
       style={{ borderLeft: "1px solid var(--gray-a5)", maxHeight: "calc(100dvh - 160px)", overflowY: "auto" }}
     >
-      <Flex align="start" justify="between" gap="2" mb="3">
+      <Box pl="4">
+      <Box pb="3">
+      <Flex align="start" justify="between" gap="2">
         <Heading as="h2" size="3">
           {title}
         </Heading>
@@ -50,14 +51,18 @@ export function Inspector({ title, onClose, children, actions, closeLabel = "Clo
           {closeLabel}
         </Button>
       </Flex>
+      </Box>
       {actions ? (
-        <Flex gap="2" wrap="wrap" mb="3">
+        <Box pb="3">
+        <Flex gap="2" wrap="wrap">
           {actions}
         </Flex>
+        </Box>
       ) : null}
       <Flex direction="column" gap="3">
         {children}
       </Flex>
+      </Box>
     </Box>
   );
 }

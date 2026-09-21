@@ -7,6 +7,7 @@ export { default as ProfileBackgroundGalleryController } from "./controllers/Pro
 export * from "./controllers/BioController";
 export * from "./controllers/ProfileLanguageController";
 export * from "./controllers/EmailController";
+export * from "./controllers/PhoneController";
 export * from "./controllers/PasswordController";
 export * from "./controllers/RememberController";
 

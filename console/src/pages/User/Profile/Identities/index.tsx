@@ -36,11 +36,11 @@ type IdentityRow = {
   avatarImageId: Nullable<string>;
 };
 
-function toForgerRow(item: Profile.Response.ForgerProfileItem): IdentityRow {
+function toCommunityRow(item: Profile.Response.ForgerProfileItem): IdentityRow {
   return {
     profileId: item.profileId,
     displayName: item.displayName,
-    kind: ProfileKindEnum.FORGER,
+    kind: ProfileKindEnum.COMMUNITY,
     avatarImageId: item.avatarImageId,
   };
 }
@@ -56,14 +56,18 @@ function toAuthorityRow(item: Profile.Response.AuthorityProfileItem): IdentityRo
 
 function EmptyBlock({ title, description }: { title: string; description: string }) {
   return (
-    <Flex direction="column" align="center" justify="center" gap="1" py="6" px="4">
-      <Text size="2" weight="medium">
-        {title}
-      </Text>
-      <Text size="1" color="gray" align="center">
-        {description}
-      </Text>
-    </Flex>
+    <Box px="4">
+      <Box py="6">
+        <Flex direction="column" align="center" justify="center" gap="1">
+          <Text size="2" weight="medium">
+            {title}
+          </Text>
+          <Text size="1" color="gray" align="center">
+            {description}
+          </Text>
+        </Flex>
+      </Box>
+    </Box>
   );
 }
 
@@ -102,36 +106,38 @@ function EmailRow({
             </Text>
           ) : null}
         </Box>
-        <Flex align="center" justify="between" gap="3" py="2">
-          <Flex minWidth="0" flexGrow="1">
-            <Flex direction="column" gap="2">
-              <Text size="1" weight="medium" color="gray">
-                {t("labels.actions")}
-              </Text>
-              <Text size="2" color="gray">
-                {item.id}
-              </Text>
+        <Box py="2">
+          <Flex align="center" justify="between" gap="3">
+            <Flex minWidth="0" flexGrow="1">
+              <Flex direction="column" gap="2">
+                <Text size="1" weight="medium" color="gray">
+                  {t("labels.actions")}
+                </Text>
+                <Text size="2" color="gray">
+                  {item.id}
+                </Text>
+              </Flex>
+            </Flex>
+            <Flex gap="2" wrap="wrap" align="center">
+              {!verified ? (
+                <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate({ emailId: item.id })}>
+                  {t("actions.sendCode")}
+                </Button>
+              ) : null}
+              {!item.isPrimary ? (
+                <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
+                  {t("actions.setPrimary")}
+                </Button>
+              ) : null}
+              <Button size="1" variant="outline" onClick={() => setEditing((v) => !v)}>
+                {editing ? t("actions.cancelEdit") : t("actions.editEmail")}
+              </Button>
+              <Button size="1" variant="outline" color="red" onClick={() => deleteEmail.mutate(item.id)}>
+                {t("actions.remove")}
+              </Button>
             </Flex>
           </Flex>
-          <Flex gap="2" wrap="wrap" align="center">
-            {!verified ? (
-              <Button size="1" variant="soft" loading={sendCode.isPending} onClick={() => sendCode.mutate({ emailId: item.id })}>
-                {t("actions.sendCode")}
-              </Button>
-            ) : null}
-            {!item.isPrimary ? (
-              <Button size="1" variant="soft" onClick={() => setPrimary.mutate(item.id)}>
-                {t("actions.setPrimary")}
-              </Button>
-            ) : null}
-            <Button size="1" variant="soft" onClick={() => setEditing((v) => !v)}>
-              {editing ? t("actions.cancelEdit") : t("actions.editEmail")}
-            </Button>
-            <Button size="1" variant="soft" color="red" onClick={() => deleteEmail.mutate(item.id)}>
-              {t("actions.remove")}
-            </Button>
-          </Flex>
-        </Flex>
+        </Box>
 
         {editing ? (
           <Flex direction="column" gap="2">
@@ -284,7 +290,7 @@ function PasswordSection() {
             <Button
               type="button"
               size="2"
-              variant="soft"
+              variant="outline"
               loading={sendCode.isPending}
               disabled={busy || !primaryEmail}
               onClick={() =>
@@ -297,27 +303,29 @@ function PasswordSection() {
             </Button>
           </Flex>
         </Flex>
-        <Flex align="center" justify="end" gap="3" py="2">
-          <Button size="2"
-            loading={changePassword.isPending}
-            disabled={!canSubmit}
-            onClick={() =>
-              changePassword
-                .mutateAsync({
-                  currentPassword,
-                  newPassword,
-                  verificationCode: normalizeVerificationCode(verificationCode),
-                })
-                .then(() => {
-                  setCurrentPassword("");
-                  setNewPassword("");
-                  setVerificationCode("");
-                })
-            }
-          >
-            {t("actions.updatePassword")}
-          </Button>
-        </Flex>
+        <Box py="2">
+          <Flex align="center" justify="end" gap="3">
+            <Button size="2"
+              loading={changePassword.isPending}
+              disabled={!canSubmit}
+              onClick={() =>
+                changePassword
+                  .mutateAsync({
+                    currentPassword,
+                    newPassword,
+                    verificationCode: normalizeVerificationCode(verificationCode),
+                  })
+                  .then(() => {
+                    setCurrentPassword("");
+                    setNewPassword("");
+                    setVerificationCode("");
+                  })
+              }
+            >
+              {t("actions.updatePassword")}
+            </Button>
+          </Flex>
+        </Box>
       </Flex>
     </Card>
   );
@@ -327,7 +335,7 @@ function ProfilesSection() {
   const { t } = useTranslation("pages.User.Profile.Identities");
   const currentProfileId = useAuthStore((s) => s.currentProfileId);
   const currentProfileKind = useAuthStore((s) => s.currentProfileKind);
-  const forgerProfiles = useListProfiles(ProfileKindEnum.FORGER);
+  const communityProfiles = useListProfiles(ProfileKindEnum.COMMUNITY);
   const authorityProfiles = useListProfiles(ProfileKindEnum.AUTHORITY);
   const createProfile = useCreateForgerProfile();
   const deleteProfile = useDeleteProfile();
@@ -336,9 +344,9 @@ function ProfilesSection() {
   const [profileLanguage, setProfileLanguage] = useState<LanguageEnum>(LanguageEnum.EN);
   const [switchingId, setSwitchingId] = useState<Nullable<string>>(null);
 
-  const forger = safeArray(forgerProfiles.data?.items);
+  const community = safeArray(communityProfiles.data?.items);
   const authority = safeArray(authorityProfiles.data?.items);
-  const rows: IdentityRow[] = [...forger.map(toForgerRow), ...authority.map(toAuthorityRow)];
+  const rows: IdentityRow[] = [...community.map(toCommunityRow), ...authority.map(toAuthorityRow)];
   const total = rows.length;
   const atFloor = total <= 1;
 
@@ -371,7 +379,7 @@ function ProfilesSection() {
           </Box>
           {rows.length ? (
             rows.map((row) => {
-              const isCommunity = row.kind === ProfileKindEnum.FORGER;
+              const isCommunity = row.kind === ProfileKindEnum.COMMUNITY;
               const isCurrent = row.profileId === currentProfileId && row.kind === currentProfileKind;
               const name = safeStringable(row.displayName) || t("labels.emptyName");
               const isSwitching = switchingId === row.profileId;
@@ -379,7 +387,8 @@ function ProfilesSection() {
               const initials = name.slice(0, 2).toUpperCase();
 
               return (
-                <Flex key={`${row.kind}-${row.profileId}`} align="center" justify="between" gap="3" py="2">
+                <Box key={`${row.kind}-${row.profileId}`} py="2">
+                  <Flex align="center" justify="between" gap="3">
                   <Flex align="center" gap="3" minWidth="0" flexGrow="1">
                     <Avatar size="2" src={row.avatarImageId ? buildAvatarImageSrc(row.avatarImageId) : undefined} fallback={initials} />
                     <Flex direction="column" gap="1" minWidth="0">
@@ -387,7 +396,7 @@ function ProfilesSection() {
                         {name}
                       </Text>
                       <Flex gap="2" align="center" wrap="wrap">
-                        <Badge color={isCommunity ? "blue" : "amber"} variant="soft">
+                        <Badge color={isCommunity ? "blue" : "amber"} variant="outline">
                           {isCommunity ? t("labels.scopeCommunity") : t("labels.scopeAuthority")}
                         </Badge>
                         <Text size="1" color="gray">
@@ -398,17 +407,17 @@ function ProfilesSection() {
                   </Flex>
                   <Flex gap="2" wrap="wrap" align="center">
                     {isCurrent ? (
-                      <Badge color="green" variant="soft">
+                      <Badge color="green" variant="outline">
                         {t("labels.current")}
                       </Badge>
                     ) : (
-                      <Button size="1" variant="soft" disabled={busy} loading={isSwitching} onClick={() => void handleSwitch(row.profileId, row.kind)}>
+                      <Button size="1" variant="outline" disabled={busy} loading={isSwitching} onClick={() => void handleSwitch(row.profileId, row.kind)}>
                         {t("actions.switch")}
                       </Button>
                     )}
                     {isCommunity ? (
                       <Button size="1"
-                        variant="soft"
+                        variant="outline"
                         color="red"
                         disabled={isCurrent || atFloor || busy}
                         title={isCurrent ? t("labels.cannotDeleteCurrent") : atFloor ? t("labels.cannotDeleteLast") : undefined}
@@ -419,7 +428,8 @@ function ProfilesSection() {
                       </Button>
                     ) : null}
                   </Flex>
-                </Flex>
+                  </Flex>
+                </Box>
               );
             })
           ) : (
@@ -489,7 +499,7 @@ function IdentitiesBody() {
         {sections.map((s) => {
           const active = section === s.id;
           return (
-            <Button key={s.id} variant={active ? "soft" : "outline"} color={active ? undefined : "gray"} onClick={() => setSection(s.id)}>
+            <Button key={s.id} variant={active ? "solid" : "outline"} color={active ? undefined : "gray"} onClick={() => setSection(s.id)}>
               {s.label}
             </Button>
           );
