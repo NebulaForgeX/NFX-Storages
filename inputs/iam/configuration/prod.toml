@@ -8,6 +8,7 @@
 
     [server.access_log]
     mode = "logger"
+    format = "pretty"
 
 [postgresql]
     host = "${POSTGRESQL_HOST}"

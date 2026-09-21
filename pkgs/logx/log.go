@@ -19,7 +19,7 @@ var (
 
 type LoggerConfig struct {
 	Level      string `koanf:"level"`     // debug | info | warn | error
-	Format     string `koanf:"format"`    // json | console
+	Format     string `koanf:"format"`    // json | pretty | console
 	Output     string `koanf:"output"`    // stdout | file
 	FilePath   string `koanf:"file_path"` // when output=file
 	MaxSizeMB  int    `koanf:"max_size_mb"`
@@ -31,9 +31,12 @@ type LoggerConfig struct {
 func Init(cfg LoggerConfig, svcName string, env env.Env) error {
 	var err error
 	once.Do(func() {
-		// === base config ===
 		baseCfg := zap.NewProductionEncoderConfig()
-		baseCfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		if cfg.Format == "console" {
+			baseCfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		} else {
+			baseCfg.EncodeLevel = zapcore.CapitalLevelEncoder
+		}
 		baseCfg.EncodeCaller = zapcore.ShortCallerEncoder
 		baseCfg.FunctionKey = zapcore.OmitKey
 
@@ -45,22 +48,18 @@ func Init(cfg LoggerConfig, svcName string, env env.Env) error {
 			)
 		}
 
-		// === info config ===
 		infoCfg := baseCfg
 		infoCfg.CallerKey = ""
 		infoEnc := newEncoder(infoCfg, cfg.Format)
 
-		// === debug config ===
 		debugCfg := baseCfg
 		debugCfg.CallerKey = "caller"
 		debugCfg.EncodeCaller = zapcore.ShortCallerEncoder
 		debugEnc := newEncoder(debugCfg, cfg.Format)
 
-		// === warn config ===
 		warnCfg := debugCfg
 		warnEnc := newEncoder(warnCfg, cfg.Format)
 
-		// === writeSyncer ===
 		var ws zapcore.WriteSyncer
 		if cfg.Output == "file" {
 			lj := &lumberjack.Logger{
@@ -74,6 +73,7 @@ func Init(cfg LoggerConfig, svcName string, env env.Env) error {
 		} else {
 			ws = zapcore.AddSync(os.Stdout)
 		}
+		ws = zapcore.Lock(ws)
 
 		debugLevel := zap.LevelEnablerFunc(func(l zapcore.Level) bool { return l == zapcore.DebugLevel })
 		infoLevel := zap.LevelEnablerFunc(func(l zapcore.Level) bool { return l == zapcore.InfoLevel })
@@ -85,9 +85,6 @@ func Init(cfg LoggerConfig, svcName string, env env.Env) error {
 
 		tee := zapcore.NewTee(coreDebug, coreInfo, coreWarn)
 
-		// TODO: sampling
-		// TODO: Sentry / Loki hooks
-
 		global = zap.New(tee, zap.AddCaller())
 	})
 	return err
@@ -97,11 +94,15 @@ func L() *zap.Logger { return global }
 
 func S() *zap.SugaredLogger { return global.Sugar() }
 
-func Sync() { global.Sync() }
+func Sync() { _ = global.Sync() }
 
 func newEncoder(cfg zapcore.EncoderConfig, format string) zapcore.Encoder {
-	if format == "console" {
+	switch format {
+	case "console":
 		return zapcore.NewConsoleEncoder(cfg)
+	case "pretty", "json_pretty":
+		return newPrettyJSONEncoder(cfg)
+	default:
+		return zapcore.NewJSONEncoder(cfg)
 	}
-	return zapcore.NewJSONEncoder(cfg)
 }
