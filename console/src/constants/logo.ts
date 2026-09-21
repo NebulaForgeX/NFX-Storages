@@ -22,10 +22,16 @@ export const syncDocumentLogo = (appearance: RadixAppearance): void => {
   if (!link) {
     link = document.createElement("link");
     link.rel = "icon";
-    link.type = "image/x-icon";
     document.head.appendChild(link);
   }
 
-  if (link.href.endsWith(href)) return;
+  link.type = "image/x-icon";
+  try {
+    const current = new URL(link.href, document.baseURI).pathname.replace(/\/+$/, "");
+    const next = new URL(href, document.baseURI).pathname.replace(/\/+$/, "");
+    if (current === next) return;
+  } catch {
+    /* fall through and set href */
+  }
   link.href = href;
 };
