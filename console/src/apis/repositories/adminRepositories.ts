@@ -1,5 +1,17 @@
+import { publicClient } from "@/apis/clients";
+import { URL_PATHS } from "@/apis/ip";
 import { createAdminApiClient } from "@/apis/s3";
-import * as systemApi from "@/apis/system.api";
+
+export const adminRepository = {
+  getErrorTranslations: async (lang: string): Promise<Record<string, unknown>> => {
+    const { data } = await publicClient.get<Record<string, unknown>>(URL_PATHS.ADMIN.locales(lang));
+    return data;
+  },
+  getMessageTranslations: async (lang: string): Promise<Record<string, unknown>> => {
+    const { data } = await publicClient.get<Record<string, unknown>>(URL_PATHS.ADMIN.messages(lang));
+    return data;
+  },
+};
 
 export const usersRepository = {
   listUsers: () => createAdminApiClient().get("/list-users"),
@@ -64,10 +76,6 @@ export const systemRepository = {
   getDataUsageInfo: () => createAdminApiClient().get("/datausageinfo"),
   getSystemMetrics: () => createAdminApiClient().get("/metrics"),
   getLicense: () => createAdminApiClient().get("/license"),
-  getErrorTranslations: systemApi.getErrorTranslations,
-  getMessageTranslations: systemApi.getMessageTranslations,
-  getLatestSystemState: systemApi.getLatestSystemState,
-  initializeSystem: systemApi.initializeSystem,
 };
 
 export const eventsTargetRepository = {

@@ -26,8 +26,8 @@ async function onLoadExtraBundles(lng: LanguageEnum) {
   const lang = lng.toString();
   try {
     const [storageErrors, storageMessages] = await Promise.all([
-      storageRepositories.system.getErrorTranslations(lang),
-      storageRepositories.system.getMessageTranslations(lang),
+      storageRepositories.admin.getErrorTranslations(lang),
+      storageRepositories.admin.getMessageTranslations(lang),
     ]);
     const bundles = [];
     if (storageErrors) bundles.push({ namespace: "errors", bundle: storageErrors as Record<string, unknown> });

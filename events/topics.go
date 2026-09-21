@@ -13,8 +13,6 @@ const (
 	TKAdminDLQ  eventbus.TopicKey = "admin_poison"
 	TKNotify    eventbus.TopicKey = "notify"
 	TKNotifyDLQ eventbus.TopicKey = "notify_poison"
-	TKSystem    eventbus.TopicKey = "system"
-	TKSystemDLQ eventbus.TopicKey = "system_poison"
 )
 
 type S3Topic struct{}
@@ -36,7 +34,3 @@ func (AdminTopic) TopicKey() eventbus.TopicKey { return TKAdmin }
 type NotifyTopic struct{}
 
 func (NotifyTopic) TopicKey() eventbus.TopicKey { return TKNotify }
-
-type SystemTopic struct{}
-
-func (SystemTopic) TopicKey() eventbus.TopicKey { return TKSystem }

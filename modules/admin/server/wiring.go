@@ -10,10 +10,7 @@ import (
 	"nfxstorages/engine/store"
 	adminapp "nfxstorages/modules/admin/application/admin"
 	resourceApp "nfxstorages/modules/admin/application/resource"
-	systemapp "nfxstorages/modules/admin/application/system"
 	"nfxstorages/modules/admin/config"
-	systemstateQuery "nfxstorages/modules/admin/infrastructure/query/systemstate"
-	systemstateRepo "nfxstorages/modules/admin/infrastructure/repository/systemstate"
 	iamapp "nfxstorages/modules/iam/application/iam"
 	iaminfra "nfxstorages/modules/iam/infrastructure/iam"
 	objectapp "nfxstorages/modules/object/application/object"
@@ -35,7 +32,6 @@ type Dependencies struct {
 	kafkaConfig         *kafkax.Config
 	busPublisher        *eventbus.BusPublisher
 	otelShutdown        otelx.ShutdownFunc
-	appSvc              *systemapp.Service
 	resourceSvc         *resourceApp.Service
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
@@ -72,13 +68,13 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	provider := servertoken.NewProvider(
 		&servertoken.HMACSigner{Key: []byte(cfg.Token.SecretKey)},
 		cfg.Token.Issuer,
-		"system",
+		"admin",
 	)
 	identityClient, err := authconn.Dial(authconn.GRPCConfig{
 		Addr:           cfg.GRPCClient.AuthAddr,
 		TokenSecretKey: cfg.Token.SecretKey,
 		TokenIssuer:    cfg.Token.Issuer,
-		CallerService:  "system",
+		CallerService:  "admin",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("dial identity auth: %w", err)
@@ -98,7 +94,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier: userTokenVerifier, serverTokenVerifier: serverTokenVerifier, errorsLangsPath: errorsLangsPath,
 		identityAuth: identityClient,
 	}
-	d.appSvc = systemapp.NewService(systemstateRepo.NewRepo(postgres.DB()), systemstateQuery.NewQuery(postgres.DB()))
 	eng, err := store.New(cfg.Storage.Disks(), cfg.Storage.DataShards, cfg.Storage.ParityShards)
 	if err != nil {
 		return nil, fmt.Errorf("init object store: %w", err)
@@ -123,7 +118,6 @@ func (d *Dependencies) Cleanup() {
 	}
 }
 
-func (d *Dependencies) AppSvc() *systemapp.Service           { return d.appSvc }
 func (d *Dependencies) ResourceSvc() *resourceApp.Service    { return d.resourceSvc }
 func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }

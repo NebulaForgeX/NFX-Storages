@@ -52,7 +52,6 @@ export default defineConfig(({ mode, command }) => {
         ? {
             proxy: {
               "/nfx-storages": { target: proxyTarget, changeOrigin: true },
-              "/system": { target: proxyTarget, changeOrigin: true },
               "/auth": { target: identityTarget, changeOrigin: true },
               "/asset": { target: identityTarget, changeOrigin: true },
             },

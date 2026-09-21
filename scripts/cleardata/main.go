@@ -1,4 +1,4 @@
-// Truncate all table data in storages, system — dev only.
+// Truncate all table data in storages — dev only.
 //
 //	go run ./scripts/cleardata
 //	go run ./scripts/cleardata --yes
@@ -21,7 +21,7 @@ import (
 
 const clearEnv = env.Dev
 
-var schemas = []string{"storages", "system"}
+var schemas = []string{"storages"}
 
 func main() {
 	skipConfirm := flag.Bool("yes", false, "Skip the interactive confirmation prompt")
