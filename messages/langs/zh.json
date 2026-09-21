@@ -1,6 +1,30 @@
 {
+  "BUCKET_ENCRYPTION_ENABLED": {
+    "title": "加密已开启",
+    "body": "存储桶加密已开启"
+  },
+  "BUCKET_ENCRYPTION_REMOVED": {
+    "title": "加密已关闭",
+    "body": "存储桶加密已关闭"
+  },
+  "BUCKET_POLICY_SAVED": {
+    "title": "策略已保存",
+    "body": "存储桶策略已保存"
+  },
+  "IAM_EXPORTED": {
+    "title": "IAM 已导出",
+    "body": "IAM 配置已导出"
+  },
+  "IAM_IMPORTED": {
+    "title": "IAM 已导入",
+    "body": "IAM 配置已导入"
+  },
+  "OBJECT_LOCK_ENABLED": {
+    "title": "对象锁定已开启",
+    "body": "对象锁定已开启"
+  },
   "STORAGES_VOLUME_ALERT": {
     "title": "存储卷告警",
-    "body": "某个存储卷状态异常。"
+    "body": "某个存储卷状态异常"
   }
 }

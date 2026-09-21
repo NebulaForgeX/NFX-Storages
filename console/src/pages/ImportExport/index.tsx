@@ -9,6 +9,7 @@ import { PageFrame } from "@/layouts";
 import { useExportIam, useImportIam } from "@/hooks";
 import { exportFile } from "@/utils/export-file";
 import { getStoragesApiErrorMessage } from "@/utils/error-handler";
+import { getCommandMessage } from "@/utils";
 import { showError, showSuccess } from "@/stores/modal";
 
 export default function ImportExportPage() {
@@ -25,7 +26,7 @@ export default function ImportExportPage() {
         { data: blob, headers: { "content-type": "application/zip", filename: encodeURIComponent(`iam-config-export-${timestamp}.zip`) } },
         `iam-config-export-${timestamp}.zip`,
       );
-      showSuccess(t("IAM configuration exported successfully"));
+      showSuccess(getCommandMessage("IAM_EXPORTED", t("IAM configuration exported successfully")));
     } catch (err) {
       showError(getStoragesApiErrorMessage(err, t("Failed to export IAM configuration")));
     }
@@ -35,7 +36,7 @@ export default function ImportExportPage() {
     if (!file) return;
     try {
       await importIam.mutateAsync(file);
-      showSuccess(t("IAM configuration imported successfully"));
+      showSuccess(getCommandMessage("IAM_IMPORTED", t("IAM configuration imported successfully")));
     } catch (err) {
       showError(getStoragesApiErrorMessage(err, t("Failed to import IAM configuration")));
     }

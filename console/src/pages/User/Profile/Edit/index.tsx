@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon, PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
-import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, isEmptyPatch, resolveAccountInitial, safeNullable, safeStringable } from "@/utils";
+import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, resolveAccountInitial, safeNullable, safeStringable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
 
@@ -64,7 +64,7 @@ function AvatarSection() {
     try {
       await confirmUpload.mutateAsync({ id: pendingImageId });
       await confirmAvatar.mutateAsync({ imageId: pendingImageId });
-      systemEventEmitter.showSuccess(t("avatar.success"));
+      systemEventEmitter.showSuccess(getCommandMessage("USER_PROFILE_AVATAR_UPDATED", t("avatar.success")));
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
       setPendingImageId(null);
