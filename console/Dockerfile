@@ -3,10 +3,10 @@
 # This file is the prod image only (ENV=secure / docker-compose.yml).
 FROM node:22-alpine AS deps
 WORKDIR /app
-ARG VITE_API_URL=http://192.168.1.64/nfx-storages
-ARG VITE_IDENTITY_API_URL=http://192.168.1.64/nfx-identity
-ARG VITE_SERVER_HOST=http://192.168.1.64
-ARG VITE_API_BASE_URL=http://192.168.1.64/nfx-storages/admin/v3
+ARG VITE_API_URL=/nfx-storages
+ARG VITE_IDENTITY_API_URL=/nfx-identity
+ARG VITE_SERVER_HOST=
+ARG VITE_API_BASE_URL=/nfx-storages/admin/v3
 ARG VITE_S3_ENDPOINT=http://192.168.1.64:10112
 ARG VITE_BASE=/console/nfx-storages/
 ENV VITE_API_URL=${VITE_API_URL}
