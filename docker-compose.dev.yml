@@ -259,15 +259,38 @@ services:
       traefik.project: "nfx-storages"
       traefik.docker.network: nfx-edge
       traefik.http.services.storages-console.loadbalancer.server.port: "${VITE_PORT}"
+      traefik.http.middlewares.storages-console-root.redirectregex.regex: ^https?://[^/]+/?$$
+      traefik.http.middlewares.storages-console-root.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-storages/
+      traefik.http.middlewares.storages-console-root.redirectregex.permanent: "true"
       traefik.http.routers.storages-console.entrypoints: web
-      traefik.http.routers.storages-console.rule: PathPrefix(`/console/nfx-storages`)
+      traefik.http.routers.storages-console.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-storages`)"
       traefik.http.routers.storages-console.service: storages-console
       traefik.http.routers.storages-console.priority: "25"
       traefik.http.routers.storages-console-secure.entrypoints: websecure
-      traefik.http.routers.storages-console-secure.rule: PathPrefix(`/console/nfx-storages`)
+      traefik.http.routers.storages-console-secure.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-storages`)"
       traefik.http.routers.storages-console-secure.service: storages-console
       traefik.http.routers.storages-console-secure.tls: "true"
       traefik.http.routers.storages-console-secure.priority: "25"
+      traefik.http.routers.storages-console-host.entrypoints: web
+      traefik.http.routers.storages-console-host.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-storages`)
+      traefik.http.routers.storages-console-host.service: storages-console
+      traefik.http.routers.storages-console-host.priority: "200"
+      traefik.http.routers.storages-console-host-secure.entrypoints: websecure
+      traefik.http.routers.storages-console-host-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-storages`)
+      traefik.http.routers.storages-console-host-secure.service: storages-console
+      traefik.http.routers.storages-console-host-secure.tls: "true"
+      traefik.http.routers.storages-console-host-secure.priority: "200"
+      traefik.http.routers.storages-console-root.entrypoints: web
+      traefik.http.routers.storages-console-root.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.storages-console-root.middlewares: storages-console-root
+      traefik.http.routers.storages-console-root.service: storages-console
+      traefik.http.routers.storages-console-root.priority: "210"
+      traefik.http.routers.storages-console-root-secure.entrypoints: websecure
+      traefik.http.routers.storages-console-root-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.storages-console-root-secure.middlewares: storages-console-root
+      traefik.http.routers.storages-console-root-secure.service: storages-console
+      traefik.http.routers.storages-console-root-secure.tls: "true"
+      traefik.http.routers.storages-console-root-secure.priority: "210"
     init: true
     networks:
       - nfx-storages
