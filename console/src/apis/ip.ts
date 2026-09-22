@@ -1,4 +1,4 @@
-const HTTP_BASE_URL = import.meta.env.VITE_API_URL || "";
+const HTTP_BASE_URL = import.meta.env.VITE_API_URL || "/nfx-storages";
 
 export const URL_PATHS = {
   ADMIN: {
