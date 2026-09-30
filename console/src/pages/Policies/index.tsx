@@ -30,9 +30,9 @@ export default function PoliciesPage() {
   const [selected, setSelected] = useState("");
   const [name, setName] = useState("");
   const [content, setContent] = useState("{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": []\n}");
+  const [documentText, setDocumentText] = useState("");
   const [users, setUsers] = useState("");
   const [groups, setGroups] = useState("");
-  const selectedPolicy = data.find((row) => row.name === selected);
   const { data: boundUsers = [] } = usePolicyUsers(selected);
 
   const rows = useMemo(
@@ -45,6 +45,23 @@ export default function PoliciesPage() {
       await createPolicy.mutateAsync({ name, policy: content });
       setName("");
       setCreateOpen(false);
+    } catch (err) {
+      showError(getStoragesApiErrorMessage(err, t("Add Failed")));
+    }
+  };
+
+  const openPolicy = (name: string) => {
+    const row = data.find((item) => item.name === name);
+    setSelected(name);
+    setDocumentText(stringifyPolicy(row?.content));
+    setUsers("");
+    setGroups("");
+  };
+
+  const saveDocument = async () => {
+    if (!selected) return;
+    try {
+      await createPolicy.mutateAsync({ name: selected, policy: documentText });
     } catch (err) {
       showError(getStoragesApiErrorMessage(err, t("Add Failed")));
     }
@@ -76,10 +93,10 @@ export default function PoliciesPage() {
         rows={rows}
         rowKey={(row) => row.name}
         selectedKey={selected}
-        onRowClick={(row) => setSelected(row.name)}
+        onRowClick={(row) => openPolicy(row.name)}
         columns={[{ key: "name", header: t("Name") }]}
         actions={(row) => [
-          { label: t("Assign Policy"), onSelect: () => setSelected(row.name) },
+          { label: t("Assign Policy"), onSelect: () => openPolicy(row.name) },
           {
             label: t("Delete"),
             color: "red",
@@ -134,7 +151,10 @@ export default function PoliciesPage() {
         <Heading size="2">{t("Users")}</Heading>
         <Text size="2">{boundUsers.length ? boundUsers.join(", ") : t("No Data")}</Text>
         <Heading size="2">{t("Access Policy")}</Heading>
-        <TextArea readOnly value={stringifyPolicy(selectedPolicy?.content)} rows={12} />
+        <TextArea value={documentText} onChange={(event) => setDocumentText(event.target.value)} rows={12} />
+        <Button type="button" disabled={!selected || createPolicy.isPending} onClick={() => void saveDocument()}>
+          {t("Save")}
+        </Button>
       </FormDialog>
     </PageFrame>
   );

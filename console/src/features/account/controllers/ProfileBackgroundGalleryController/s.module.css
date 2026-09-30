@@ -115,7 +115,7 @@
 .tileDragging {
   opacity: 0.78;
   z-index: 2;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-4);
 }
 
 .tileFailed {
@@ -147,7 +147,7 @@
   height: 21px;
   padding-inline: 6px;
   border-radius: 999px;
-  color: #fff;
+  color: var(--white-a12);
   background: var(--black-a8);
 }
 
@@ -195,20 +195,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: var(--space-1);
   min-width: 0;
   height: 22px;
   padding-inline: 7px;
   border-radius: 999px;
   overflow: hidden;
-  color: #fff;
+  color: var(--white-a12);
   text-overflow: ellipsis;
   white-space: nowrap;
   background: var(--black-a8);
 }
 
 .statusFailed {
-  background: color-mix(in srgb, var(--red-9) 86%, #000 14%);
+  background: color-mix(in srgb, var(--red-9) 86%, var(--black-a12) 14%);
 }
 
 .spin {

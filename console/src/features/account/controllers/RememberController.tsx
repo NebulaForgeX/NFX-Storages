@@ -1,4 +1,4 @@
-import type { LoginFormData, SignupFormData } from "nfx-ui/schemas";
+import type { SignupFormData } from "nfx-ui/schemas";
 
 import { Checkbox, Flex, Text } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";

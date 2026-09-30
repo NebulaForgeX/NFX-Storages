@@ -62,6 +62,7 @@
     "notifications": "通知",
     "unreadNotifications": "{{count}} 条未读通知",
     "settingsItem": "设置",
+    "product": "存储",
     "helpCenter": "帮助中心",
     "logout": "退出登录",
     "switchProfile": "切换身份",

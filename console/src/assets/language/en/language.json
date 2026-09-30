@@ -62,6 +62,7 @@
     "notifications": "Notifications",
     "unreadNotifications": "{{count}} unread notifications",
     "settingsItem": "Settings",
+    "product": "Storages",
     "helpCenter": "Help Center",
     "logout": "Logout",
     "switchProfile": "Switch identity",

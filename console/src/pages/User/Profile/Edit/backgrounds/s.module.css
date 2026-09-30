@@ -37,7 +37,7 @@
 
 .failedOverlay {
   background: color-mix(in oklab, var(--red-9) 35%, transparent);
-  color: white;
+  color: var(--white-a12);
 }
 
 .hiddenInput {

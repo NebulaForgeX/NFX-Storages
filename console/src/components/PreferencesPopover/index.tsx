@@ -26,6 +26,10 @@ function swatchVar(color: AccentColorEnum | GrayColorEnum): string {
   return color === "auto" ? "var(--gray-9)" : `var(--${color}-9)`;
 }
 
+function swatchContrast(color: AccentColorEnum | GrayColorEnum): string {
+  return color === "auto" ? "var(--gray-contrast)" : `var(--${color}-contrast)`;
+}
+
 const RADIUS_CORNER: Record<RadiusEnum, string> = {
   [RadiusEnum.NONE]: styles.radiusNone,
   [RadiusEnum.SMALL]: styles.radiusSmall,
@@ -74,7 +78,7 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                     style={{ background: swatchVar(c) }}
                     onClick={() => syncPreference({ theme: { accent: AccentColor(c) } })}
                   >
-                    {active ? <CheckIcon color="white" width={11} height={11} /> : null}
+                    {active ? <CheckIcon color={swatchContrast(c)} width={11} height={11} /> : null}
                   </Button>
                 );
               })}
@@ -100,7 +104,7 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                     style={{ background: swatchVar(c) }}
                     onClick={() => syncPreference({ theme: { gray: GrayColor(c) } })}
                   >
-                    {active ? <CheckIcon color="white" width={11} height={11} /> : null}
+                    {active ? <CheckIcon color={swatchContrast(c)} width={11} height={11} /> : null}
                   </Button>
                 );
               })}

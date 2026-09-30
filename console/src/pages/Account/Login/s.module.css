@@ -147,7 +147,7 @@
 .profileRowGrid {
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
 }
 
