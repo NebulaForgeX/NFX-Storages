@@ -11,10 +11,12 @@ import { useTranslation } from "react-i18next";
 import { Menu, Sidebar as ProSidebar } from "react-pro-sidebar";
 import { Link, Outlet, useLocation } from "react-router";
 
+import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
 import { buildImageUrl, resolveAccountDisplayName, safeNullable } from "@/utils";
 
 import { MenuItem, SidebarMenuState, SubMenu } from "./menu";
+import UserTopBar from "../UserTopBar";
 import styles from "./s.module.css";
 
 const SIDEBAR_WIDTH = "234px";
@@ -319,7 +321,16 @@ function Sidebar() {
             <div className={styles.header}>
               <div className={styles.headerHairline}>
                 <div className={styles.headerPy}>
-              <Button type="button" variant="ghost" className={styles.accountCard} aria-label={displayName}>
+              <Button
+                type="button"
+                variant="ghost"
+                className={styles.accountCard}
+                aria-label={displayName}
+                onClick={() => {
+                  closeMobile();
+                  routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW });
+                }}
+              >
                 <Avatar
                   size="3"
                   className={styles.avatar}
@@ -385,6 +396,7 @@ function Sidebar() {
             <AnimatedIcon icon={UnorderedListIcon} size={18} />
           </IconButton>
         ) : null}
+        <UserTopBar />
         <Box flexGrow="1" minWidth="0" minHeight="0" className={styles.contentInner}>
           <Outlet />
         </Box>

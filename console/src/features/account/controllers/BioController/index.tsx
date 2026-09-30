@@ -5,7 +5,7 @@ import { safeStringable } from "nfx-ui/utils";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import styles from "./BioController.module.css";
+import styles from "./s.module.css";
 
 export const BioController = () => {
   const { t } = useTranslation("pages.User.Profile.Edit");

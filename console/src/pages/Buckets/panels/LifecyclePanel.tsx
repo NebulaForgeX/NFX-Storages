@@ -15,19 +15,28 @@ export function LifecyclePanel({ bucket }: { bucket: string }) {
   const [ruleId, setRuleId] = useState("");
   const [prefix, setPrefix] = useState("");
   const [days, setDays] = useState("30");
+  const [noncurrentDays, setNoncurrentDays] = useState("");
+  const [abortDays, setAbortDays] = useState("");
 
   const addRule = async () => {
     if (!bucket) return;
+    const rule = {
+      ID: ruleId || `rule-${Date.now()}`,
+      Status: "Enabled",
+      Filter: { Prefix: prefix },
+      Expiration: { Days: Number(days) || 30 },
+      ...(noncurrentDays ? { NoncurrentVersionExpiration: { NoncurrentDays: Number(noncurrentDays) } } : {}),
+      ...(abortDays ? { AbortIncompleteMultipartUpload: { DaysAfterInitiation: Number(abortDays) } } : {}),
+    };
     try {
       await saveLifecycle.mutateAsync({
         bucket,
-        rules: [
-          ...data,
-          { ID: ruleId || `rule-${Date.now()}`, Status: "Enabled", Filter: { Prefix: prefix }, Expiration: { Days: Number(days) || 30 } },
-        ],
+        rules: [...data, rule],
       });
       setRuleId("");
       setPrefix("");
+      setNoncurrentDays("");
+      setAbortDays("");
       setOpen(false);
     } catch (err) {
       showError(getStoragesApiErrorMessage(err, t("Add Failed")));
@@ -66,6 +75,8 @@ export function LifecyclePanel({ bucket }: { bucket: string }) {
           { key: "Status", header: t("Status") },
           { key: "prefix", header: t("Prefix"), render: (row) => row.Filter?.Prefix ?? "-" },
           { key: "days", header: t("Days"), render: (row) => String(row.Expiration?.Days ?? "-") },
+          { key: "noncurrent", header: t("Noncurrent days"), render: (row) => String(row.NoncurrentVersionExpiration?.NoncurrentDays ?? "-") },
+          { key: "abort", header: t("Abort incomplete days"), render: (row) => String(row.AbortIncompleteMultipartUpload?.DaysAfterInitiation ?? "-") },
         ]}
         actions={(row) => [{ label: t("Delete"), color: "red", onSelect: () => remove(row.ID) }]}
       />
@@ -81,6 +92,8 @@ export function LifecyclePanel({ bucket }: { bucket: string }) {
         <TextField.Root value={ruleId} onChange={(event) => setRuleId(event.target.value)} placeholder={t("Rule ID")} />
         <TextField.Root value={prefix} onChange={(event) => setPrefix(event.target.value)} placeholder={t("Prefix")} />
         <TextField.Root value={days} onChange={(event) => setDays(event.target.value)} placeholder={t("Days")} />
+        <TextField.Root value={noncurrentDays} onChange={(event) => setNoncurrentDays(event.target.value)} placeholder={t("Noncurrent days")} />
+        <TextField.Root value={abortDays} onChange={(event) => setAbortDays(event.target.value)} placeholder={t("Abort incomplete days")} />
         {!bucket ? <Text color="red">{t("Please select bucket")}</Text> : null}
       </FormDialog>
     </>

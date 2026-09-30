@@ -123,6 +123,8 @@ export interface LifecycleRule {
   Status?: string;
   Filter?: { Prefix?: string };
   Expiration?: { Days?: number };
+  NoncurrentVersionExpiration?: { NoncurrentDays?: number };
+  AbortIncompleteMultipartUpload?: { DaysAfterInitiation?: number };
 }
 
 export function useLifecycle(bucket: string) {

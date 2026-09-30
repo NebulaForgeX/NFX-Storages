@@ -136,14 +136,35 @@ export function useTiers() {
   });
 }
 
+export interface S3TierInput {
+  name: string;
+  endpoint: string;
+  bucket: string;
+  prefix: string;
+  region: string;
+  accesskey: string;
+  secretkey: string;
+}
+
+function s3TierPayload(body: S3TierInput) {
+  return {
+    type: "s3",
+    s3: {
+      name: body.name,
+      endpoint: body.endpoint,
+      bucket: body.bucket,
+      prefix: body.prefix,
+      region: body.region || "us-east-1",
+      accesskey: body.accesskey,
+      secretkey: body.secretkey,
+    },
+  };
+}
+
 export function useCreateTier() {
   const repos = useStorageRepositories();
   return useMutation({
-    mutationFn: (body: { name: string; endpoint: string }) =>
-      repos.tiers.addTiers({
-        type: "s3",
-        s3: { name: body.name, endpoint: body.endpoint, bucket: body.name, prefix: "", region: "us-east-1", accesskey: "", secretkey: "" },
-      }),
+    mutationFn: (body: S3TierInput) => repos.tiers.addTiers(s3TierPayload(body)),
     onSuccess: () => invalidateEventEmitter.emit(invalidateEvents.TIERS),
   });
 }
@@ -159,11 +180,7 @@ export function useDeleteTier() {
 export function useUpdateTier() {
   const repos = useStorageRepositories();
   return useMutation({
-    mutationFn: (body: { name: string; endpoint: string }) =>
-      repos.tiers.updateTiers(body.name, {
-        type: "s3",
-        s3: { name: body.name, endpoint: body.endpoint, bucket: body.name, prefix: "", region: "us-east-1", accesskey: "", secretkey: "" },
-      }),
+    mutationFn: (body: S3TierInput) => repos.tiers.updateTiers(body.name, s3TierPayload(body)),
     onSuccess: () => invalidateEventEmitter.emit(invalidateEvents.TIERS),
   });
 }
@@ -174,7 +191,7 @@ export function useEventsTarget() {
     queryKey: STORAGES_QUERY_KEYS.eventsTarget,
     queryFn: async () => {
       const res = (await repos.eventsTarget.getEventsTargetList()) as {
-        notification_endpoints?: Array<{ account_id: string; service: string; status: string }>;
+        notification_endpoints?: Array<{ account_id: string; service: string; status: string; config?: Record<string, string> }>;
       };
       return res.notification_endpoints ?? [];
     },
@@ -264,7 +281,8 @@ export function useUpdateAccessKey() {
 export function useCreateEventTarget() {
   const repos = useStorageRepositories();
   return useMutation({
-    mutationFn: (body: { type: string; name: string }) => repos.eventsTarget.updateEventTarget(body.type, body.name, { name: body.name }),
+    mutationFn: (body: { type: string; name: string; config: Record<string, string> }) =>
+      repos.eventsTarget.updateEventTarget(body.type, body.name, body.config),
     onSuccess: () => invalidateEventEmitter.emit(invalidateEvents.EVENTS_TARGET),
   });
 }

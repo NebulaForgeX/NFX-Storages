@@ -48,6 +48,10 @@ function swatchVar(color: AccentColorEnum | GrayColorEnum): string {
   return color === "auto" ? "var(--gray-9)" : `var(--${color}-9)`;
 }
 
+function swatchContrast(color: AccentColorEnum | GrayColorEnum): string {
+  return color === "auto" ? "var(--gray-contrast)" : `var(--${color}-contrast)`;
+}
+
 function toDraft(pref: ResolvedThemePreference): ResolvedThemePreference {
   return { ...pref };
 }
@@ -131,7 +135,7 @@ export default function ThemeSettings() {
                     className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
+                    {active ? <LucideIcon icon={Check} size={12} color={swatchContrast(c)} /> : null}
                   </Button>
                 );
               })}
@@ -156,7 +160,7 @@ export default function ThemeSettings() {
                     className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
+                    {active ? <LucideIcon icon={Check} size={12} color={swatchContrast(c)} /> : null}
                   </Button>
                 );
               })}

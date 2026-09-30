@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Box } from "@radix-ui/themes";
 import { GuestRoute, ProtectedRoute } from "nfx-ui/navigations";
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import { useAuthStore } from "nfx-ui/stores";
@@ -50,7 +51,11 @@ function S3SessionGate() {
   }, [accessToken, profileId, s3Valid]);
 
   if (!s3Valid) {
-    return <div style={{ padding: 24 }}>{credError || "Issuing S3 credentials…"}</div>;
+    return (
+      <Box px="5">
+        <Box py="5">{credError || "Issuing S3 credentials…"}</Box>
+      </Box>
+    );
   }
 
   return <Outlet />;

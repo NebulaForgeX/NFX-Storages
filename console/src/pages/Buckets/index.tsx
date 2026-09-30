@@ -85,7 +85,8 @@ export default function BucketsPage() {
             <Tabs.Trigger value="replication">{t("Replication")}</Tabs.Trigger>
             <Tabs.Trigger value="events">{t("Events")}</Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content value="overview" style={{ paddingTop: 12 }}>
+          <Tabs.Content value="overview">
+            <Box pt="3">
             <PropertyList
               items={[
                 { label: t("Bucket"), value: bucket },
@@ -95,14 +96,17 @@ export default function BucketsPage() {
                 { label: t("Object Lock"), value: data.objectLockEnabled ? t("Enabled") : t("Disabled") },
               ]}
             />
+            </Box>
           </Tabs.Content>
-          <Tabs.Content value="policy" style={{ paddingTop: 12 }}>
+          <Tabs.Content value="policy">
+            <Box pt="3">
             <Toolbar>
               <Button onClick={() => void run(() => setPolicy.mutateAsync({ bucket, policy }), getCommandMessage("BUCKET_POLICY_SAVED", t("Save")))}>{t("Save")}</Button>
             </Toolbar>
             <TextArea value={policy} onChange={(event) => setPolicyText(event.target.value)} rows={16} style={{ width: "100%" }} />
+            </Box>
           </Tabs.Content>
-          <Tabs.Content value="versioning" style={{ paddingTop: 12 }}>
+          <Tabs.Content value="versioning">
             <Box pt="3">
             <Flex direction="column" gap="3">
               <Flex align="center" gap="3">
@@ -138,7 +142,7 @@ export default function BucketsPage() {
             </Flex>
             </Box>
           </Tabs.Content>
-          <Tabs.Content value="encryption" style={{ paddingTop: 12 }}>
+          <Tabs.Content value="encryption">
             <Box pt="3">
             <Flex gap="2" align="center">
               <Text>{t("Algorithm")}: {data.encryptionAlgorithm || t("Disabled")}</Text>
@@ -165,7 +169,8 @@ export default function BucketsPage() {
             </Flex>
             </Box>
           </Tabs.Content>
-          <Tabs.Content value="tags" style={{ paddingTop: 12 }}>
+          <Tabs.Content value="tags">
+            <Box pt="3">
             <Toolbar>
               <TextField.Root value={tagKey} onChange={(event) => setTagKey(event.target.value)} placeholder={t("Name")} />
               <TextField.Root value={tagValue} onChange={(event) => setTagValue(event.target.value)} placeholder={t("Value")} />
@@ -199,15 +204,22 @@ export default function BucketsPage() {
                 },
               ]}
             />
+            </Box>
           </Tabs.Content>
-          <Tabs.Content value="lifecycle" style={{ paddingTop: 12 }}>
-            <LifecyclePanel bucket={bucket} />
+          <Tabs.Content value="lifecycle">
+            <Box pt="3">
+              <LifecyclePanel bucket={bucket} />
+            </Box>
           </Tabs.Content>
-          <Tabs.Content value="replication" style={{ paddingTop: 12 }}>
-            <ReplicationPanel bucket={bucket} />
+          <Tabs.Content value="replication">
+            <Box pt="3">
+              <ReplicationPanel bucket={bucket} />
+            </Box>
           </Tabs.Content>
-          <Tabs.Content value="events" style={{ paddingTop: 12 }}>
-            <EventsPanel bucket={bucket} />
+          <Tabs.Content value="events">
+            <Box pt="3">
+              <EventsPanel bucket={bucket} />
+            </Box>
           </Tabs.Content>
         </Tabs.Root>
       ) : null}

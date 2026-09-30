@@ -493,7 +493,11 @@ func (s *Service) NotificationEndpoints() map[string]any {
 	rows := s.ListTargets()
 	eps := make([]map[string]any, 0, len(rows))
 	for _, r := range rows {
-		eps = append(eps, map[string]any{"account_id": r.Name, "service": r.Type, "status": "online"})
+		var cfg any
+		if json.Unmarshal([]byte(r.Config), &cfg) != nil || cfg == nil {
+			cfg = map[string]any{}
+		}
+		eps = append(eps, map[string]any{"account_id": r.Name, "service": r.Type, "status": "online", "config": cfg})
 	}
 	return map[string]any{"notification_endpoints": eps}
 }
