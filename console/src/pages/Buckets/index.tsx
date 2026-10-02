@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
-import { Box, Button, Flex, Select, Switch, Tabs, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Section, Button, Flex, Select, Switch, Tabs, Text, TextArea, TextField } from "@radix-ui/themes";
 import { DataTable, EmptyState, PageHeader, PropertyList, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 import {
@@ -86,7 +86,7 @@ export default function BucketsPage() {
             <Tabs.Trigger value="events">{t("Events")}</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="overview">
-            <Box pt="3">
+            <Section pt="3">
             <PropertyList
               items={[
                 { label: t("Bucket"), value: bucket },
@@ -96,18 +96,18 @@ export default function BucketsPage() {
                 { label: t("Object Lock"), value: data.objectLockEnabled ? t("Enabled") : t("Disabled") },
               ]}
             />
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="policy">
-            <Box pt="3">
+            <Section pt="3">
             <Toolbar>
               <Button onClick={() => void run(() => setPolicy.mutateAsync({ bucket, policy }), getCommandMessage("BUCKET_POLICY_SAVED", t("Save")))}>{t("Save")}</Button>
             </Toolbar>
             <TextArea value={policy} onChange={(event) => setPolicyText(event.target.value)} rows={16} style={{ width: "100%" }} />
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="versioning">
-            <Box pt="3">
+            <Section pt="3">
             <Flex direction="column" gap="3">
               <Flex align="center" gap="3">
                 <Text>{t("Versioning")}</Text>
@@ -140,10 +140,10 @@ export default function BucketsPage() {
                 </Button>
               </Flex>
             </Flex>
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="encryption">
-            <Box pt="3">
+            <Section pt="3">
             <Flex gap="2" align="center">
               <Text>{t("Algorithm")}: {data.encryptionAlgorithm || t("Disabled")}</Text>
               <Button onClick={() => void run(() => setEncryption.mutateAsync(bucket), getCommandMessage("BUCKET_ENCRYPTION_ENABLED", t("Enabled")))}>{t("Enabled")}</Button>
@@ -167,10 +167,10 @@ export default function BucketsPage() {
                 </Button>
               ) : null}
             </Flex>
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="tags">
-            <Box pt="3">
+            <Section pt="3">
             <Toolbar>
               <TextField.Root value={tagKey} onChange={(event) => setTagKey(event.target.value)} placeholder={t("Name")} />
               <TextField.Root value={tagValue} onChange={(event) => setTagValue(event.target.value)} placeholder={t("Value")} />
@@ -204,22 +204,22 @@ export default function BucketsPage() {
                 },
               ]}
             />
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="lifecycle">
-            <Box pt="3">
+            <Section pt="3">
               <LifecyclePanel bucket={bucket} />
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="replication">
-            <Box pt="3">
+            <Section pt="3">
               <ReplicationPanel bucket={bucket} />
-            </Box>
+            </Section>
           </Tabs.Content>
           <Tabs.Content value="events">
-            <Box pt="3">
+            <Section pt="3">
               <EventsPanel bucket={bucket} />
-            </Box>
+            </Section>
           </Tabs.Content>
         </Tabs.Root>
       ) : null}

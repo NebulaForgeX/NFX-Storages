@@ -1,0 +1,63 @@
+.logo {
+  padding: 0;
+  background: transparent;
+}
+
+.mark {
+  display: block;
+  overflow: hidden;
+}
+
+.mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plain {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-chip);
+  box-shadow: var(--shadow-4);
+}
+
+.glassSquare {
+  width: 54px;
+  height: 54px;
+  border: 1px solid var(--white-a6);
+  border-radius: var(--radius-icon);
+  background: var(--white-a4);
+  box-shadow: var(--shadow-5);
+}
+
+.glassCircle {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--white-a8);
+  border-radius: var(--radius-full);
+  background: var(--white-a4);
+  box-shadow: var(--shadow-5);
+}
+
+.small.plain,
+.small.glassSquare,
+.small.glassCircle {
+  width: 36px;
+  height: 36px;
+}
+
+.large.plain {
+  width: calc(40px + var(--space-3));
+  height: calc(40px + var(--space-3));
+}
+
+.large.glassSquare {
+  width: 64px;
+  height: 64px;
+}
+
+.large.glassCircle {
+  width: 56px;
+  height: 56px;
+}

@@ -1,7 +1,7 @@
 import { PenIcon } from "nfx-ui/icons";
 import { Upload } from "lucide-react";
 import { useRef, useState } from "react";
-import { Avatar, Box, Button, Card, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Box, Section, Avatar, Button, Card, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useConfirmImageUpload, useConfirmProfileAvatar, useCurrentProfile, useDeleteImage, usePatchProfile, usePrepareImageUpload } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
@@ -82,11 +82,11 @@ function AvatarSection() {
           <Text size="2" weight="bold">
             {t("avatar.title")}
           </Text>
-          <Text size="1" color="gray" mt="1">
+          <Section mt="1"><Text size="1" color="gray">
             {t("avatar.hint")}
-          </Text>
+          </Text></Section>
         </Box>
-        <Box py="2">
+        <Section py="2">
           <Flex align="center" justify="between" gap="3">
             <Flex align="center" gap="3" minWidth="0" flexGrow="1">
               <Avatar size="5" radius="full" src={src} fallback={initial} />
@@ -104,7 +104,7 @@ function AvatarSection() {
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
         <input
           ref={fileRef}
           type="file"
@@ -141,9 +141,9 @@ export default function ProfileEditPage() {
               <Text size="2" weight="bold">
                 {t("sections.basics.title")}
               </Text>
-              <Text size="1" color="gray" mt="1">
+              <Section mt="1"><Text size="1" color="gray">
                 {t("sections.basics.description")}
-              </Text>
+              </Text></Section>
             </Box>
             <Flex direction="column" gap="2">
               <Text size="1" weight="medium" color="gray">
@@ -169,7 +169,7 @@ export default function ProfileEditPage() {
               </Text>
               <TextField.Root size="2" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("labels.website")} />
             </Flex>
-            <Box py="2">
+            <Section py="2">
               <Flex align="center" justify="end" gap="3">
               <Button size="2"
                 loading={patch.isPending}
@@ -189,7 +189,7 @@ export default function ProfileEditPage() {
                 {t("actions.saveChanges")}
               </Button>
             </Flex>
-            </Box>
+            </Section>
           </Flex>
         </Card>
     </PageFrame>

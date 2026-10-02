@@ -74,11 +74,12 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                     color="gray"
                     aria-label={c}
                     aria-pressed={active}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
-                    style={{ background: swatchVar(c) }}
+                    className={`${styles.swatchHit} ${active ? styles.swatchActive : ""}`}
                     onClick={() => syncPreference({ theme: { accent: AccentColor(c) } })}
                   >
-                    {active ? <CheckIcon color={swatchContrast(c)} width={11} height={11} /> : null}
+                    <Flex align="center" justify="center" className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge}`} style={{ background: swatchVar(c) }}>
+                      {active ? <CheckIcon color={swatchContrast(c)} width={11} height={11} /> : null}
+                    </Flex>
                   </Button>
                 );
               })}
@@ -100,11 +101,12 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                     color="gray"
                     aria-label={c}
                     aria-pressed={active}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
-                    style={{ background: swatchVar(c) }}
+                    className={`${styles.swatchHit} ${active ? styles.swatchActive : ""}`}
                     onClick={() => syncPreference({ theme: { gray: GrayColor(c) } })}
                   >
-                    {active ? <CheckIcon color={swatchContrast(c)} width={11} height={11} /> : null}
+                    <Flex align="center" justify="center" className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge}`} style={{ background: swatchVar(c) }}>
+                      {active ? <CheckIcon color={swatchContrast(c)} width={11} height={11} /> : null}
+                    </Flex>
                   </Button>
                 );
               })}
@@ -142,9 +144,7 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                 return (
                   <RadioCards.Item key={v} value={v} aria-label={platform}>
                     <Flex direction="column" align="center" gap="1" width="100%">
-                      <Box asChild className={`${styles.radiusCorner} ${RADIUS_CORNER[v]}`}>
-                        <span />
-                      </Box>
+                      <Box className={`${styles.cornerSize} ${RADIUS_CORNER[v]} ${styles.cornerEdge} ${styles.cornerFill}`} />
                       <Text as="span" size="1" weight="bold" align="center">
                         {platform}
                       </Text>

@@ -2,7 +2,7 @@ import { Check, RefreshCw, Save } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { useEffect, useState } from "react";
-import { Badge, Box, Button, Card, Flex, Grid, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
+import { Box, Container, Badge, Button, Card, Flex, Grid, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { AccentColorEnum, AppearanceEnum, GrayColorEnum, LanguageEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
 import { useBaseLabel, useSyncPreference } from "nfx-ui/hooks";
@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon } from "@/components";
 
-import styles from "../s.module.css";
+import styles from "./s.module.css";
 
 const FONT_LABEL_KEY: Record<ThemeFontFamilyEnum, string> = {
   [ThemeFontFamilyEnum.SYSTEM]: "labels.fontSystem",
@@ -132,10 +132,13 @@ export default function ThemeSettings() {
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ accent: c })}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
-                    style={{ background: swatchVar(c) }}
+                    className={`${styles.swatchHit} ${active ? styles.swatchActive : ""}`}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color={swatchContrast(c)} /> : null}
+                    <Box className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge}`} style={{ background: swatchVar(c) }}>
+                      <Flex align="center" justify="center" width="100%" height="100%">
+                        {active ? <LucideIcon icon={Check} size={12} color={swatchContrast(c)} /> : null}
+                      </Flex>
+                    </Box>
                   </Button>
                 );
               })}
@@ -157,10 +160,13 @@ export default function ThemeSettings() {
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ gray: c })}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
-                    style={{ background: swatchVar(c) }}
+                    className={`${styles.swatchHit} ${active ? styles.swatchActive : ""}`}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color={swatchContrast(c)} /> : null}
+                    <Box className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge}`} style={{ background: swatchVar(c) }}>
+                      <Flex align="center" justify="center" width="100%" height="100%">
+                        {active ? <LucideIcon icon={Check} size={12} color={swatchContrast(c)} /> : null}
+                      </Flex>
+                    </Box>
                   </Button>
                 );
               })}
@@ -281,9 +287,9 @@ export default function ThemeSettings() {
       <Card size="2">
         <Flex align="center" justify="end" gap="2" wrap="wrap">
           {dirty ? (
-            <Text size="1" color="gray" mr="auto">
+            <Container mr="auto"><Text size="1" color="gray">
               {t("labels.unsavedChanges")}
-            </Text>
+            </Text></Container>
           ) : null}
           <Button type="button" variant="outline" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
             <LucideIcon icon={RefreshCw} size={14} />

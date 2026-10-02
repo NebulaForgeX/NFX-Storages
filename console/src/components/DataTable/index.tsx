@@ -3,8 +3,11 @@ import type { AnimatedIconComponent } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { DropdownMenu, IconButton, Table } from "@radix-ui/themes";
-import EmptyState from "./EmptyState";
+import { Box, DropdownMenu, IconButton, Table } from "@radix-ui/themes";
+
+import EmptyState from "../EmptyState";
+
+import styles from "./s.module.css";
 
 export interface Column<T> {
   key: string;
@@ -49,6 +52,7 @@ export function DataTable<T>({
     return <EmptyState icon={emptyIcon ?? StackIcon} title={empty ?? "No data"} />;
   }
   return (
+    <Box overflow="hidden" style={{ borderRadius: "var(--radius-3)", background: "var(--color-panel-solid)", boxShadow: "var(--shadow-2)" }}>
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
@@ -68,10 +72,7 @@ export function DataTable<T>({
             <Table.Row
               key={key}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
-              style={{
-                cursor: onRowClick ? "pointer" : undefined,
-                background: selectedKey === key ? "var(--accent-a3)" : undefined,
-              }}
+              className={[onRowClick ? styles.rowHit : "", selectedKey === key ? styles.rowSelected : ""].filter(Boolean).join(" ") || undefined}
             >
               {columns.map((column) => (
                 <Table.Cell key={column.key}>
@@ -107,5 +108,6 @@ export function DataTable<T>({
         })}
       </Table.Body>
     </Table.Root>
+    </Box>
   );
 }

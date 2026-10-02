@@ -1,0 +1,88 @@
+.controlFit {
+  width: max-content;
+  max-width: 100%;
+}.controlFit :global(.rt-SegmentedControlRoot) {
+  width: max-content;
+  max-width: 100%;
+}.swatchHit {
+  padding-inline: 0;
+}.swatchHitY {
+  padding-block: 0;
+}.swatch {
+  width: 22px;
+  height: 22px;
+}.swatchRadius {
+  border-radius: var(--radius-chip);
+}.swatchEdge {
+  border: 1px solid var(--gray-a6);
+}.swatchActive {
+  outline: 2px solid var(--gray-12);
+  outline-offset: 2px;
+}.previewTheme {
+  width: 100%;
+}.positionPreview {
+  position: relative;
+  width: 56px;
+  height: 40px;
+}.positionRadius {
+  border-radius: var(--radius-chip);
+}.positionEdge {
+  border: 1px solid var(--gray-a5);
+}.positionFill {
+  background: var(--gray-3);
+}.positionDotSize {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+}.positionDotRadius {
+  border-radius: var(--radius-full);
+}.positionDotFill {
+  background: var(--accent-9);
+}.preview_bottom_right .positionDotSize {
+  right: 6px;
+  bottom: 6px;
+}.preview_bottom_left .positionDotSize {
+  left: 6px;
+  bottom: 6px;
+}.preview_top_right .positionDotSize {
+  right: 6px;
+  top: 6px;
+}.preview_top_left .positionDotSize {
+  left: 6px;
+  top: 6px;
+}.colorRowRule {
+  border-bottom: 1px solid var(--gray-a3);
+}.colorRowRule:last-child {
+  border-bottom: none;
+}.colorRowSize {
+  width: 100%;
+}.colorInputSize {
+  width: 36px;
+  height: 28px;
+}.colorInputPadX {
+  padding-inline: 0;
+}.colorInputPadY {
+  padding-block: 0;
+}.colorInputEdge {
+  border: 1px solid var(--gray-a5);
+}.colorInputRadius {
+  border-radius: var(--radius-chip);
+}.colorInputFill {
+  background: transparent;
+}.colorInputHit {
+  cursor: pointer;
+}
+
+.swatchRadius > *,
+.swatchEdge > *,
+.positionRadius > *,
+.positionEdge > *,
+.positionFill > *,
+.positionDotRadius > *,
+.positionDotFill > *,
+.swatch > *,
+.positionPreview > *,
+.positionDotSize > *,
+.colorInputSize > * {
+  height: 100%;
+}

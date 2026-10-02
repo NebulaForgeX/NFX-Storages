@@ -1,6 +1,6 @@
 import type { FormEvent, ReactNode } from "react";
 
-import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
+import { Section, Button, Dialog, Flex } from "@radix-ui/themes";
 
 export interface FormDialogProps {
   open: boolean;
@@ -44,7 +44,7 @@ export function FormDialog({
             {children}
           </Flex>
           {footer ?? (
-            <Box pt="4">
+            <Section pt="4">
             <Flex gap="2" justify="end">
               <Dialog.Close>
                 <Button type="button" variant="outline" disabled={submitting}>
@@ -57,7 +57,7 @@ export function FormDialog({
                 </Button>
               ) : null}
             </Flex>
-            </Box>
+            </Section>
           )}
         </form>
       </Dialog.Content>

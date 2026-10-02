@@ -7,7 +7,7 @@ import { getLogoSrc } from "@/constants";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
 
-import styles from "./styles.module.css";
+import styles from "./s.module.css";
 
 export interface LogoProps {
   to?: string;
@@ -22,42 +22,45 @@ export interface LogoProps {
 
 function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, variant = "plain", size = "medium", className = "", onClick }: LogoProps) {
   const appearance = useResolvedAppearance();
-  const logoClasses = [styles.logo, styles[variant], styles[size], className].filter(Boolean).join(" ");
+  const markClass = [
+    styles.mark,
+    styles[variant],
+    size === "small" ? styles.small : size === "large" ? styles.large : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <Flex asChild align="center" gap="3" width="fit-content">
-      <Button
-        type="button"
-        variant="ghost"
-        className={logoClasses}
-        aria-label={typeof title === "string" ? title : APP_NAME}
-        onClick={() => {
-          routerEventEmitter.navigate({ to });
-          onClick?.();
-        }}
-      >
-        <Box asChild className={styles.mark}>
-          <span>
-            <img src={getLogoSrc(appearance)} alt={alt} />
-          </span>
+    <Button
+      type="button"
+      variant="ghost"
+      className={[styles.logo, className].filter(Boolean).join(" ")}
+      aria-label={typeof title === "string" ? title : APP_NAME}
+      onClick={() => {
+        routerEventEmitter.navigate({ to });
+        onClick?.();
+      }}
+    >
+      <Flex align="center" gap="3" width="fit-content">
+        <Box className={markClass}>
+          <img src={getLogoSrc(appearance)} alt={alt} />
         </Box>
-
         {(title || subtitle) && (
-          <Flex direction="column" gap="1" minWidth="0" overflow="hidden">
-            {title && (
+          <Flex direction="column" gap="1" minWidth="0">
+            {title ? (
               <Text as="span" size="3" weight="bold" truncate color="gray" highContrast>
                 {title}
               </Text>
-            )}
-            {subtitle && (
+            ) : null}
+            {subtitle ? (
               <Text as="span" size="1" weight="medium" truncate color="gray">
                 {subtitle}
               </Text>
-            )}
+            ) : null}
           </Flex>
         )}
-      </Button>
-    </Flex>
+      </Flex>
+    </Button>
   );
 }
 

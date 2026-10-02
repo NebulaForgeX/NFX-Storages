@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
+import { Section, Container, Box, Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
@@ -37,10 +37,11 @@ export default function ConfigPage() {
   };
 
   return (
+    <Box className={`${styles.pageFill} ${styles.pageInk}`}>
     <AuthMotionRoot className={styles.page}>
-      <Box className={styles.bar}>
-        <Box className={styles.barPx}>
-          <Box className={styles.barPy}>
+      <Box className={`${styles.barRule} ${styles.barFill}`}>
+        <Container className={styles.barPx}>
+          <Section className={styles.barPy}>
             <Flex asChild align="center" justify="between" gap="4">
               <header>
                 <span className={styles.mount} data-auth-motion>
@@ -49,12 +50,13 @@ export default function ConfigPage() {
                 <PreferencesPopover />
               </header>
             </Flex>
-          </Box>
-        </Box>
+          </Section>
+        </Container>
       </Box>
-      <Box className={styles.body}>
-        <Box className={styles.bodyPx}>
-          <Box className={styles.bodyPy}>
+      <Flex className={styles.body}>
+        <Box className={styles.bodyWide}>
+        <Container className={styles.bodyPx}>
+          <Section className={styles.bodyPy}>
             <Flex direction="column" gap="4" className={styles.endpoint} data-auth-motion>
           <Heading as="h1" size="5">
             {t("Server Configuration")}
@@ -95,9 +97,11 @@ export default function ConfigPage() {
               </Button>
             </Flex>
             </Flex>
-          </Box>
+          </Section>
+        </Container>
         </Box>
-      </Box>
+      </Flex>
     </AuthMotionRoot>
+    </Box>
   );
 }

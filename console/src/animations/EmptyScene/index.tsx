@@ -1,10 +1,11 @@
 import { useRef } from "react";
+import { Grid, Section } from "@radix-ui/themes";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 import { EmptySceneVariantEnum } from "@/enums";
 
-import campfireStyles from "./campfire.module.css";
+import { CampfireArt } from "./Campfire";
 import styles from "./s.module.css";
 
 gsap.registerPlugin(useGSAP);
@@ -17,32 +18,6 @@ export type EmptySceneProps = {
 function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function CampfireArt() {
-  return (
-    <div className={campfireStyles.campfire}>
-      <div className={campfireStyles.fireContainer}>
-        <div className={`${campfireStyles.flame} ${campfireStyles.flameMain}`} />
-        <div className={`${campfireStyles.flame} ${campfireStyles.flameLeft}`} />
-        <div className={`${campfireStyles.flame} ${campfireStyles.flameRight}`} />
-      </div>
-      <div className={campfireStyles.logs}>
-        <div className={campfireStyles.logsPx}>
-          <div className={campfireStyles.logsRow}>
-            <div className={campfireStyles.log} />
-            <div className={campfireStyles.log} />
-          </div>
-        </div>
-      </div>
-      <div className={campfireStyles.embers}>
-        <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0 }} />
-        <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0.3 }} />
-        <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0.6 }} />
-      </div>
-      <div className={campfireStyles.sparkles} />
-    </div>
-  );
 }
 
 function AbstractArt() {
@@ -93,9 +68,9 @@ export function EmptyScene({ variant = EmptySceneVariantEnum.ABSTRACT, className
   );
 
   return (
-    <div ref={rootRef} className={[styles.scene, isCampfire ? styles.campfireScene : "", className].filter(Boolean).join(" ")} aria-hidden>
+    <Section ref={rootRef} className={[styles.scene, isCampfire ? styles.campfireScene : "", className].filter(Boolean).join(" ")} aria-hidden>
       {!isCampfire ? <div className={styles.glow} /> : null}
-      <div className={styles.stage}>{isCampfire ? <CampfireArt /> : <AbstractArt />}</div>
-    </div>
+      <Grid className={styles.stage}>{isCampfire ? <CampfireArt /> : <AbstractArt />}</Grid>
+    </Section>
   );
 }

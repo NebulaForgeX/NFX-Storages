@@ -1,171 +1,116 @@
-.page {
+.pageStack {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background: var(--color-bg);
+}.pageFill {
+  background: var(--color-background);
+}.pageInk {
   color: var(--gray-12);
-}
-
-.topbar {
+}.topbarRule {
   border-bottom: 1px solid var(--gray-a5);
-}
-
-.topbarPx {
-  padding-inline: 24px;
-}
-
-.topbarPy {
-  padding-block: 16px;
-}
-
-.path {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}.topbarPx {
+  padding-inline: var(--space-5);
+}.topbarPy {
+  padding-block: var(--space-4);
+}.path {
+  font-family: var(--default-font-family);
   font-size: 13px;
-  color: var(--color-primary);
+  color: var(--accent-9);
   letter-spacing: 0.02em;
-}
-
-.body {
+}.body {
   flex: 1;
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr) 220px;
   min-height: 0;
-}
-
-.steps {
+}.steps {
   border-right: 1px solid var(--gray-a5);
-}
-
-.stepsPx {
-  padding-inline: 24px 0;
-}
-
-.stepsPy {
-  padding-block: 28px;
-}
-
-.step {
+}.stepsPx {
+  padding-inline: var(--space-5) 0;
+}.stepsPy {
+  padding-block: var(--space-6);
+}.step {
   color: var(--gray-11);
-}
-
-.stepCurrent {
+}.stepCurrentInk {
   color: var(--gray-12);
-  border-right: 2px solid var(--color-primary);
-}
-
-.stepPx {
-  padding-inline: 0 16px;
-}
-
-.stepPy {
-  padding-block: 14px;
-}
-
-.stepGrid {
+}.stepCurrentEdge {
+  border-right: 2px solid var(--accent-9);
+}.stepPx {
+  padding-inline: 0 var(--space-4);
+}.stepPy {
+  padding-block: var(--space-3);
+}.stepGrid {
   display: grid;
   grid-template-columns: 28px 1fr;
   gap: var(--space-3);
   align-items: start;
-}
-
-.index {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}.index {
+  font-family: var(--default-font-family);
   font-size: 12px;
-  color: var(--color-primary);
-}
-
-.formPane {
+  color: var(--accent-9);
+}.formPane {
   max-width: 560px;
-}
-
-.formPanePx {
-  padding-inline: 48px;
-}
-
-.formPanePy {
-  padding-block: 40px;
-}
-
-.kicker {
+}.formPanePx {
+  padding-inline: var(--space-8);
+}.formPanePy {
+  padding-block: var(--space-7);
+}.kicker {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--color-primary);
-}
-
-.bucket {
+  color: var(--accent-9);
+}.bucketEdge {
   border-left: 1px dashed var(--gray-a6);
-  background: var(--color-bg-2);
-}
-
-.bucketPx {
-  padding-inline: 24px;
-  height: 100%;
-}
-
-.bucketPy {
-  padding-block: 24px;
-  height: 100%;
-}
-
-.bucketGlyph {
+}.bucketFill {
+  background: var(--color-panel-solid);
+}.bucketPx {
+  padding-inline: var(--space-5);
+}.bucketPy {
+  padding-block: var(--space-5);
+}.bucketGlyphSize {
   width: 88px;
   height: 72px;
-  border: 2px solid var(--color-primary);
-  border-top-width: 10px;
   position: relative;
-}
-
-.bucketGlyph::after {
+}.bucketGlyphEdge {
+  border: 2px solid var(--accent-9);
+  border-top-width: 10px;
+}.bucketGlyphEdge::after {
   content: "";
   position: absolute;
   inset: 14px 10px 10px;
   border: 1px dashed var(--gray-a7);
-}
-
-@media (max-width: 960px) {
+}@media (max-width: 960px) {
   .body {
     grid-template-columns: 1fr;
-  }
-
-  .steps {
+  }.steps {
     border-right: 0;
     border-bottom: 1px solid var(--gray-a5);
-  }
-
-  .stepsPx {
-    padding-inline: 16px;
-  }
-
-  .stepsPy {
-    padding-block: 12px;
-  }
-
-  .step {
+  }.stepsPx {
+    padding-inline: var(--space-4);
+  }.stepsPy {
+    padding-block: var(--space-3);
+  }.step {
     flex: 1;
-  }
-
-  .stepPx {
-    padding-inline: 8px;
-  }
-
-  .stepPy {
-    padding-block: 8px;
-  }
-
-  .stepCurrent {
+  }.stepPx {
+    padding-inline: var(--space-2);
+  }.stepPy {
+    padding-block: var(--space-2);
+  }.stepCurrentEdge {
     border-right: 0;
-    border-bottom: 2px solid var(--color-primary);
-  }
-
-  .bucket {
+    border-bottom: 2px solid var(--accent-9);
+  }.bucketEdge {
     display: none;
-  }
+  }.formPanePx {
+    padding-inline: var(--space-5);
+  }.formPanePy {
+    padding-block: var(--space-5);
+  }}
 
-  .formPanePx {
-    padding-inline: 24px;
-  }
-
-  .formPanePy {
-    padding-block: 24px;
-  }
+.bucketEdge > *,
+.bucketFill > *,
+.bucketPx > *,
+.bucketPy > *,
+.bucketGlyphEdge > *,
+.pageStack > *,
+.body > *,
+.bucketGlyphSize > * {
+  height: 100%;
 }

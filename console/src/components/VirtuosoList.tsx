@@ -5,7 +5,7 @@
 import type { CSSProperties, ReactNode, RefObject } from "react";
 
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { Box, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { safeStringable } from "nfx-ui/utils";
 import { Virtuoso } from "react-virtuoso";
 
@@ -58,12 +58,7 @@ function resolveGapToken(gap: string | undefined, fallback: string): string {
   return gap;
 }
 
-const listInsetTopStyle: CSSProperties = { height: DEFAULT_ROW_GAP, flexShrink: 0, pointerEvents: "none" };
-const footerEndLabelStyle: CSSProperties = {
-  padding: "var(--space-2) var(--space-3)",
-  backgroundColor: "var(--color-panel-solid)",
-  borderRadius: "var(--radius-3)",
-};
+const listInsetTopStyle: CSSProperties = { height: DEFAULT_ROW_GAP, pointerEvents: "none" };
 const itemChildStyle: CSSProperties = { minWidth: 0 };
 
 function resolveHeight(height: string | number | undefined): string | number {
@@ -162,12 +157,10 @@ function VirtuosoListComponent<T>({
 
   const rowStyle = useMemo(
     (): CSSProperties => ({
-      display: "grid",
       gap: effectiveColumnGap,
       width: "100%",
-      marginBottom: effectiveRowGap,
     }),
-    [effectiveColumnGap, effectiveRowGap],
+    [effectiveColumnGap],
   );
 
   const itemGapStyle = useMemo((): CSSProperties => ({ marginBottom: effectiveRowGap }), [effectiveRowGap]);
@@ -182,57 +175,63 @@ function VirtuosoListComponent<T>({
     if (hasNextPage) {
       if (loadingIndicator) return <>{loadingIndicator}</>;
       return (
-        <Box py="8">
+        <Section py="8">
           <Flex align="center" justify="center">
             <Text size="2" color="gray">
               {isFetchingNextPage ? loadingMoreText : ""}
             </Text>
           </Flex>
-        </Box>
+        </Section>
       );
     }
     if (dataLength === 0) return null;
     if (endOfListIndicator) return <>{endOfListIndicator}</>;
     return (
       <Box style={{ borderTop: "1px solid var(--gray-a7)" }}>
-        <Box mt="3" py="8">
+        <Section mt="3" py="8">
           <Flex align="center" justify="center">
-            <Text as="span" size="2" color="gray" style={footerEndLabelStyle}>
-              {endOfListText}
-            </Text>
+            <Section py="2" style={{ backgroundColor: "var(--color-panel-solid)", borderRadius: "var(--radius-3)" }}>
+              <Container px="3">
+                <Text as="span" size="2" color="gray">
+                  {endOfListText}
+                </Text>
+              </Container>
+            </Section>
           </Flex>
-        </Box>
+        </Section>
       </Box>
     );
   }, [dataLength, endOfListIndicator, endOfListText, hasNextPage, isFetchingNextPage, loadingIndicator, loadingMoreText]);
 
-  const Header = useCallback(() => <div style={listInsetTopStyle} aria-hidden />, []);
+  const Header = useCallback(() => <Box style={listInsetTopStyle} aria-hidden />, []);
 
   const renderVirtualRow = useCallback(
     (rowIndex: number, row: RowChunk<T>) => {
       if (columnCount <= 1) {
         const item = row.items[0]!;
         return (
-          <div className={safeStringable(itemClassName)} style={itemGapStyle}>
+          <Section className={safeStringable(itemClassName)} style={itemGapStyle}>
             {renderItem(item, rowIndex)}
-          </div>
+          </Section>
         );
       }
 
       return (
-        <div className={safeStringable(rowClassName)} style={{ ...rowStyle, gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
+        <Section style={{ marginBottom: effectiveRowGap }}>
+        <Grid className={safeStringable(rowClassName)} style={{ ...rowStyle, gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
           {row.items.map((item, colIndex) => {
             const itemIndex = rowIndex * columnCount + colIndex;
             return (
-              <div key={getItemKey(item, itemIndex)} className={itemClassName} style={itemChildStyle}>
+              <Box key={getItemKey(item, itemIndex)} className={itemClassName} style={itemChildStyle}>
                 {renderItem(item, itemIndex)}
-              </div>
+              </Box>
             );
           })}
-        </div>
+        </Grid>
+        </Section>
       );
     },
-    [columnCount, getItemKey, itemClassName, itemGapStyle, renderItem, rowClassName, rowStyle],
+    [columnCount, effectiveRowGap, getItemKey, itemClassName, itemGapStyle, renderItem, rowClassName, rowStyle],
   );
 
   const rootClassName = [safeStringable(outerClass), safeStringable(innerClass)].filter(Boolean).join(" ");
@@ -241,13 +240,13 @@ function VirtuosoListComponent<T>({
     ref: parentRef,
     width: "100%" as const,
     minWidth: "0" as const,
-    px: { initial: "3" as const, sm: "4" as const },
     className: rootClassName || undefined,
     style: { height: resolvedHeight },
   };
 
   if (dataLength === 0 && isLoading) {
     return (
+      <Container px={{ initial: "3", sm: "4" }}>
       <Box {...rootProps}>
         {loadingIndicator ?? (
           <Flex align="center" justify="center" height="100%">
@@ -257,11 +256,13 @@ function VirtuosoListComponent<T>({
           </Flex>
         )}
       </Box>
+      </Container>
     );
   }
 
   if (dataLength === 0) {
     return (
+      <Container px={{ initial: "3", sm: "4" }}>
       <Box {...rootProps}>
         {emptyState ?? (
           <Flex align="center" justify="center" height="100%">
@@ -269,10 +270,12 @@ function VirtuosoListComponent<T>({
           </Flex>
         )}
       </Box>
+      </Container>
     );
   }
 
   return (
+    <Container px={{ initial: "3", sm: "4" }}>
     <Box {...rootProps}>
       <Virtuoso
         style={{ height: "100%" }}
@@ -284,6 +287,7 @@ function VirtuosoListComponent<T>({
         components={{ Header, Footer }}
       />
     </Box>
+    </Container>
   );
 }
 

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Container, Flex } from "@radix-ui/themes";
+import { Container, Flex, Section } from "@radix-ui/themes";
 
 import { safeStringable } from "@/utils";
 
@@ -23,13 +23,15 @@ function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDT
   return (
     <Container size="4" align="center" px="6" width="100%" maxWidth={resolvedMaxWidth} className={frameClass || undefined}>
       {fullHeight ? (
-        <div className={styles.fullHeightBody}>{children}</div>
+        <Flex direction="column" flexGrow="1" minHeight="0" width="100%" height="100%" className={styles.fullHeightBody}>
+          {children}
+        </Flex>
       ) : (
-        <Box py="7">
+        <Section size="2">
           <Flex direction="column" gap="7" width="100%" className={styles.stack}>
             {children}
           </Flex>
-        </Box>
+        </Section>
       )}
     </Container>
   );

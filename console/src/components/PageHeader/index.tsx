@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Section, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
@@ -18,11 +18,11 @@ export default function PageHeader({ icon, title, description, actions, index, d
   const compact = density === "panel";
   return (
     <Box className={styles.hairline} width="100%">
-      <Box pb="5">
+      <Section pb="5">
         <Flex asChild align="start" justify="between" gap="4" wrap="wrap">
           <header>
             <Flex align="start" gap="4" minWidth="0">
-              <Flex align="center" justify="center" flexShrink="0" className={styles.stamp}>
+              <Flex align="center" justify="center" className={styles.stamp}>
                 <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
               </Flex>
               <Flex direction="column" gap="2" minWidth="0" className={styles.copy}>
@@ -48,7 +48,7 @@ export default function PageHeader({ icon, title, description, actions, index, d
             ) : null}
           </header>
         </Flex>
-      </Box>
+      </Section>
     </Box>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, Heading, TextField } from "@radix-ui/themes";
+import { Section, Button, Heading, TextField } from "@radix-ui/themes";
 import { DataTable, FormDialog, Toolbar } from "@/components";
 import { useDeleteRemoteTarget, useRemoteTargets, useReplication, useSaveReplication, useSetRemoteTarget } from "@/hooks";
 import { showConfirm, showError } from "@/stores/modal";
@@ -95,9 +95,9 @@ export function ReplicationPanel({ bucket }: { bucket: string }) {
           },
         ]}
       />
-      <Heading as="h3" size="3" mt="4" mb="2">
+      <Section mt="4"><Section mb="2"><Heading as="h3" size="3">
         {t("ARN")}
-      </Heading>
+      </Heading></Section></Section>
       <DataTable
         empty={t("No Data")}
         rows={remotes}

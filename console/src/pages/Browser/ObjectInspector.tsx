@@ -2,7 +2,7 @@ import { FileDescriptionIcon, LayersIcon, LockIcon, ShieldCheck } from "nfx-ui/i
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, Flex, Heading, Select, Switch, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Flex, Heading, Select, Switch, Text, TextField } from "@radix-ui/themes";
 import { DataTable, Inspector, PropertyList } from "@/components";
 import {
   useDeleteAllObjectVersions,
@@ -175,7 +175,11 @@ export default function ObjectInspector({ bucket, objectKey, onClose, onDeleted 
         ]}
       />
       {previewUrl && contentType.startsWith("image/") ? (
-        <img src={previewUrl} alt={name} style={{ width: "100%", borderRadius: 6 }} />
+        <Box width="100%">
+          <Box style={{ borderRadius: "var(--radius-2)" }}>
+            <img src={previewUrl} alt={name} style={{ width: "100%" }} />
+          </Box>
+        </Box>
       ) : null}
       {previewText ? (
         <pre style={{ whiteSpace: "pre-wrap", fontSize: 12, maxHeight: 220, overflow: "auto" }}>{previewText}</pre>

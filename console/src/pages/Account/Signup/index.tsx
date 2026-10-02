@@ -1,6 +1,6 @@
 import { AnimatedIcon, ArrowNarrowRightIcon } from "nfx-ui/icons";
 import { useMemo } from "react";
-import { Box, Button, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Grid, Heading, Link, Section, Text } from "@radix-ui/themes";
 import { AuthSignupPlatformEnum, LanguageEnum } from "nfx-ui/enums";
 import { useSendVerificationCode, useSignupWithEmail } from "nfx-ui/hooks";
 import { SignupFormData, useInitSignupForm } from "nfx-ui/schemas";
@@ -58,10 +58,11 @@ export default function SignupPage() {
   ];
 
   return (
-    <AuthMotionRoot className={styles.page}>
-      <Box className={styles.topbar}>
-        <Box className={styles.topbarPx}>
-          <Box className={styles.topbarPy}>
+    <Box className={`${styles.pageFill} ${styles.pageInk}`}>
+    <AuthMotionRoot className={styles.pageStack}>
+      <Box className={styles.topbarRule}>
+        <Container className={styles.topbarPx}>
+          <Section className={styles.topbarPy}>
             <Flex align="center" justify="between" gap="4">
               <Flex align="center" gap="3" minWidth="0">
                 <Logo variant="plain" size="small" to={ROUTES.LOGIN} />
@@ -71,37 +72,39 @@ export default function SignupPage() {
               </Flex>
               <PreferencesPopover />
             </Flex>
-          </Box>
-        </Box>
+          </Section>
+        </Container>
       </Box>
-      <div className={styles.body}>
+      <Grid className={styles.body}>
         <Box asChild className={styles.steps}>
           <nav aria-label={t("pageEyebrow")}>
-          <Box className={styles.stepsPx}>
-            <Box className={styles.stepsPy}>
+          <Container className={styles.stepsPx}>
+            <Section className={styles.stepsPy}>
               <Flex direction="column">
                 {steps.map((item) => (
-                  <Box key={item.n} className={`${styles.step} ${step === item.n ? styles.stepCurrent : ""}`} data-auth-motion>
-                    <Box className={styles.stepPx}>
-                      <Box className={styles.stepPy}>
-                        <div className={styles.stepGrid}>
+                  <Box key={item.n} className={step === item.n ? styles.stepCurrentEdge : undefined} data-auth-motion>
+                    <Flex direction="column" className={`${styles.step} ${step === item.n ? styles.stepCurrentInk : ""}`}>
+                    <Container className={styles.stepPx}>
+                      <Section className={styles.stepPy}>
+                        <Grid className={styles.stepGrid}>
                           <span className={styles.index}>{String(item.n).padStart(2, "0")}</span>
                           <Text size="2" weight={step === item.n ? "bold" : "regular"}>
                             {item.label}
                           </Text>
-                        </div>
-                      </Box>
-                    </Box>
+                        </Grid>
+                      </Section>
+                    </Container>
+                    </Flex>
                   </Box>
                 ))}
               </Flex>
-            </Box>
-          </Box>
+            </Section>
+          </Container>
           </nav>
         </Box>
         <Box className={styles.formPane}>
-          <Box className={styles.formPanePx}>
-            <Box className={styles.formPanePy}>
+          <Container className={styles.formPanePx}>
+            <Section className={styles.formPanePy}>
               <Flex direction="column" gap="4">
                 <Flex direction="column" gap="1" data-auth-motion>
                   <Text as="p" size="1" weight="bold" className={styles.kicker}>
@@ -162,14 +165,16 @@ export default function SignupPage() {
                   </Link>
                 </Text>
               </Flex>
-            </Box>
-          </Box>
+            </Section>
+          </Container>
         </Box>
-        <Box className={styles.bucket} data-auth-motion>
-          <Box className={styles.bucketPx}>
-            <Box className={styles.bucketPy}>
+        <Box className={`${styles.bucketEdge} ${styles.bucketFill}`} data-auth-motion>
+          <Container className={styles.bucketPx}>
+            <Section className={styles.bucketPy}>
               <Flex direction="column" align="center" justify="center" gap="4">
-                <div className={styles.bucketGlyph} aria-hidden />
+                <Box className={styles.bucketGlyphSize} aria-hidden>
+                  <Box className={styles.bucketGlyphEdge} />
+                </Box>
                 <Text size="2" weight="bold">
                   {t("emptyBucket")}
                 </Text>
@@ -177,10 +182,11 @@ export default function SignupPage() {
                   {t("emptyHint")}
                 </Text>
               </Flex>
-            </Box>
-          </Box>
+            </Section>
+          </Container>
         </Box>
-      </div>
+      </Grid>
     </AuthMotionRoot>
+    </Box>
   );
 }
