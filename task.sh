@@ -18,9 +18,9 @@ fi
 # ── Pick the environment once; every task launched from the menu inherits it via $ENV ──
 announce_environment() {
   if [ "$ENV" = "secure" ]; then
-    printf '\n  → ENV=secure  (docker-compose.yml · attach nfx-edge)\n\n'
+    printf '\n  → ENV=secure  (docker-compose.yml · NAS_IP host ports)\n\n'
   else
-    printf '\n  → ENV=dev     (docker-compose.dev.yml · attach nfx-edge)\n\n'
+    printf '\n  → ENV=dev     (docker-compose.dev.yml · NAS_IP host ports)\n\n'
   fi
 }
 
@@ -34,8 +34,8 @@ choose_environment() {
   esac
   local choice
   printf '\n  NFX-Storages — select environment\n'
-  printf '    [D]ev     docker-compose.dev.yml · nfx-edge\n'
-  printf '    [S]ecure  docker-compose.yml     · nfx-edge\n'
+  printf '    [D]ev     docker-compose.dev.yml · NAS_IP host ports\n'
+  printf '    [S]ecure  docker-compose.yml     · NAS_IP host ports\n'
   printf '  Choice [D/s]: '
   IFS= read -r choice || choice=""
   case "$choice" in

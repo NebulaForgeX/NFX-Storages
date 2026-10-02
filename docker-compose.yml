@@ -1,10 +1,9 @@
 name: nfx-storages
-
-# HTTP 入口只有 NFX-Edge（先启动 Edge：共享网络 nfx-edge + Traefik）。
-# 本栈不跑 reverse-proxy。对齐 CityPulso PulsoLoop-API docker-compose.dev.yml。
-# Must start NFX-Edge first (creates nfx-edge).
+# Publish HTTP, gRPC, and console on ${NAS_IP}:host port.
+# NFX-Edge routes to those ports. This file has no Traefik labels and no shared network.
 
 services:
+
   s3-base:
     image: nfx-storages-s3-base:prod
     container_name: NFX-Storages-S3-Base-Prod
@@ -19,19 +18,8 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_S3}"
     ports:
-      - "${GRPC_EXT_PORT_S3}:${GRPC_PORT_S3}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.storages-s3-base.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-s3-base.entrypoints: web
-      traefik.http.routers.storages-s3-base.rule: Host(`${TRAEFIK_S3_HOST}`)
-      traefik.http.routers.storages-s3-base.service: storages-s3-base
-      traefik.http.routers.storages-s3-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-s3-base-secure.rule: Host(`${TRAEFIK_S3_HOST}`)
-      traefik.http.routers.storages-s3-base-secure.service: storages-s3-base
-      traefik.http.routers.storages-s3-base-secure.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_S3}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_S3}:${GRPC_PORT_S3}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
@@ -40,12 +28,6 @@ services:
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
       - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-      - nfx-edge
-      - nfx-stack
 
   admin-base:
     image: nfx-storages-admin-base:prod
@@ -61,24 +43,8 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_ADMIN}"
     ports:
-      - "${GRPC_EXT_PORT_ADMIN}:${GRPC_PORT_ADMIN}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.storages-admin-base.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-admin-base.entrypoints: web
-      traefik.http.middlewares.nfx-storages-admin-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.storages-admin-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ADMIN}`)
-      traefik.http.routers.storages-admin-base.priority: "20"
-      traefik.http.routers.storages-admin-base.middlewares: nfx-storages-admin-gw
-      traefik.http.routers.storages-admin-base.service: storages-admin-base
-      traefik.http.routers.storages-admin-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-admin-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ADMIN}`)
-      traefik.http.routers.storages-admin-base-secure.priority: "20"
-      traefik.http.routers.storages-admin-base-secure.middlewares: nfx-storages-admin-gw
-      traefik.http.routers.storages-admin-base-secure.service: storages-admin-base
-      traefik.http.routers.storages-admin-base-secure.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_ADMIN}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_ADMIN}:${GRPC_PORT_ADMIN}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
@@ -87,12 +53,6 @@ services:
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
       - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-      - nfx-edge
-      - nfx-stack
 
   object-base:
     image: nfx-storages-object-base:prod
@@ -108,24 +68,8 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_OBJECT}"
     ports:
-      - "${GRPC_EXT_PORT_OBJECT}:${GRPC_PORT_OBJECT}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.storages-object-base.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-object-base.entrypoints: web
-      traefik.http.middlewares.nfx-storages-object-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.storages-object-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_OBJECT}`)
-      traefik.http.routers.storages-object-base.priority: "20"
-      traefik.http.routers.storages-object-base.middlewares: nfx-storages-object-gw
-      traefik.http.routers.storages-object-base.service: storages-object-base
-      traefik.http.routers.storages-object-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-object-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_OBJECT}`)
-      traefik.http.routers.storages-object-base-secure.priority: "20"
-      traefik.http.routers.storages-object-base-secure.middlewares: nfx-storages-object-gw
-      traefik.http.routers.storages-object-base-secure.service: storages-object-base
-      traefik.http.routers.storages-object-base-secure.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_OBJECT}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_OBJECT}:${GRPC_PORT_OBJECT}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
@@ -134,12 +78,6 @@ services:
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
       - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-      - nfx-edge
-      - nfx-stack
 
   iam-base:
     image: nfx-storages-iam-base:prod
@@ -155,24 +93,8 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_IAM}"
     ports:
-      - "${GRPC_EXT_PORT_IAM}:${GRPC_PORT_IAM}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.storages-iam-base.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-iam-base.entrypoints: web
-      traefik.http.middlewares.nfx-storages-iam-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.storages-iam-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_IAM}`)
-      traefik.http.routers.storages-iam-base.priority: "20"
-      traefik.http.routers.storages-iam-base.middlewares: nfx-storages-iam-gw
-      traefik.http.routers.storages-iam-base.service: storages-iam-base
-      traefik.http.routers.storages-iam-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-iam-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_IAM}`)
-      traefik.http.routers.storages-iam-base-secure.priority: "20"
-      traefik.http.routers.storages-iam-base-secure.middlewares: nfx-storages-iam-gw
-      traefik.http.routers.storages-iam-base-secure.service: storages-iam-base
-      traefik.http.routers.storages-iam-base-secure.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_IAM}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_IAM}:${GRPC_PORT_IAM}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
@@ -181,12 +103,6 @@ services:
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
       - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-      - nfx-edge
-      - nfx-stack
 
   notify-base:
     image: nfx-storages-notify-base:prod
@@ -202,24 +118,8 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_NOTIFY}"
     ports:
-      - "${GRPC_EXT_PORT_NOTIFY}:${GRPC_PORT_NOTIFY}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.storages-notify-base.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.storages-notify-base.entrypoints: web
-      traefik.http.middlewares.nfx-storages-notify-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.storages-notify-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_NOTIFY}`)
-      traefik.http.routers.storages-notify-base.priority: "20"
-      traefik.http.routers.storages-notify-base.middlewares: nfx-storages-notify-gw
-      traefik.http.routers.storages-notify-base.service: storages-notify-base
-      traefik.http.routers.storages-notify-base-secure.entrypoints: websecure
-      traefik.http.routers.storages-notify-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_NOTIFY}`)
-      traefik.http.routers.storages-notify-base-secure.priority: "20"
-      traefik.http.routers.storages-notify-base-secure.middlewares: nfx-storages-notify-gw
-      traefik.http.routers.storages-notify-base-secure.service: storages-notify-base
-      traefik.http.routers.storages-notify-base-secure.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_NOTIFY}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_NOTIFY}:${GRPC_PORT_NOTIFY}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
@@ -228,13 +128,6 @@ services:
       - ${STORAGES_VOLUME_2}:${STORAGES_VOLUME_2}
       - ${STORAGES_VOLUME_3}:${STORAGES_VOLUME_3}
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-storages
-      - nfx-edge
-      - nfx-stack
-
 
   console:
     image: nfx-storages-console:prod
@@ -250,55 +143,6 @@ services:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
         VITE_S3_ENDPOINT: ${VITE_S3_ENDPOINT}
         VITE_BASE: ${VITE_BASE}
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-storages"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.storages-console.loadbalancer.server.port: "${CONSOLE_PORT}"
-      traefik.http.middlewares.storages-console-root.redirectregex.regex: ^https?://[^/]+/?$$
-      traefik.http.middlewares.storages-console-root.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-storages/
-      traefik.http.middlewares.storages-console-root.redirectregex.permanent: "true"
-      traefik.http.routers.storages-console.entrypoints: web
-      traefik.http.routers.storages-console.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-storages`)"
-      traefik.http.routers.storages-console.service: storages-console
-      traefik.http.routers.storages-console.priority: "25"
-      traefik.http.routers.storages-console-secure.entrypoints: websecure
-      traefik.http.routers.storages-console-secure.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-storages`)"
-      traefik.http.routers.storages-console-secure.service: storages-console
-      traefik.http.routers.storages-console-secure.tls: "true"
-      traefik.http.routers.storages-console-secure.priority: "25"
-      traefik.http.routers.storages-console-host.entrypoints: web
-      traefik.http.routers.storages-console-host.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-storages`)
-      traefik.http.routers.storages-console-host.service: storages-console
-      traefik.http.routers.storages-console-host.priority: "200"
-      traefik.http.routers.storages-console-host-secure.entrypoints: websecure
-      traefik.http.routers.storages-console-host-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-storages`)
-      traefik.http.routers.storages-console-host-secure.service: storages-console
-      traefik.http.routers.storages-console-host-secure.tls: "true"
-      traefik.http.routers.storages-console-host-secure.priority: "200"
-      traefik.http.routers.storages-console-root.entrypoints: web
-      traefik.http.routers.storages-console-root.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
-      traefik.http.routers.storages-console-root.middlewares: storages-console-root
-      traefik.http.routers.storages-console-root.service: storages-console
-      traefik.http.routers.storages-console-root.priority: "210"
-      traefik.http.routers.storages-console-root-secure.entrypoints: websecure
-      traefik.http.routers.storages-console-root-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
-      traefik.http.routers.storages-console-root-secure.middlewares: storages-console-root
-      traefik.http.routers.storages-console-root-secure.service: storages-console
-      traefik.http.routers.storages-console-root-secure.tls: "true"
-      traefik.http.routers.storages-console-root-secure.priority: "210"
+    ports:
+      - "${NAS_IP}:${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
     restart: always
-    networks:
-      - nfx-storages
-      - nfx-edge
-
-networks:
-  nfx-storages:
-    name: nfx-storages
-    driver: bridge
-  nfx-edge:
-    external: true
-    name: nfx-edge
-  nfx-stack:
-    external: true
-    name: nfx-stack
