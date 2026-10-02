@@ -1,0 +1,38 @@
+.hairline {
+  border-bottom: 1px solid var(--gray-6);
+}.copy {
+  min-width: 0;
+}.index {
+  font-size: 11px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-9);
+}.title {
+  font-family: var(--heading-font-family), sans-serif;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  color: var(--gray-12);
+  text-wrap: balance;
+}.lede {
+  max-width: 46ch;
+  color: var(--gray-11);
+  text-wrap: pretty;
+}.stamp {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 1px solid var(--accent-a7);
+  background: var(--color-background);
+  color: var(--accent-9);
+}.actions {
+  min-width: 0;
+}
+
+.stampEdge > *,
+.stampFill > *,
+.stampSize > *,
+.stampInk > * {
+  height: 100%;
+}

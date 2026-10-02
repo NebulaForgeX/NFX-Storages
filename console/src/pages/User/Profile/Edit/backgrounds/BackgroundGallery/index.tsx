@@ -1,0 +1,156 @@
+import { ArrowLeft, Camera, ChevronRight, Save, Trash2 } from "lucide-react";
+import type { Profile } from "nfx-ui/types";
+
+import { useRef } from "react";
+import { Container, Box, Section, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { useTranslation } from "react-i18next";
+
+import { LucideIcon } from "@/components";
+
+import { isUserProfileBackgroundDraftBusy } from "../drafts";
+import styles from "./s.module.css";
+import { useUserProfileBackgroundUpload } from "../useUserProfileBackgroundUpload";
+
+const MAX_PROFILE_BACKGROUNDS = 6;
+
+export default function BackgroundGallery({ profile }: { profile: Profile.Response.ProfileBase }) {
+  const { t } = useTranslation("pages.User.Profile.Edit");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { drafts, uploading, confirming, dirty, imageError, uploadFiles, removeDraft, moveDraft, confirmDrafts } = useUserProfileBackgroundUpload(profile, MAX_PROFILE_BACKGROUNDS);
+
+  const completedCount = drafts.filter((d) => !isUserProfileBackgroundDraftBusy(d) && d.status !== "failed").length;
+  const atLimit = drafts.filter((d) => d.status !== "failed").length >= MAX_PROFILE_BACKGROUNDS;
+
+  return (
+    <Card size="2">
+      <Flex direction="column" gap="3">
+        <Box>
+          <Text size="2" weight="bold">
+            {t("backgroundUpload.label")}
+          </Text>
+          <Section mt="1">
+            <Text size="1" color="gray">
+              {t("backgroundUpload.hint")}
+            </Text>
+          </Section>
+        </Box>
+        <Section py="2">
+          <Flex align="center" justify="between" gap="3">
+            <Flex minWidth="0" flexGrow="1">
+              <Text size="1" color="gray">
+                {t("backgroundUpload.queueSummary", {
+                  done: completedCount,
+                  total: MAX_PROFILE_BACKGROUNDS,
+                })}
+              </Text>
+            </Flex>
+            <Flex gap="2" wrap="wrap" align="center">
+            <Button type="button" size="2" variant="outline" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
+              <LucideIcon icon={Camera} size={14} />
+              {atLimit ? t("backgroundUpload.full") : t("backgroundUpload.add")}
+            </Button>
+            <Button type="button" size="2" disabled={!dirty || uploading || confirming} loading={confirming} onClick={() => void confirmDrafts()}>
+              <LucideIcon icon={Save} size={14} />
+              {confirming ? t("backgroundUpload.confirming") : t("backgroundUpload.confirm")}
+            </Button>
+          </Flex>
+        </Flex>
+        </Section>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className={styles.hiddenInput}
+          onChange={(event) => {
+            const files = event.target.files;
+            if (files?.length) void uploadFiles(files);
+            event.target.value = "";
+          }}
+        />
+
+        {drafts.length ? (
+          <Flex wrap="wrap" gap="3" width="100%">
+            {drafts.map((draft, index) => {
+              const busy = isUserProfileBackgroundDraftBusy(draft);
+              const failed = draft.status === "failed";
+              return (
+                <Box key={draft.imageId} position="relative" className={`${styles.tileSize} ${styles.tileRadius} ${styles.tileClip} ${styles.tileEdge} ${styles.tileFill}`}>
+                  <img src={draft.previewUrl} alt="" className={styles.tileImage} draggable={false} />
+                  <Container position="absolute" top="2" left="2" className={`${styles.orderBadgePad} ${styles.orderBadgeRadius} ${styles.orderBadgeFill}`}>
+                    <Text size="1" weight="bold" className={styles.orderBadgeInk}>
+                      {draft.sortOrder + 1}
+                    </Text>
+                  </Container>
+                  {busy ? (
+                    <Flex position="absolute" inset="0" align="center" justify="center" className={styles.busyOverlay}>
+                      <Text size="1" weight="bold" className={styles.busyInk}>
+                        {Math.round(draft.progress ?? 0)}%
+                      </Text>
+                    </Flex>
+                  ) : null}
+                  {failed ? (
+                    <Flex position="absolute" inset="0" align="center" justify="center" className={styles.failedOverlay}>
+                      <Text size="1" weight="bold" className={styles.failedInk}>
+                        {t("backgroundUpload.status.failed")}
+                      </Text>
+                    </Flex>
+                  ) : null}
+                  <Box position="absolute" right="1" bottom="1" className={styles.tileActions}>
+                  <Flex gap="1">
+                    <Button
+                      type="button"
+                      size="1"
+                      variant="outline"
+                      color="gray"
+                      disabled={busy || failed || index === 0}
+                      onClick={() => moveDraft(draft.imageId, -1)}
+                      aria-label={t("backgroundUpload.moveLeft")}
+                    >
+                      <LucideIcon icon={ArrowLeft} size={12} />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="1"
+                      variant="outline"
+                      color="gray"
+                      disabled={busy || failed || index === drafts.length - 1}
+                      onClick={() => moveDraft(draft.imageId, 1)}
+                      aria-label={t("backgroundUpload.moveRight")}
+                    >
+                      <LucideIcon icon={ChevronRight} size={12} />
+                    </Button>
+                    <Button type="button" size="1" variant="outline" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
+                      <LucideIcon icon={Trash2} size={12} />
+                    </Button>
+                  </Flex>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Flex>
+        ) : (
+          <Text size="2" color="gray">
+            {t("backgroundUpload.dropTitle")}
+          </Text>
+        )}
+
+        {drafts.length > 1 ? (
+          <Section mt="2">
+            <Text size="1" color="gray">
+              {t("backgroundUpload.reorderHint")}
+            </Text>
+          </Section>
+        ) : null}
+        {imageError ? (
+          <Section mt="1">
+            <Text size="1" color="red">
+              {imageError}
+            </Text>
+          </Section>
+        ) : null}
+      </Flex>
+    </Card>
+  );
+}

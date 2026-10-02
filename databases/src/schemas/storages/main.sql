@@ -1,0 +1,17 @@
+-- atlas:import schema.sql
+-- atlas:import tables/access_keys.sql
+-- atlas:import tables/policies.sql
+-- atlas:import tables/groups.sql
+-- atlas:import tables/event_targets.sql
+-- atlas:import tables/tiers.sql
+-- atlas:import tables/kms_keys.sql
+-- atlas:import tables/kms_state.sql
+-- atlas:import tables/remote_targets.sql
+-- atlas:import views/access_keys_active_view.sql
+-- atlas:import views/policies_active_view.sql
+-- atlas:import views/groups_active_view.sql
+-- atlas:import views/event_targets_active_view.sql
+-- atlas:import views/tiers_active_view.sql
+-- atlas:import views/kms_keys_active_view.sql
+-- atlas:import views/kms_state_active_view.sql
+-- atlas:import views/remote_targets_active_view.sql

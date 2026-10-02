@@ -1,0 +1,63 @@
+{
+  "title": "Sign in",
+  "brand": {
+    "access": "{{name}} access",
+    "title": "Enter volumes, buckets, and object space."
+  },
+  "heroFooter": "Sign in once. Carry the same Account into the Storages console.",
+  "form": {
+    "welcomeBack": "Welcome back",
+    "title": "Sign in to {{name}}",
+    "subtitle": "Continue with your NFX Account — identity first, storage next.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "rememberMe": "Remember me",
+    "submit": "Sign in",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "Email",
+    "channelPhone": "Phone",
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email",
+      "phoneRequired": "Phone is required",
+      "phoneInvalid": "Enter a valid phone number",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "promo": {
+    "newTo": "New to {{name}}?",
+    "createAccount": "Create an account"
+  },
+  "selectProfile": {
+    "eyebrow": "Choose identity",
+    "title": "Which Profile continues?",
+    "subtitle": "Your Account can hold more than one Profile.",
+    "back": "Back to sign in",
+    "kind": {
+      "authority": "Authority",
+      "community": "Community"
+    },
+    "kindHint": {
+      "authority": "Moderation & roles",
+      "community": "Everyday use"
+    },
+    "roles": {
+      "pulser": "Pulser",
+      "tester": "Tester",
+      "creator": "Creator",
+      "reviewer": "Reviewer",
+      "moderator": "Moderator",
+      "inspector": "Inspector",
+      "supporter": "Supporter",
+      "auditor": "Auditor",
+      "administrator": "Administrator",
+      "owner": "Owner",
+      "forger": "Forger"
+    }
+  }
+}

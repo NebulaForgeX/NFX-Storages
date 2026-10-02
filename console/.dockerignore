@@ -1,0 +1,11 @@
+node_modules
+.git
+.nuxt
+.output
+dist
+*.log
+.env
+.env.*
+!.env.example
+.claude
+.cursor

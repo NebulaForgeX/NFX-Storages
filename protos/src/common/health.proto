@@ -1,0 +1,54 @@
+syntax = "proto3";
+package common.health;
+
+option go_package = "nfxstorages/protos/gen/common/health;healthpb";
+
+// ResourceHealth 单个资源的健康状态
+message ResourceHealth {
+  // 资源是否健康
+  bool healthy = 1;
+  
+  // 错误消息（如果不健康）
+  optional string error_message = 2;
+  
+  // 检查时间戳（Unix 时间戳，秒）
+  int64 checked_at = 3;
+}
+
+// InfrastructureHealth 基础设施健康状态
+message InfrastructureHealth {
+  // 数据库健康状态
+  ResourceHealth database = 1;
+  
+  // Redis 健康状态
+  ResourceHealth redis = 2;
+  
+  // 其他基础设施（可选）
+  map<string, ResourceHealth> others = 3;
+}
+
+// GetHealthRequest 获取健康状态请求
+message GetHealthRequest {
+  // 空请求
+}
+
+// GetHealthResponse 获取健康状态响应
+message GetHealthResponse {
+  // 服务整体健康状态
+  bool healthy = 1;
+  
+  // 基础设施健康状态
+  InfrastructureHealth infrastructure = 2;
+  
+  // 服务名称
+  string service_name = 3;
+  
+  // 检查时间戳（Unix 时间戳，秒）
+  int64 checked_at = 4;
+}
+
+// HealthService 健康检查服务 - 返回服务及其基础设施的健康状态
+service HealthService {
+  // 获取健康状态（包括数据库、Redis等基础设施）
+  rpc GetHealth (GetHealthRequest) returns (GetHealthResponse);
+}

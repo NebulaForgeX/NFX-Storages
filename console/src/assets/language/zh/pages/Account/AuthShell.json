@@ -1,0 +1,22 @@
+{
+  "productName": "NFX-Storages",
+  "productPath": "s3://nfx/storages",
+  "capacityLabel": "已用容量",
+  "capacityValue": "42%",
+  "capacityHint": "示意机架，非实时集群数据。",
+  "rackTitle": "机架湾",
+  "bucketCol": "桶",
+  "objectsCol": "对象",
+  "statusCol": "状态",
+  "online": "在线",
+  "locked": "锁定",
+  "bucketLogs": "logs",
+  "bucketLogsCount": "1.2k",
+  "bucketArtifacts": "artifacts",
+  "bucketArtifactsCount": "840",
+  "bucketBackups": "backups",
+  "bucketBackupsCount": "3.4k",
+  "summary": "已挂载 3 个湾。登录后打开对象浏览器。",
+  "session": "会话",
+  "backHome": "返回首页"
+}

@@ -1,0 +1,20 @@
+{
+  "contact": {
+    "sendSuccess": "Message envoyé. Nous vous répondrons bientôt."
+  },
+  "account": {
+    "sendVerificationCodeSuccess": "Si cette adresse peut recevoir des e-mails, un code de vérification a été envoyé.",
+    "createUserProfileSuccess": "Profil créé.",
+    "deleteUserProfileSuccess": "Profil supprimé.",
+    "createEmailSuccess": "E-mail ajouté.",
+    "verifyEmailSuccess": "E-mail vérifié.",
+    "updateEmailSuccess": "E-mail mis à jour.",
+    "setPrimaryEmailSuccess": "E-mail principal mis à jour.",
+    "deleteEmailSuccess": "E-mail supprimé.",
+    "changePasswordSuccess": "Mot de passe mis à jour."
+  },
+  "payments": {
+    "stripeLoadFailed": "Impossible de charger Stripe.",
+    "receiptDownloadFailed": "Impossible de télécharger le reçu."
+  }
+}

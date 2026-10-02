@@ -1,0 +1,80 @@
+syntax = "proto3";
+package authority_profile;
+
+option go_package = "nfxstorages/protos/gen/auth/authority_profile;authorityprofilepb";
+
+import "auth/account.proto";
+
+message ConfirmAuthorityProfileAvatarRequest {
+  string account_id = 1;
+  string image_id = 2;
+  string profile_id = 3;
+}
+
+message ConfirmAuthorityProfileAvatarResponse {
+  account.AuthorityProfileAvatar avatar = 1;
+}
+
+message ConfirmAuthorityProfileBackgroundItem {
+  string image_id = 1;
+  int32 sort_order = 2;
+}
+
+message ConfirmAuthorityProfileBackgroundsRequest {
+  string account_id = 1;
+  repeated ConfirmAuthorityProfileBackgroundItem images = 2;
+  string profile_id = 3;
+}
+
+message ConfirmAuthorityProfileBackgroundsResponse {
+  repeated account.AuthorityProfileBackground backgrounds = 1;
+}
+
+message PublicProfileCard {
+  string profile_id = 1;
+  optional string display_name = 2;
+  optional string avatar_image_id = 3;
+  optional string city = 4;
+  optional string country = 5;
+  optional string website = 6;
+  optional string timezone = 7;
+  optional string birthday = 8;
+  optional string background_image_id = 9;
+}
+
+message BatchGetPublicProfileCardsRequest {
+  repeated string profile_ids = 1;
+}
+
+message BatchGetPublicProfileCardsResponse {
+  repeated PublicProfileCard profiles = 1;
+}
+
+message GetAuthorityRolesRequest {
+  string profile_id = 1;
+}
+
+message GetAuthorityRolesResponse {
+  repeated account.AuthorityRole authority_roles = 1;
+}
+
+message HasAuthorityRoleRequest {
+  string account_id = 1;
+  string profile_id = 2;
+  string profile_scope = 3;
+}
+
+message HasAuthorityRoleResponse {
+  bool allowed = 1;
+}
+
+service AuthorityProfileService {
+  rpc ConfirmAuthorityProfileAvatar (ConfirmAuthorityProfileAvatarRequest) returns (ConfirmAuthorityProfileAvatarResponse);
+  rpc ConfirmAuthorityProfileBackgrounds (ConfirmAuthorityProfileBackgroundsRequest) returns (ConfirmAuthorityProfileBackgroundsResponse);
+  rpc BatchGetPublicProfileCards (BatchGetPublicProfileCardsRequest) returns (BatchGetPublicProfileCardsResponse);
+  rpc GetAuthorityRoles (GetAuthorityRolesRequest) returns (GetAuthorityRolesResponse);
+  rpc HasAuthorityRole (HasAuthorityRoleRequest) returns (HasAuthorityRoleResponse);
+  rpc IsAuditor (HasAuthorityRoleRequest) returns (HasAuthorityRoleResponse);
+  rpc IsAdministrator (HasAuthorityRoleRequest) returns (HasAuthorityRoleResponse);
+  rpc IsOwner (HasAuthorityRoleRequest) returns (HasAuthorityRoleResponse);
+}

@@ -1,0 +1,122 @@
+import { StackIcon } from "nfx-ui/icons";
+import type { AnimatedIconComponent } from "nfx-ui/icons";
+import type { ReactNode } from "react";
+
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Box, DropdownMenu, Flex, IconButton, Section, Spinner, Table, Text } from "@radix-ui/themes";
+
+import EmptyState from "../EmptyState";
+
+import styles from "./s.module.css";
+
+export interface Column<T> {
+  key: string;
+  header: string;
+  render?: (row: T) => ReactNode;
+  width?: string;
+}
+
+export interface RowAction {
+  label: string;
+  onSelect: () => void;
+  color?: "red";
+}
+
+interface DataTableProps<T> {
+  columns: Column<T>[];
+  rows: T[];
+  rowKey: (row: T) => string;
+  empty?: string;
+  emptyIcon?: AnimatedIconComponent;
+  loading?: boolean;
+  onRowClick?: (row: T) => void;
+  actions?: (row: T) => RowAction[];
+  selectedKey?: string;
+}
+
+export function DataTable<T>({
+  columns,
+  rows,
+  rowKey,
+  empty,
+  emptyIcon,
+  loading,
+  onRowClick,
+  actions,
+  selectedKey,
+}: DataTableProps<T>) {
+  if (loading) {
+    return (
+      <Section py="6">
+        <Flex align="center" justify="center" gap="2">
+          <Spinner />
+          <Text size="2" color="gray">
+            {empty ?? "Loading..."}
+          </Text>
+        </Flex>
+      </Section>
+    );
+  }
+  if (!rows.length) {
+    return <EmptyState icon={emptyIcon ?? StackIcon} title={empty ?? "No data"} />;
+  }
+  return (
+    <Box overflow="hidden" style={{ borderRadius: "var(--radius-3)", background: "var(--color-panel-solid)", boxShadow: "var(--shadow-2)" }}>
+    <Table.Root variant="surface">
+      <Table.Header>
+        <Table.Row>
+          {columns.map((column) => (
+            <Table.ColumnHeaderCell key={column.key} style={column.width ? { width: column.width } : undefined}>
+              {column.header}
+            </Table.ColumnHeaderCell>
+          ))}
+          {actions ? <Table.ColumnHeaderCell width="56px" /> : null}
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map((row) => {
+          const key = rowKey(row);
+          const rowActions = actions?.(row) ?? [];
+          return (
+            <Table.Row
+              key={key}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
+              className={[onRowClick ? styles.rowHit : "", selectedKey === key ? styles.rowSelected : ""].filter(Boolean).join(" ") || undefined}
+            >
+              {columns.map((column) => (
+                <Table.Cell key={column.key}>
+                  {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? "")}
+                </Table.Cell>
+              ))}
+              {actions ? (
+                <Table.Cell onClick={(event) => event.stopPropagation()}>
+                  {rowActions.length ? (
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger>
+                        <IconButton size="1" variant="ghost" aria-label="Actions">
+                          <DotsHorizontalIcon />
+                        </IconButton>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content align="end">
+                        {rowActions.map((action) => (
+                          <DropdownMenu.Item
+                            key={action.label}
+                            color={action.color}
+                            onSelect={() => action.onSelect()}
+                          >
+                            {action.label}
+                          </DropdownMenu.Item>
+                        ))}
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  ) : null}
+                </Table.Cell>
+              ) : null}
+            </Table.Row>
+          );
+        })}
+      </Table.Body>
+    </Table.Root>
+    </Box>
+  );
+}

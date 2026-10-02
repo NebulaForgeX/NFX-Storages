@@ -1,0 +1,20 @@
+{
+  "contact": {
+    "sendSuccess": "留言已发送，我们会尽快回复您。"
+  },
+  "account": {
+    "sendVerificationCodeSuccess": "若邮箱可用，验证码已发送，请查收邮件。",
+    "createUserProfileSuccess": "身份已创建。",
+    "deleteUserProfileSuccess": "身份已删除。",
+    "createEmailSuccess": "邮箱已添加。",
+    "verifyEmailSuccess": "邮箱已验证。",
+    "updateEmailSuccess": "邮箱已更新。",
+    "setPrimaryEmailSuccess": "主邮箱已更新。",
+    "deleteEmailSuccess": "邮箱已删除。",
+    "changePasswordSuccess": "密码已更新。"
+  },
+  "payments": {
+    "stripeLoadFailed": "无法加载 Stripe。",
+    "receiptDownloadFailed": "无法下载收据。"
+  }
+}

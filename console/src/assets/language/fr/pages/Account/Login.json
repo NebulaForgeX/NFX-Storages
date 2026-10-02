@@ -1,0 +1,63 @@
+{
+  "title": "Connexion",
+  "brand": {
+    "access": "Accès {{name}}",
+    "title": "Entrez dans volumes, seaux et espace objet."
+  },
+  "heroFooter": "Connectez-vous une fois. Le même Account ouvre la console Storages.",
+  "form": {
+    "welcomeBack": "Bon retour",
+    "title": "Connexion à {{name}}",
+    "subtitle": "Continuez avec votre Account NFX — l'identité d'abord.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "showPassword": "Afficher",
+    "hidePassword": "Masquer",
+    "rememberMe": "Se souvenir de moi",
+    "submit": "Se connecter",
+    "phoneLabel": "Téléphone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "E-mail",
+    "channelPhone": "Téléphone",
+    "validation": {
+      "emailRequired": "L'e-mail est requis",
+      "emailInvalid": "Entrez un e-mail valide",
+      "phoneRequired": "Le téléphone est requis",
+      "phoneInvalid": "Entrez un numéro valide",
+      "passwordRequired": "Le mot de passe est requis"
+    }
+  },
+  "promo": {
+    "newTo": "Nouveau sur {{name}} ?",
+    "createAccount": "Créer un compte"
+  },
+  "selectProfile": {
+    "eyebrow": "Choisir l'identité",
+    "title": "Quel Profile continuer ?",
+    "subtitle": "Votre Account peut porter plusieurs Profile.",
+    "back": "Retour à la connexion",
+    "kind": {
+      "authority": "Authority",
+      "community": "Community"
+    },
+    "kindHint": {
+      "authority": "Modération et rôles",
+      "community": "Usage quotidien"
+    },
+    "roles": {
+      "pulser": "Pulser",
+      "tester": "Testeur",
+      "creator": "Créateur",
+      "reviewer": "Réviseur",
+      "moderator": "Modérateur",
+      "inspector": "Inspecteur",
+      "supporter": "Support",
+      "auditor": "Auditeur",
+      "administrator": "Administrateur",
+      "owner": "Propriétaire",
+      "forger": "Forger"
+    }
+  }
+}

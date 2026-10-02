@@ -1,0 +1,274 @@
+{{- /* snake_case -> PascalCase */ -}}
+{{- define "Title" -}}
+  {{- $v := "" -}}
+  {{- range $w := splitBy $ "_" -}}
+    {{- if le (len $w) 1 -}}
+      {{- $v = print $v (upper $w) -}}
+    {{- else -}}
+      {{- $v = print $v (upper (slice $w 0 1)) (lower (slice $w 1)) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- print $v -}}
+{{- end -}}
+
+{{- /* Convert plural to singular */ -}}
+{{- define "Singular" -}}
+  {{- $s := . -}}
+  {{- if and (hasSuffix $s "ies") (gt (len $s) 3) -}}
+    {{- printf "%sy" (slice $s 0 (sub (len $s) 3)) -}}
+  {{- else if hasSuffix $s "ses" -}}
+    {{- trimSuffix $s "es" -}}
+  {{- else if hasSuffix $s "xes" -}}
+    {{- trimSuffix $s "es" -}}
+  {{- else if and (hasSuffix $s "s") (gt (len $s) 1) -}}
+    {{- trimSuffix $s "s" -}}
+  {{- else -}}
+    {{- $s -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Normalize database type name */ -}}
+{{- define "NormalizeDbTypeFull" -}}
+  {{- $raw := . -}}
+  {{- $parts := splitBy $raw "(" -}}
+  {{- $base := trim (index $parts 0) -}}
+  {{- $rest := "" -}}
+  {{- if gt (len $parts) 1 -}}
+    {{- $rest = print "(" (index $parts 1) -}}
+  {{- end -}}
+  {{- /* Normalize "character varying" -> "varchar" */ -}}
+  {{- if eq $base "character varying" -}}
+    {{- $base = "varchar" -}}
+  {{- /* Normalize "bpchar" -> "char" */ -}}
+  {{- else if eq $base "bpchar" -}}
+    {{- $base = "char" -}}
+  {{- end -}}
+  {{- print $base $rest -}}
+{{- end -}}
+
+{{- /* Column -> Go field name (ID, URL, UUID kept UPPERCASE) */ -}}
+{{- define "FieldName" -}}
+  {{- $col := . -}}
+  {{- $parts := splitBy $col "_" -}}
+  {{- $out := "" -}}
+  {{- range $p := $parts -}}
+    {{- $u := upper $p -}}
+    {{- if or (eq $u "ID") (eq $u "URL") (eq $u "UID") (eq $u "API") (eq $u "UUID") (eq $u "IP") -}}
+      {{- $out = printf "%s%s" $out $u -}}
+    {{- else -}}
+      {{- $out = printf "%s%s%s" $out (upper (slice $p 0 1)) (lower (slice $p 1)) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- print $out -}}
+{{- end -}}
+
+{{- /* Generate Go-friendly suffix from index / constraint name */ -}}
+{{- define "IndexSuffix" -}}
+  {{- $name := .name -}}
+  {{- $table := .table -}}
+
+  {{- $parts := splitBy $name "_" -}}
+  {{- $tableLc := lower $table -}}
+  {{- $tableParts := splitBy $tableLc "_" -}}
+
+  {{- $start := 0 -}}
+  {{- if gt (len $parts) 0 -}}
+    {{- $first := lower (index $parts 0) -}}
+    {{- if or
+          (eq $first "fk")
+          (eq $first "uk")
+          (eq $first "uq")
+          (eq $first "idx")
+          (eq $first "pk")
+          (eq $first "fkey")
+        -}}
+      {{- $start = 1 -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $parts2 := slice $parts $start -}}
+
+  {{- $tpLen := len $tableParts -}}
+  {{- $parts3 := $parts2 -}}
+  {{- if and (gt $tpLen 0) (ge (len $parts2) $tpLen) -}}
+    {{- $match := true -}}
+    {{- range $j, $tp := $tableParts }}
+      {{- if ne (lower (index $parts2 $j)) $tp }}
+        {{- $match = false -}}
+      {{- end }}
+    {{- end }}
+    {{- if $match -}}
+      {{- $parts3 = slice $parts2 $tpLen -}}
+    {{- end }}
+  {{- end -}}
+
+  {{- $out := list -}}
+  {{- range $i, $p := $parts3 }}
+    {{- $out = append $out (include "Title" $p) -}}
+  {{- end }}
+
+  {{- if eq (len $out) 0 -}}
+    {{- include "Title" $name -}}
+  {{- else -}}
+    {{- $res := "" -}}
+    {{- range $out }}
+      {{- $res = print $res . -}}
+    {{- end }}
+    {{- $res -}}
+  {{- end }}
+{{- end }}
+
+
+{{- /* ===== Map column types to Go types (considering nullable strategy) ===== */ -}}
+{{- define "ResolveType" -}}
+  {{- $ctx := . -}}
+  {{- $root := $ctx.root -}}
+  {{- $col  := $ctx.col  -}}
+  {{- $schema := $ctx.schema -}}
+
+   {{- /* Whether to use pointer for nullable fields (true=*T, false=sql.NullX) */ -}}
+  {{- $USE_POINTER_NULLS := true -}}
+
+  {{- /* Collect enums of THIS schema: name(lc) -> GoType(SchemaPrefix + Title) */ -}}
+  {{- $ENUMS := dict -}}
+  {{- $schemaPrefix := (include "Title" $schema.Name) -}}
+  {{- range $o := $schema.Objects }}
+    {{- if eq (printf "%T" $o) "*schema.EnumType" }}
+      {{- $baseType := (include "Title" $o.T) -}}
+      {{- $goType := printf "%s%s" $schemaPrefix $baseType -}}
+      {{- $_ := set $ENUMS (lower $o.T) $goType -}}
+    {{- end }}
+  {{- end }}
+
+   {{- /* Normalize column type base; also strip optional schema prefix: auth.user_status -> user_status */ -}}
+  {{- $tRaw  := columnType $col -}}
+  {{- $paren := splitBy $tRaw "(" -}}
+  {{- $t     := trim (index $paren 0) -}}
+  {{- $tBase := lower $t -}}
+  {{- $parts := splitBy $tBase "." -}}
+  {{- if gt (len $parts) 1 -}}
+    {{- $tBase = index $parts 1 -}}
+  {{- end -}}
+
+  {{- if hasKey $ENUMS $tBase -}}
+    {{- $enumGo := printf "enums.%s" (get $ENUMS $tBase) -}}
+    {{- if $col.Type.Null -}}
+      {{- if $USE_POINTER_NULLS -}}*{{ $enumGo }}{{- else -}}{{ $enumGo }}{{- end -}}
+    {{- else -}}
+      {{- $enumGo -}}
+    {{- end -}}
+  {{- else -}}
+
+  {{- /* Mapping table within this template scope */ -}}
+  {{- $PG2GO := dict
+      "smallint"                    "int16"
+      "integer"                     "int"
+      "int"                         "int"
+      "bigint"                      "int64"
+      "serial"                      "int"
+      "bigserial"                   "int64"
+      "numeric"                     "float64"
+      "decimal"                     "float64"
+      "real"                        "float32"
+      "double precision"            "float64"
+      "money"                       "float64"
+
+      "boolean"                     "bool"
+      "bool"                        "bool"
+
+      "character"                   "string"
+      "bpchar"                      "string"
+      "character varying"           "string"
+      "varchar"                     "string"
+      "text"                        "string"
+      "citext"                      "string"
+
+      "uuid"                        "uuid.UUID"
+      "bytea"                       "[]byte"
+      "json"                        "datatypes.JSON"
+      "jsonb"                       "datatypes.JSON"
+
+      "timestamp without time zone" "time.Time"
+      "timestamp with time zone"    "time.Time"
+      "timestamp"                   "time.Time"
+      "timestamptz"                 "time.Time"
+      "date"                        "time.Time"
+      "time without time zone"      "time.Time"
+      "time with time zone"         "time.Time"
+      "time"                        "time.Time"
+
+      "inet"                        "string"
+      "cidr"                        "string"
+      "macaddr"                     "string"
+    -}}
+
+    {{- $PGNULL := dict
+      "int16"         "sql.NullInt16"
+      "int"           "sql.NullInt64"
+      "int64"         "sql.NullInt64"
+      "float32"       "sql.NullFloat64"
+      "float64"       "sql.NullFloat64"
+      "bool"          "sql.NullBool"
+      "string"        "sql.NullString"
+      "time.Time"     "*time.Time"
+      "uuid.UUID"     "*uuid.UUID"
+      "[]byte"        "[]byte"
+      "datatypes.JSON" "datatypes.JSON"
+    -}}
+
+    {{- /* Lookup mapping table */ -}}
+    {{- $base := "string" -}}
+    {{- if hasKey $PG2GO $t -}} {{- $base = get $PG2GO $t -}} {{- end -}}
+
+    {{- /* Nullable strategy */ -}}
+    {{- if $col.Type.Null -}}
+      {{- if $USE_POINTER_NULLS -}}
+        {{- if eq $base "[]byte" -}}[]byte
+        {{- else if hasPrefix $base "*" -}}{{- $base -}}
+        {{- else -}}*{{ $base }}
+        {{- end -}}
+      {{- else -}}
+        {{- if hasKey $PGNULL $base -}}{{- get $PGNULL $base -}}
+        {{- else -}}*{{ $base }}
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $base -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Calculate the "bucket name" = prefix or common */ -}}
+{{- define "BucketOf" -}}
+  {{- $n := lower . -}}
+  {{- $parts := splitBy $n "_" -}}
+  {{- if gt (len $parts) 1 -}}
+    {{- printf "%s" (index $parts 0) -}}
+  {{- else -}}
+    {{- "common" -}}
+  {{- end -}}
+{{- end }}
+
+{{- define "ColsStruct" -}}
+var {{ .TableName }}Cols = struct {
+    {{- $perLine := 7 -}}
+
+    {{- $fields := list -}}
+    {{- range $c := .Table.Columns }}
+        {{- $fields = append $fields (exec "FieldName" $c.Name) -}}
+    {{- end }}
+
+    {{- $total := len $fields -}}
+    {{- range $i, $f := $fields }}
+        {{- if eq (mod $i $perLine) 0 }}
+    {{ end }}{{ $f }}{{ if ne $i (sub $total 1) }},{{ end }}
+    {{- end }} string
+}{
+  {{- range $c := .Table.Columns }}
+    {{- $col := $c.Name -}}
+    {{- $field := exec "FieldName" $col -}}
+    {{- printf "\n    %s: \"%s\"," $field $col -}}
+  {{- end }}
+}
+{{- end }}
+

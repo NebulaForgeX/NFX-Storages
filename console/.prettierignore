@@ -1,0 +1,13 @@
+node_modules
+dist
+.nuxt
+.output
+.git
+*.log
+public
+coverage
+.cursor
+.github
+.specify
+auto-imports.d.ts
+components.d.ts

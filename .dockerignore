@@ -1,0 +1,45 @@
+# Git and IDE
+.git
+.gitignore
+.idea
+.vscode
+.cursor
+*.md
+.editorconfig
+
+# Build / runtime (not needed for image build)
+bin
+tmp
+data
+*.log
+.air.toml.local
+.buildcache
+
+# Assets and static (mounted at runtime; exclude from context to reduce size)
+assets
+static
+dynamic
+console
+**/node_modules
+
+# Task / scripts (not needed for go build)
+.task
+Taskfile.yml
+run_atlas_pipeline.sh
+scripts
+databases
+
+# Docker / compose (avoid recursive context)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Env and secrets (.env kept for dev image COPY . ./)
+.env.*
+*.key
+*.pem
+*.crt
+
+# Docs and misc
+WARN.md
+docs

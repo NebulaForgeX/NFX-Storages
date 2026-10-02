@@ -1,0 +1,246 @@
+syntax = "proto3";
+package account;
+
+option go_package = "nfxstorages/protos/gen/auth/account;accountpb";
+
+import "google/protobuf/timestamp.proto";
+
+enum ForgerRole {
+  FORGER_ROLE_UNSPECIFIED = 0;
+  FORGER_ROLE_FORGER = 1;
+}
+
+enum AuthorityRole {
+  AUTHORITY_ROLE_UNSPECIFIED = 0;
+  AUTHORITY_ROLE_AUDITOR = 1;
+  AUTHORITY_ROLE_ADMINISTRATOR = 2;
+  AUTHORITY_ROLE_OWNER = 3;
+}
+
+enum AccountStatus {
+  ACCOUNT_STATUS_UNSPECIFIED = 0;
+  ACCOUNT_STATUS_ACTIVE = 1;
+  ACCOUNT_STATUS_SUSPENDED = 2;
+  ACCOUNT_STATUS_DELETED = 3;
+}
+
+enum ProfileLanguage {
+  PROFILE_LANGUAGE_UNSPECIFIED = 0;
+  PROFILE_LANGUAGE_EN = 1;
+  PROFILE_LANGUAGE_ZH = 2;
+  PROFILE_LANGUAGE_FR = 3;
+}
+
+message Account {
+  string id = 1;
+  AccountStatus account_status = 2;
+  string signup_platform = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  optional google.protobuf.Timestamp deleted_at = 6;
+}
+
+message Email {
+  string id = 1;
+  string account_id = 2;
+  string email = 3;
+  bool is_primary = 4;
+  optional google.protobuf.Timestamp verified_at = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Timestamp deleted_at = 8;
+}
+
+message Phone {
+  string id = 1;
+  string account_id = 2;
+  string phone = 3;
+  bool is_primary = 4;
+  optional google.protobuf.Timestamp verified_at = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Timestamp deleted_at = 8;
+}
+
+message ForgerProfileAvatar {
+  string id = 1;
+  string profile_id = 2;
+  string image_id = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  optional google.protobuf.Timestamp deleted_at = 7;
+}
+
+message ForgerProfileBackground {
+  string id = 1;
+  string profile_id = 2;
+  string image_id = 3;
+  int32 sort_order = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  optional google.protobuf.Timestamp deleted_at = 7;
+}
+
+message ForgerProfile {
+  string account_id = 1;
+  string profile_id = 2;
+  ProfileLanguage profile_language = 3;
+  string preference_json = 4 [json_name = "preference"];
+  optional string display_name = 5;
+  optional string first_name = 6;
+  optional string last_name = 7;
+  optional string country = 8;
+  optional string city = 9;
+  optional string gender = 10;
+  optional string birthday = 11;
+  optional string website = 12;
+  optional string timezone = 13;
+  optional string bio = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  optional google.protobuf.Timestamp deleted_at = 17;
+  repeated ForgerProfileAvatar avatars = 18;
+  repeated ForgerProfileBackground backgrounds = 19;
+  repeated ForgerRole forger_roles = 20;
+}
+
+message AuthorityProfileAvatar {
+  string id = 1;
+  string profile_id = 2;
+  string image_id = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  optional google.protobuf.Timestamp deleted_at = 7;
+}
+
+message AuthorityProfileBackground {
+  string id = 1;
+  string profile_id = 2;
+  string image_id = 3;
+  int32 sort_order = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  optional google.protobuf.Timestamp deleted_at = 7;
+}
+
+message AuthorityProfile {
+  string account_id = 1;
+  string profile_id = 2;
+  ProfileLanguage profile_language = 3;
+  string preference_json = 4 [json_name = "preference"];
+  optional string display_name = 5;
+  optional string first_name = 6;
+  optional string last_name = 7;
+  optional string country = 8;
+  optional string city = 9;
+  optional string gender = 10;
+  optional string birthday = 11;
+  optional string website = 12;
+  optional string timezone = 13;
+  optional string bio = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  optional google.protobuf.Timestamp deleted_at = 17;
+  repeated AuthorityProfileAvatar avatars = 18;
+  repeated AuthorityProfileBackground backgrounds = 19;
+  repeated AuthorityRole authority_roles = 20;
+}
+
+message FullAccountInformation {
+  Account account = 1;
+  repeated Email emails = 2;
+  repeated Phone phones = 3;
+  ForgerProfile forger_profile = 4;
+  AuthorityProfile authority_profile = 5;
+}
+
+message GetFullAccountInformationRequest {
+  string account_id = 1;
+}
+
+message GetFullAccountInformationResponse {
+  FullAccountInformation full = 1;
+}
+
+message GetAccountByIDRequest {
+  string id = 1;
+}
+
+message GetAccountByIDResponse {
+  repeated FullAccountInformation items = 1;
+}
+
+message GetAccountByEmailRequest {
+  string email = 1;
+}
+
+message GetAccountByEmailResponse {
+  repeated FullAccountInformation items = 1;
+}
+
+message GetAccountByPhoneRequest {
+  string phone = 1;
+}
+
+message GetAccountByPhoneResponse {
+  repeated FullAccountInformation items = 1;
+}
+
+message GetPrimaryEmailByProfileIDRequest {
+  string profile_id = 1;
+}
+
+message GetPrimaryEmailByProfileIDResponse {
+  string email = 1;
+  string profile_language = 2;
+}
+
+message InvalidateFullInformationWithForgerProfileRequest {
+  string account_id = 1;
+  string profile_id = 2;
+}
+
+message InvalidateFullInformationWithForgerProfileResponse {}
+
+message InvalidateFullInformationWithAuthorityProfileRequest {
+  string account_id = 1;
+  string profile_id = 2;
+}
+
+message InvalidateFullInformationWithAuthorityProfileResponse {}
+
+message EnsureOwnedProfileRequest {
+  string account_id = 1;
+  string profile_id = 2;
+  string profile_scope = 3;
+}
+
+message EnsureOwnedProfileResponse {
+  bool allowed = 1;
+}
+
+message ListProfilesInTableRequest {
+  string table = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  string query = 4;
+}
+
+message ListProfilesInTableResponse {
+  repeated FullAccountInformation items = 1;
+  int64 total = 2;
+}
+
+service AccountService {
+  rpc GetFullAccountInformation (GetFullAccountInformationRequest) returns (GetFullAccountInformationResponse);
+  rpc GetAccountByID (GetAccountByIDRequest) returns (GetAccountByIDResponse);
+  rpc GetAccountByEmail (GetAccountByEmailRequest) returns (GetAccountByEmailResponse);
+  rpc GetAccountByPhone (GetAccountByPhoneRequest) returns (GetAccountByPhoneResponse);
+  rpc GetPrimaryEmailByProfileID (GetPrimaryEmailByProfileIDRequest) returns (GetPrimaryEmailByProfileIDResponse);
+  rpc InvalidateFullInformationWithForgerProfile (InvalidateFullInformationWithForgerProfileRequest) returns (InvalidateFullInformationWithForgerProfileResponse);
+  rpc InvalidateFullInformationWithAuthorityProfile (InvalidateFullInformationWithAuthorityProfileRequest) returns (InvalidateFullInformationWithAuthorityProfileResponse);
+  rpc EnsureOwnedProfile (EnsureOwnedProfileRequest) returns (EnsureOwnedProfileResponse);
+  rpc ListProfilesInTable (ListProfilesInTableRequest) returns (ListProfilesInTableResponse);
+}

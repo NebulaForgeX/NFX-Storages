@@ -1,0 +1,309 @@
+.root {
+  width: 100%;
+}.galleryRow {
+  width: max-content;
+}.tile {
+  position: relative;
+  width: 168px;
+  height: 126px;
+  overflow: hidden;
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-3);
+  background: var(--color-panel-solid);
+}
+
+.badge {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  min-width: 21px;
+  height: 21px;
+  padding-inline: 6px;
+  border-radius: var(--radius-full);
+  background: var(--black-a8);
+  color: var(--white-a12);
+}
+
+.remove {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border-radius: var(--radius-full);
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  --profile-background-upload-progress: 0%;
+  background:
+    radial-gradient(circle closest-side, var(--color-panel-solid) 68%, transparent 70%),
+    conic-gradient(var(--accent-9) var(--profile-background-upload-progress), var(--gray-a5) 0);
+  color: var(--accent-9);
+}
+
+.ring span::after {
+  content: "%";
+}
+
+.pill {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: var(--red-a11);
+  color: var(--white-a12);
+}
+
+.addTile {
+  flex: 0 0 168px;
+  width: 168px;
+  height: 126px;
+  border: 1px dashed var(--gray-a5);
+  border-radius: var(--radius-3);
+  background: var(--gray-2, var(--gray-3));
+}
+
+.addIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  background: var(--color-panel-solid);
+  color: var(--accent-9);
+  box-shadow: var(--shadow-3);
+}
+
+
+.hiddenInput {
+  display: none;
+}
+.uploadSurface {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}.uploadSurfacePy {
+  padding-bottom: 2px;
+}.tileSize {
+  position: relative;
+  flex: 0 0 168px;
+  width: 168px;
+  height: 126px;
+}.tileRadius {
+  border-radius: var(--radius-3);
+}.tileClip {
+overflow: hidden;
+}.tileEdge {
+  border: 1px solid var(--gray-a5);
+}.tileFill {
+  background: var(--gray-2, var(--gray-3));
+}/* 原生 button 重置 + 虚线上传位装饰 */
+.addTileReset {
+appearance: none;
+font: inherit;
+color: var(--gray-10);
+cursor: pointer;
+width: 100%;
+}.addTileMarginX {
+  margin-inline: 0;
+}.addTileMarginY {
+  margin-block: 0;
+}.addTileDash {
+  border-style: dashed;
+}.addTileDash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, var(--gray-a3) 25%, transparent 25%) 0 0 / 22px 22px,
+    linear-gradient(135deg, transparent 75%, var(--gray-a3) 75%) 0 0 / 22px 22px;
+  opacity: 0.75;
+}.addTileReset:hover:not(:disabled) {
+  color: var(--accent-9);
+}.addTileReset:hover:not(:disabled) .addTileDash {
+  border-color: var(--accent-9);
+}.addTileReset:hover:not(:disabled) .tileFill {
+  background: var(--accent-a3);
+}.addTileReset:disabled,
+.addTileDisabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}.iconLayer {
+  position: relative;
+  z-index: 1;
+}.iconSize {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}.iconRadius {
+  border-radius: var(--radius-full);
+}.iconFill {
+  background: var(--color-panel-solid);
+}.iconShadow {
+  box-shadow: var(--shadow-3);
+}.iconInk {
+  color: var(--accent-9);
+}.iconSvg {
+  display: block;
+  flex-shrink: 0;
+}.addContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+}.addTitle {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--gray-11);
+}.tilePhotoFill {
+  background: var(--color-panel-solid);
+}.tileGrab {
+  cursor: grab;
+}.tileGrab:active {
+  cursor: grabbing;
+}.tileBusy,
+.tileFailed {
+  cursor: default;
+}.tileDragging {
+  opacity: 0.78;
+  z-index: 2;
+}.tileDragShadow {
+  box-shadow: var(--shadow-4);
+}.tileEdgeFailed {
+  border-color: var(--red-a7);
+}.tileImage {
+display: block;
+width: 100%;
+object-fit: cover;
+}.tileBusy .tileImage {
+  filter: saturate(0.9);
+}.tileFailed .tileImage {
+  filter: grayscale(1);
+  opacity: 0.72;
+}.badgeAnchor {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+}.badgeX {
+  margin-left: 6px;
+}.badgeY {
+  margin-top: 6px;
+}.badgeSize {
+  min-width: 21px;
+  height: 21px;
+}.badgePad {
+  padding-inline: 6px;
+}.badgeRadius {
+  border-radius: var(--radius-full);
+}.badgeFill {
+  background: var(--black-a8);
+}.badgeInk {
+  color: var(--white-a12);
+}.removeAnchor {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+}.removeX {
+  margin-right: 5px;
+}.removeY {
+  margin-top: 5px;
+}.removeSize {
+  min-width: 26px;
+  min-height: 26px;
+}.removeRadius {
+  border-radius: var(--radius-full);
+}.ringAnchor {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+}.ringShift {
+  transform: translate(-50%, -50%);
+}.ringSize {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}.ringRadius {
+  border-radius: var(--radius-full);
+}.ringCover {
+  position: absolute;
+  inset: 0;
+}.ringShadow {
+  box-shadow: var(--shadow-4);
+}.ringFill {
+  --profile-background-upload-progress: 0%;
+  background:
+    radial-gradient(circle closest-side, var(--color-panel-solid) 68%, transparent 70%),
+    conic-gradient(var(--accent-9) var(--profile-background-upload-progress), var(--gray-a5) 0);
+}.ringInk {
+  color: var(--accent-9);
+  text-align: center;
+}.ringInk::after {
+  content: "%";
+}.pillAnchor {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}.pillX {
+  margin-inline: 6px;
+}.pillY {
+  margin-bottom: 6px;
+}.pillSize {
+  height: 22px;
+  min-width: 0;
+}.pillRadius {
+  border-radius: var(--radius-full);
+}.pillClip {
+  overflow: hidden;
+}.pillPad {
+  padding-inline: 7px;
+}.pillFill {
+  background: var(--black-a8);
+}.pillInk {
+  color: var(--white-a12);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}.statusFailed {
+  background: var(--red-a11);
+}.spin {
+  animation: profileBackgroundSpin 0.8s linear infinite;
+}@keyframes profileBackgroundSpin {
+  from {
+    transform: rotate(0deg);
+  }to {
+    transform: rotate(360deg);
+  }}@media (max-width: 560px) {
+  .tileSize {
+    flex-basis: 148px;
+    width: 148px;
+    height: 111px;
+  }}
+
+.tileRadius > *,
+.tileEdge > *,
+.tileFill > *,
+.tilePhotoFill > *,
+.tileSize > *,
+.tileClip > *,
+.addTileReset > *,
+.iconSize > *,
+.tileImage > *,
+.badgeSize > *,
+.removeSize > *,
+.ringSize > *,
+.pillSize > * {
+  height: 100%;
+}

@@ -1,0 +1,63 @@
+{
+  "title": "登录",
+  "brand": {
+    "access": "{{name}} 通行",
+    "title": "进入卷、桶与对象空间。"
+  },
+  "heroFooter": "登录一次。同一份 Account 进入 Storages 控制台。",
+  "form": {
+    "welcomeBack": "欢迎回来",
+    "title": "登录 {{name}}",
+    "subtitle": "继续你的 NFX Account——先身份，再存储。",
+    "emailLabel": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "密码",
+    "passwordPlaceholder": "输入密码",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码",
+    "rememberMe": "记住我",
+    "submit": "登录",
+    "phoneLabel": "手机",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "邮箱",
+    "channelPhone": "手机",
+    "validation": {
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "邮箱格式不正确",
+      "phoneRequired": "请输入手机号",
+      "phoneInvalid": "手机号格式不正确",
+      "passwordRequired": "请输入密码"
+    }
+  },
+  "promo": {
+    "newTo": "还没有 {{name}}？",
+    "createAccount": "创建账号"
+  },
+  "selectProfile": {
+    "eyebrow": "选择身份",
+    "title": "用哪个 Profile 继续？",
+    "subtitle": "一个 Account 可以持有多个 Profile。",
+    "back": "返回登录",
+    "kind": {
+      "authority": "Authority",
+      "community": "Community"
+    },
+    "kindHint": {
+      "authority": "审核与角色",
+      "community": "日常使用"
+    },
+    "roles": {
+      "pulser": "脉搏者",
+      "tester": "测试者",
+      "creator": "创作者",
+      "reviewer": "审核员",
+      "moderator": "治理员",
+      "inspector": "巡查员",
+      "supporter": "支持员",
+      "auditor": "审计员",
+      "administrator": "管理员",
+      "owner": "所有者",
+      "forger": "Forger"
+    }
+  }
+}

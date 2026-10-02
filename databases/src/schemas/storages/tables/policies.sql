@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS "storages"."policies" (
+  "name" VARCHAR(255) PRIMARY KEY,
+  "document" JSONB NOT NULL DEFAULT '{}'::jsonb,
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

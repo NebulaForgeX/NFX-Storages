@@ -1,0 +1,12 @@
+.icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-5);
+  background: var(--accent-a3);
+  border: 1px solid var(--gray-a5);
+  color: var(--accent-11);
+}
+
+.lede {
+  max-width: 36ch;
+}

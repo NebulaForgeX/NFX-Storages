@@ -1,0 +1,14 @@
+.scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: content-box;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.scenePx {
+  padding-inline: var(--space-7);
+}
+.scenePy {
+  padding-block: var(--space-8);
+}

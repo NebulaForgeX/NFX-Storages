@@ -1,0 +1,7 @@
+.rowHit {
+  cursor: pointer;
+}
+
+.rowSelected {
+  background: var(--accent-a3);
+}

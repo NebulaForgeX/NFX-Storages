@@ -1,0 +1,21 @@
+# Buf 配置文件版本
+version: v2
+
+modules:
+  - path: src
+
+deps:
+  - buf.build/bufbuild/protovalidate
+
+lint:
+  use:
+    - STANDARD
+  except:
+    - DIRECTORY_SAME_PACKAGE
+    - PACKAGE_DIRECTORY_MATCH
+    - PACKAGE_VERSION_SUFFIX
+    - PACKAGE_SAME_GO_PACKAGE
+
+breaking:
+  use:
+    - FILE
