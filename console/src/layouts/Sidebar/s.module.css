@@ -119,9 +119,9 @@ min-height: 0;
   font-size: 11px;
   line-height: 16px;
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.14em;
 }.sectionTitleIcon {
-  display: none;
+  color: var(--accent-11);
 }.sectionDividerSize {
   height: 1px;
 }.sectionDividerSpace {

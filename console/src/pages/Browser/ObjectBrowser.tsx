@@ -116,18 +116,20 @@ export default function ObjectBrowserPage() {
   return (
     <PageFrame>
       <PageHeader icon={StackIcon} title={bucket} description={prefix || "/"} />
-      <Section pb="3">
+      <Box style={{ borderBottom: "1px solid var(--gray-a5)" }}>
+      <Section py="2">
       <Flex gap="1" wrap="wrap" align="center">
         {crumbs.map((crumb, index) => (
           <Flex key={crumb.href} gap="1" align="center">
             {index > 0 ? <Text color="gray">/</Text> : null}
-            <Button size="1" variant="ghost" onClick={() => navigate(crumb.href)}>
+            <Button size="1" variant={index === crumbs.length - 1 ? "solid" : "ghost"} color="gray" onClick={() => navigate(crumb.href)}>
               {crumb.label}
             </Button>
           </Flex>
         ))}
       </Flex>
       </Section>
+      </Box>
       <Toolbar search={search} onSearchChange={setSearch} searchPlaceholder={t("Search")}>
         <input ref={fileRef} type="file" multiple hidden onChange={(event) => void uploadFiles(event.target.files)} />
         <Button onClick={() => fileRef.current?.click()}>{t("Upload File")}</Button>
