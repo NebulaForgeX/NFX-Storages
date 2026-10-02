@@ -286,7 +286,7 @@ min-height: 0;
 }.menuAreaCollapsed .sectionTitleX {
   padding-inline: 0;
   margin-inline: 0;
-}.collapsedSubmenuSize {
+}.collapsedSubmenuSize:global(.rt-IconButton) {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,6 +299,13 @@ min-height: 0;
   color: var(--gray-11);
   background: transparent;
   cursor: pointer;
+}
+.footerCollapsed .logoutHit {
+  width: 40px;
+  margin-inline: auto;
+}
+.footerCollapsed .logoutRadius {
+  border-radius: var(--radius-3) !important;
 }.collapsedSubmenuPadX {
   padding-inline: 0;
 }.collapsedSubmenuPadY {
