@@ -1,5 +1,5 @@
 import { Settings, User } from "lucide-react";
-import { Avatar, Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Container, Section, Avatar, Button, Flex, Text } from "@radix-ui/themes";
 import { ProfileKindEnum } from "nfx-ui/enums";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
@@ -21,9 +21,9 @@ export default function UserTopBar() {
   const role = t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity");
 
   return (
-    <Box position="sticky" top="0" className={styles.bar}>
-      <Box px="6">
-        <Box py="4">
+    <Box position="sticky" top="0" className={`${styles.barLayer} ${styles.barRule} ${styles.barFill} ${styles.barBlur}`}>
+      <Container px="6">
+        <Section py="4">
           <Flex align="center" justify="between" gap="4" wrap="wrap">
             <Flex align="center" gap="3" minWidth="0">
               <Avatar size="2" radius="none" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
@@ -47,8 +47,8 @@ export default function UserTopBar() {
               </Button>
             </Flex>
           </Flex>
-        </Box>
-      </Box>
+        </Section>
+      </Container>
     </Box>
   );
 }

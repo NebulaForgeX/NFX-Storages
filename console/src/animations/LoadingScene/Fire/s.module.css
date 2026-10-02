@@ -3,91 +3,61 @@
   0%,
   100% {
     transform: scaleY(1) scaleX(1);
-  }
-  50%,
+  }50%,
   90% {
     transform: scaleY(1.1);
-  }
-  75% {
+  }75% {
     transform: scaleY(0.95);
-  }
-  80% {
+  }80% {
     transform: scaleX(0.95);
-  }
-}
-
-@keyframes shake {
+  }}@keyframes shake {
   0%,
   100% {
     transform: skewX(0) scale(1);
-  }
-  50% {
+  }50% {
     transform: skewX(5deg) scale(0.9);
-  }
-}
-
-@keyframes particleUp {
+  }}@keyframes particleUp {
   0% {
     opacity: 0;
-  }
-  20% {
+  }20% {
     opacity: 1;
-  }
-  80% {
+  }80% {
     opacity: 1;
-  }
-  100% {
+  }100% {
     opacity: 0;
     top: -100%;
     transform: scale(0.5);
-  }
-}
-
-@keyframes glow {
+  }}@keyframes glow {
   0%,
   100% {
     background-color: #ef5a00;
-  }
-  50% {
+  }50% {
     background-color: #ff7800;
-  }
-}
-
-.fire {
+  }}.fire {
   position: relative;
   width: 100px;
   height: 100px;
   background-color: transparent;
   overflow: visible;
-}
-
-/* Headroom for scaleY(1.1) + particleUp above the flame box. */
+}/* Headroom for scaleY(1.1) + particleUp above the flame box. */
 .sizeSmall,
 .sizeMedium,
 .sizeLarge {
   overflow: visible;
   padding-top: 28%;
   box-sizing: content-box;
-}
-
-.fireCenter {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  animation: scaleUpDown 3s ease-out infinite both;
-}
-
-.fireCenter .mainFire {
+}.fireCenter {
+position: absolute;
+width: 100%;
+animation: scaleUpDown 3s ease-out infinite both;
+}.fireCenter .mainFire {
   position: absolute;
   width: 100%;
-  height: 100%;
-  background-image: radial-gradient(farthest-corner at 10px 0, #d43300 0%, #ef5a00 95%);
+background-image: radial-gradient(farthest-corner at 10px 0, #d43300 0%, #ef5a00 95%);
   transform: scaleX(0.8) rotate(45deg);
   border-radius: 0 40% 60% 40%;
   filter: drop-shadow(0 0 10px #d43322);
-}
-
-.fireCenter .particleFire {
+}.fireCenter .particleFire {
   position: absolute;
   top: 60%;
   left: 45%;
@@ -97,16 +67,11 @@
   border-radius: 50%;
   filter: drop-shadow(0 0 10px #d43322);
   animation: particleUp 2s ease-out infinite both;
-}
-
-.fireRight {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  animation: shake 2s ease-out infinite both;
-}
-
-.fireRight .mainFire {
+}.fireRight {
+width: 100%;
+position: absolute;
+animation: shake 2s ease-out infinite both;
+}.fireRight .mainFire {
   position: absolute;
   top: 15%;
   right: -25%;
@@ -116,9 +81,7 @@
   transform: scaleX(0.8) rotate(45deg);
   border-radius: 0 40% 60% 40%;
   filter: drop-shadow(0 0 10px #d43322);
-}
-
-.fireRight .particleFire {
+}.fireRight .particleFire {
   position: absolute;
   top: 45%;
   left: 50%;
@@ -129,16 +92,11 @@
   border-radius: 50%;
   filter: drop-shadow(0 0 10px #d43322);
   animation: particleUp 2s ease-out infinite both;
-}
-
-.fireLeft {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  animation: shake 3s ease-out infinite both;
-}
-
-.fireLeft .mainFire {
+}.fireLeft {
+position: absolute;
+width: 100%;
+animation: shake 3s ease-out infinite both;
+}.fireLeft .mainFire {
   position: absolute;
   top: 15%;
   left: -20%;
@@ -148,9 +106,7 @@
   transform: scaleX(0.8) rotate(45deg);
   border-radius: 0 40% 60% 40%;
   filter: drop-shadow(0 0 10px #d43322);
-}
-
-.fireLeft .particleFire {
+}.fireLeft .particleFire {
   position: absolute;
   top: 10%;
   left: 20%;
@@ -160,9 +116,7 @@
   border-radius: 50%;
   filter: drop-shadow(0 0 10px #d43322);
   animation: particleUp 3s ease-out infinite both;
-}
-
-.fireBottom .mainFire {
+}.fireBottom .mainFire {
   position: absolute;
   top: 30%;
   left: 20%;
@@ -173,24 +127,16 @@
   border-radius: 0 40% 100% 40%;
   filter: blur(10px);
   animation: glow 2s ease-out infinite both;
-}
-
-.sizeSmall .fire {
+}.sizeSmall .fire {
   width: 64px;
   height: 64px;
-}
-
-.sizeMedium .fire {
+}.sizeMedium .fire {
   width: 100px;
   height: 100px;
-}
-
-.sizeLarge .fire {
+}.sizeLarge .fire {
   width: 128px;
   height: 128px;
-}
-
-@media (prefers-reduced-motion: reduce) {
+}@media (prefers-reduced-motion: reduce) {
   .fireCenter,
   .fireRight,
   .fireLeft,
@@ -199,5 +145,17 @@
   .fireLeft .particleFire,
   .fireBottom .mainFire {
     animation: none;
-  }
+  }}
+
+.fireCenter > *,
+.mainFire > *,
+.fire > *,
+.particleFire > *,
+.fireRight > *,
+.fireLeft > *,
+.fireBottom > *,
+.sizeSmall > *,
+.sizeMedium > *,
+.sizeLarge > * {
+  height: 100%;
 }

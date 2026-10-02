@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { MenuItemProps, SubMenuProps } from "react-pro-sidebar";
 
 import { createContext, isValidElement, useContext, useEffect, useRef, useState } from "react";
-import { IconButton, Popover, Tooltip } from "@radix-ui/themes";
+import { Section, Box, IconButton, Popover, Tooltip } from "@radix-ui/themes";
 import { Menu, MenuItem as ProMenuItem, SubMenu as ProSubMenu } from "react-pro-sidebar";
 
 import styles from "./s.module.css";
@@ -29,7 +29,12 @@ export function MenuItem(props: MenuItemProps) {
   const item = (
     <ProMenuItem
       {...props}
-      suffix={props.suffix ?? (hasUnread ? <span className={styles.menuDot} /> : undefined)}
+      suffix={
+        props.suffix ??
+        (hasUnread ? (
+          <span className={`${styles.menuDotSize} ${styles.menuDotRadius} ${styles.menuDotFill}`} />
+        ) : undefined)
+      }
       aria-label={props["aria-label"] ?? label}
       aria-current={props.active ? "page" : undefined}
     />
@@ -58,13 +63,14 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
   useEffect(() => () => clearTimeout(closeTimer.current), []);
   return (
     <li className="ps-menuitem-root">
+      <Section my="1">
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger>
           <IconButton
             ref={trigger}
             type="button"
             variant="ghost"
-            className={`${styles.collapsedSubmenuTrigger} ${active ? styles.collapsedSubmenuCurrent : open ? styles.collapsedSubmenuActive : ""}`}
+            className={`${styles.collapsedSubmenuSize} ${active ? styles.collapsedSubmenuCurrent : open ? styles.collapsedSubmenuActive : ""}`}
             aria-label={labelText(label)}
             aria-expanded={open}
             onPointerEnter={() => {
@@ -82,7 +88,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
               content.current?.querySelector<HTMLAnchorElement>("a[href]")?.focus();
             }}
           >
-            {icon}
+            <Box className={`${styles.collapsedSubmenuRadius} ${styles.collapsedSubmenuFill} ${styles.collapsedSubmenuInk}`}>{icon}</Box>
           </IconButton>
         </Popover.Trigger>
         <Popover.Content
@@ -91,7 +97,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
           align="start"
           sideOffset={12}
           collisionPadding={12}
-          className={styles.flyout}
+          className={styles.flyoutSize}
           aria-label={labelText(label)}
           onPointerEnter={cancelClose}
           onPointerLeave={scheduleClose}
@@ -102,15 +108,18 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
             if (pointerOpened.current) event.preventDefault();
           }}
         >
+          <Box className={`${styles.flyoutRadius} ${styles.flyoutEdge} ${styles.flyoutFill} ${styles.flyoutShadow} ${styles.flyoutClip}`}>
+                    <Section className={styles.flyoutPad}>
           <NestedContext.Provider value={true}>
             <Menu
               menuItemStyles={{
                 button: ({ active }) => ({
                   height: "34px",
-                  margin: "3px 7px",
-                  padding: "0 11px",
+                  margin: "var(--space-1) var(--space-2)",
+                  padding: "0 var(--space-3)",
                   borderRadius: "var(--radius-chip)",
-                  font: "14px Arial, sans-serif",
+                  fontFamily: "var(--default-font-family)",
+                  fontSize: "14px",
                   color: active ? "var(--accent-11)" : "var(--gray-11)",
                   backgroundColor: active ? "var(--accent-a3)" : "transparent",
                   "&:hover": {
@@ -131,8 +140,11 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
               {children}
             </Menu>
           </NestedContext.Provider>
+                    </Section>
+          </Box>
         </Popover.Content>
       </Popover.Root>
+      </Section>
     </li>
   );
 }

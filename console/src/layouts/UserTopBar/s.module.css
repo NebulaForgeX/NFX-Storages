@@ -1,6 +1,15 @@
-.bar {
+.barLayer {
   z-index: 10;
+}
+
+.barRule {
   border-bottom: 1px solid var(--gray-a4);
-  background: color-mix(in oklab, var(--color-background) 92%, transparent);
+}
+
+.barFill {
+  background: var(--color-panel-solid);
+}
+
+.barBlur {
   backdrop-filter: blur(10px);
 }

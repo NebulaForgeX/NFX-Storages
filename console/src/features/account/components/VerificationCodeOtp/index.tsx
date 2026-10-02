@@ -1,7 +1,7 @@
 import type { ReactNode, Ref } from "react";
 
 import { useEffect, useState } from "react";
-import { Flex } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { normalizeVerificationCode } from "nfx-ui/utils";
 import { unstable_OneTimePasswordField as OneTimePasswordField } from "radix-ui";
 
@@ -70,14 +70,15 @@ export function VerificationCodeOtp({
         }}
       >
         {Array.from({ length: slotCount }, (_, index) => (
-          <OneTimePasswordField.Input
-            key={index}
-            index={index}
-            autoCapitalize="characters"
-            autoCorrect="off"
-            spellCheck={false}
-            className={[styles.otpSlot, showError ? styles.otpSlotError : ""].filter(Boolean).join(" ")}
-          />
+          <Flex key={index} className={showError ? styles.slotError : styles.slot}>
+            <OneTimePasswordField.Input
+              index={index}
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              className={styles.slotInput}
+            />
+          </Flex>
         ))}
       </Flex>
       {hiddenInputRef ? <OneTimePasswordField.HiddenInput ref={hiddenInputRef} /> : null}

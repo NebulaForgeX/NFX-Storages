@@ -1,23 +1,32 @@
-.cover {
+.coverSize {
   width: 100%;
   height: 180px;
-  overflow: hidden;
-  border-bottom: 1px solid var(--gray-a4);
+}.coverClip {
+overflow: hidden;
+}.coverFill {
+background: var(--gray-3);
+}.coverRule {
+border-bottom: 1px solid var(--gray-a4);
+}.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}.gallerySize {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}.galleryRadius {
+  border-radius: var(--radius-2);
+}.galleryClip {
+overflow: hidden;
+}.galleryEdge {
+  border: 1px solid var(--gray-a5);
+}.galleryFill {
   background: var(--gray-3);
-}
-
-.coverImage {
+}.galleryImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.galleryItem {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--radius-2);
-  border: 1px solid var(--gray-a5);
-  background: var(--gray-3);
-}

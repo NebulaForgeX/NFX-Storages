@@ -1,0 +1,18 @@
+.clipMax {
+  max-height: calc(100dvh - 160px);
+}.clipScroll {
+  overflow-y: auto;
+}.edge {
+  border-left: 1px solid var(--gray-a5);
+}.labelWidth {
+  width: 36%;
+}.labelNowrap {
+  white-space: nowrap;
+}.valueBreak {
+  word-break: break-all;
+}
+
+.edge > *,
+.clipMax > * {
+  height: 100%;
+}

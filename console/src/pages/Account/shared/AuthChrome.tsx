@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Grid } from "@radix-ui/themes";
 import gsap from "gsap";
 
 import { PreferencesPopover } from "@/components";
@@ -33,11 +33,18 @@ export function AuthToolbar() {
   );
 }
 
-export function AuthMotionRoot({ children, className }: { children: ReactNode; className?: string }) {
+export function AuthMotionRoot({ children, className, display = "flex" }: { children: ReactNode; className?: string; display?: "flex" | "grid" }) {
   const scope = useAuthMotion();
+  if (display === "grid") {
+    return (
+      <Grid ref={scope} className={className}>
+        {children}
+      </Grid>
+    );
+  }
   return (
-    <div ref={scope} className={className}>
+    <Flex ref={scope} direction="column" className={className}>
       {children}
-    </div>
+    </Flex>
   );
 }

@@ -1,42 +1,38 @@
 .hairline {
-  width: 100%;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.copy {
+  border-bottom: 1px solid var(--gray-6);
+}.copy {
   min-width: 0;
-}
-
-.index {
+}.index {
   font-size: 11px;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-primary);
-}
-
-.title {
-  margin: 0;
+  color: var(--accent-9);
+}.title {
   font-family: var(--heading-font-family), sans-serif;
   font-weight: 650;
   letter-spacing: -0.04em;
   color: var(--gray-12);
-}
-
-.lede {
+  text-wrap: balance;
+}.lede {
   max-width: 46ch;
   color: var(--gray-11);
-}
-
-.stamp {
+  text-wrap: pretty;
+}.stamp {
   width: 32px;
   height: 32px;
-  border: 1px solid color-mix(in oklab, var(--color-primary) 55%, var(--color-border));
-  background: var(--color-bg);
-  color: var(--color-primary);
+  flex-shrink: 0;
+  border: 1px solid var(--accent-a7);
+  background: var(--color-background);
+  color: var(--accent-9);
+}.actions {
+  min-width: 0;
 }
 
-.actions {
-  min-width: 0;
+.stampEdge > *,
+.stampFill > *,
+.stampSize > *,
+.stampInk > * {
+  height: 100%;
 }

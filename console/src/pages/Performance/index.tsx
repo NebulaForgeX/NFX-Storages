@@ -1,7 +1,7 @@
 import { GaugeIcon } from "nfx-ui/icons";
 import { useTranslation } from "react-i18next";
 
-import { Button, Heading } from "@radix-ui/themes";
+import { Section, Button, Heading } from "@radix-ui/themes";
 import { DataTable, PageHeader, PropertyList, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 
@@ -41,9 +41,11 @@ export default function PerformancePage() {
           { label: t("Runtime"), value: String(info.runtime ?? "-") },
         ]}
       />
-      <Heading as="h2" size="3" mt="4" mb="2">
-        {t("Disks")}
-      </Heading>
+      <Section mt="4" mb="2">
+        <Heading as="h2" size="3">
+          {t("Disks")}
+        </Heading>
+      </Section>
       <DataTable
         empty={t("No Data")}
         emptyIcon={GaugeIcon}

@@ -1,5 +1,5 @@
 import { UserIcon } from "nfx-ui/icons";
-import { Avatar, Box, Button, Card, Flex, Grid, Text } from "@radix-ui/themes";
+import { Box, Section, Avatar, Button, Card, Flex, Grid, Text } from "@radix-ui/themes";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -52,11 +52,11 @@ export default function ProfileOverviewPage() {
         <Card size="2">
           <Flex direction="column" gap="3">
             {coverId ? (
-              <Box className={styles.cover}>
+              <Box className={`${styles.coverSize} ${styles.coverClip} ${styles.coverFill} ${styles.coverRule}`}>
                 <img src={buildImageUrl(coverId)} alt="" className={styles.coverImage} />
               </Box>
             ) : null}
-            <Box py="2">
+            <Section py="2">
               <Flex align="center" gap="3">
                 <Flex align="center" gap="3" minWidth="0" flexGrow="1">
                   <Avatar size="4" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
@@ -70,7 +70,7 @@ export default function ProfileOverviewPage() {
                   </Flex>
                 </Flex>
               </Flex>
-            </Box>
+            </Section>
             <Grid columns={{ initial: "1", sm: "2", md: "3" }} gap="4">
               <Info label={t("labels.bio")} value={safeStringable(profile?.bio)} />
               <Info label={t("labels.city")} value={safeStringable(profile?.city)} />
@@ -89,15 +89,19 @@ export default function ProfileOverviewPage() {
                 {t("labels.backgroundGallery")}
               </Text>
               {!backgrounds.length ? (
-                <Text size="1" color="gray" mt="1">
-                  {t("labels.noBackgrounds")}
-                </Text>
+                <Section mt="1">
+                  <Text size="1" color="gray">
+                    {t("labels.noBackgrounds")}
+                  </Text>
+                </Section>
               ) : null}
             </Box>
             {backgrounds.length ? (
               <Grid columns="repeat(auto-fill, minmax(160px, 1fr))" gap="3">
                 {backgrounds.map((bg) => (
-                  <img key={bg.imageId} src={buildImageUrl(bg.imageId)} alt="" className={styles.galleryItem} loading="lazy" draggable={false} />
+                  <Box key={bg.imageId} className={`${styles.gallerySize} ${styles.galleryRadius} ${styles.galleryClip} ${styles.galleryEdge} ${styles.galleryFill}`}>
+                    <img src={buildImageUrl(bg.imageId)} alt="" className={styles.galleryImage} loading="lazy" draggable={false} />
+                  </Box>
                 ))}
               </Grid>
             ) : null}

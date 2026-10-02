@@ -1,46 +1,49 @@
-/* Swatch / radius preview chrome — Themes props cannot express color chips */
-
-.swatch {
+.swatchHit {
+  padding-inline: 0;
+}.swatchHitY {
+  padding-block: 0;
+}.swatch {
   width: 22px;
   height: 22px;
   min-width: 22px;
   min-height: 22px;
-  padding: 0;
-  border-radius: 999px;
+}.swatchRadius {
+  border-radius: var(--radius-full);
+}.swatchEdge {
   border: 1px solid var(--gray-a6);
-  flex: 0 0 auto;
-}
-
-.swatchActive {
+}.swatchActive {
   outline: 2px solid var(--gray-12);
   outline-offset: 2px;
-}
-
-.radiusCorner {
+}.cornerSize {
   width: 16px;
   height: 16px;
+}.cornerEdge {
   border-left: 2px solid var(--accent-9);
   border-top: 2px solid var(--accent-9);
-  background: color-mix(in oklab, var(--accent-9) 22%, transparent);
-  flex: 0 0 auto;
-}
-
-.radiusNone {
+}.cornerFill {
+  background: var(--accent-a4);
+}.radiusNone {
   border-radius: 0;
+}.radiusSmall {
+  border-radius: var(--radius-1) 0 0 0;
+}.radiusMedium {
+  border-radius: var(--radius-2) 0 0 0;
+}.radiusLarge {
+  border-radius: var(--radius-3) 0 0 0;
+}.radiusFull {
+  border-radius: var(--radius-full) 0 0 0;
 }
 
-.radiusSmall {
-  border-radius: 3px 0 0 0;
-}
-
-.radiusMedium {
-  border-radius: 6px 0 0 0;
-}
-
-.radiusLarge {
-  border-radius: 10px 0 0 0;
-}
-
-.radiusFull {
-  border-radius: 999px 0 0 0;
+.swatchRadius > *,
+.swatchEdge > *,
+.cornerEdge > *,
+.cornerFill > *,
+.radiusNone > *,
+.radiusSmall > *,
+.radiusMedium > *,
+.radiusLarge > *,
+.radiusFull > *,
+.swatch > *,
+.cornerSize > * {
+  height: 100%;
 }

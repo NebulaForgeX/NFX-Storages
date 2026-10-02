@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box, Button, Code, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Section, Button, Code, Dialog, Flex, Text } from "@radix-ui/themes";
 
 export interface SecretDialogProps {
   open: boolean;
@@ -42,13 +42,13 @@ export function SecretDialog({ open, onOpenChange, title, description, fields }:
             </Flex>
           ))}
         </Flex>
-        <Box pt="4">
+        <Section pt="4">
         <Flex justify="end">
           <Dialog.Close>
             <Button>Close</Button>
           </Dialog.Close>
         </Flex>
-        </Box>
+        </Section>
       </Dialog.Content>
     </Dialog.Root>
   );

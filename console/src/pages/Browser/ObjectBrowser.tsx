@@ -3,7 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 
-import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
+import { Box, Section, Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { DataTable, FormDialog, PageHeader, Toolbar } from "@/components";
 import { PageFrame } from "@/layouts";
 
@@ -116,7 +116,7 @@ export default function ObjectBrowserPage() {
   return (
     <PageFrame>
       <PageHeader icon={StackIcon} title={bucket} description={prefix || "/"} />
-      <Box pb="3">
+      <Section pb="3">
       <Flex gap="1" wrap="wrap" align="center">
         {crumbs.map((crumb, index) => (
           <Flex key={crumb.href} gap="1" align="center">
@@ -127,7 +127,7 @@ export default function ObjectBrowserPage() {
           </Flex>
         ))}
       </Flex>
-      </Box>
+      </Section>
       <Toolbar search={search} onSearchChange={setSearch} searchPlaceholder={t("Search")}>
         <input ref={fileRef} type="file" multiple hidden onChange={(event) => void uploadFiles(event.target.files)} />
         <Button onClick={() => fileRef.current?.click()}>{t("Upload File")}</Button>
@@ -138,6 +138,7 @@ export default function ObjectBrowserPage() {
           {t("Refresh")}
         </Button>
       </Toolbar>
+      <Flex direction="column" minHeight="240px" style={dragging ? { outline: "2px dashed var(--accent-8)", outlineOffset: 4 } : undefined}>
       <Flex
         gap="4"
         align="start"
@@ -150,11 +151,6 @@ export default function ObjectBrowserPage() {
           event.preventDefault();
           setDragging(false);
           void uploadFiles(event.dataTransfer.files);
-        }}
-        style={{
-          outline: dragging ? "2px dashed var(--accent-8)" : undefined,
-          outlineOffset: 4,
-          minHeight: 240,
         }}
       >
         <Flex direction="column" gap="3" flexGrow="1" minWidth="0">
@@ -213,7 +209,8 @@ export default function ObjectBrowserPage() {
           />
         ) : null}
       </Flex>
-      <FormDialog
+      </Flex>
+      <FormDialog>
         open={folderOpen}
         onOpenChange={setFolderOpen}
         title={t("Create Folder")}

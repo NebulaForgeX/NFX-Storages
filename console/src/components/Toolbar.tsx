@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Flex, TextField } from "@radix-ui/themes";
+import { Section, Flex, TextField } from "@radix-ui/themes";
 
 export interface ToolbarProps {
   search?: string;
@@ -11,7 +11,7 @@ export interface ToolbarProps {
 
 export function Toolbar({ search, onSearchChange, searchPlaceholder, children }: ToolbarProps) {
   return (
-    <Box pb="3">
+    <Section pb="3">
     <Flex gap="2" wrap="wrap" align="center">
       {onSearchChange ? (
         <TextField.Root
@@ -23,6 +23,6 @@ export function Toolbar({ search, onSearchChange, searchPlaceholder, children }:
       ) : null}
       {children}
     </Flex>
-    </Box>
+    </Section>
   );
 }

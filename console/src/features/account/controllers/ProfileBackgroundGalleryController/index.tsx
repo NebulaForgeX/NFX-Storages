@@ -9,7 +9,7 @@ import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, us
 import { horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ResetIcon } from "@radix-ui/react-icons";
-import { Box, Button, Card, Flex, IconButton, Spinner, Text } from "@radix-ui/themes";
+import { Box, Button, Card, Container, Flex, IconButton, Section, Spinner, Text } from "@radix-ui/themes";
 import { useWheelHorizontalScroll } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -52,23 +52,22 @@ const SortableBackgroundItem = ({ draft, onRemove, removeLabel }: SortableBackgr
     <Box
       ref={setNodeRef}
       style={style}
-      className={`${styles.tile} ${isDragging ? styles.tileDragging : ""} ${isBusy ? styles.tileBusy : ""} ${isFailed ? styles.tileFailed : ""}`}
+      className={[styles.tile, styles.tileGrab, isDragging ? styles.tileDragging : "", isBusy ? styles.tileBusy : "", isFailed ? styles.tileFailed : ""].filter(Boolean).join(" ")}
       {...(isBusy || isFailed ? {} : attributes)}
       {...(isBusy || isFailed ? {} : listeners)}
     >
       <img src={draft.previewUrl} alt="" className={styles.tileImage} draggable={false} />
-      <Flex asChild align="center" justify="center" className={styles.orderBadge}>
+      <Container className={styles.badge}>
         <Text as="span" size="1" weight="bold">
           {draft.sortOrder + 1}
         </Text>
-      </Flex>
-
+      </Container>
       <IconButton
         type="button"
         variant="solid"
         color="red"
         size="2"
-        className={styles.removeBtn}
+        className={styles.remove}
         disabled={isBusy}
         onPointerDown={(event) => event.stopPropagation()}
         onClick={() => onRemove(draft.imageId)}
@@ -77,23 +76,15 @@ const SortableBackgroundItem = ({ draft, onRemove, removeLabel }: SortableBackgr
       >
         <LucideIcon icon={Trash2} size={14} />
       </IconButton>
-
       {isBusy ? (
-        <Flex
-          align="center"
-          justify="center"
-          className={styles.progressRing}
-          style={{ "--profile-background-upload-progress": `${progress}%` } as CSSProperties}
-          aria-label={t("backgroundUpload.status.uploading")}
-        >
+        <Flex align="center" justify="center" className={styles.ring} style={{ "--profile-background-upload-progress": `${progress}%` } as CSSProperties} aria-label={t("backgroundUpload.status.uploading")}>
           <Text as="span" size="1" weight="bold">
             {Math.round(progress)}
           </Text>
         </Flex>
       ) : null}
-
       {isFailed ? (
-        <Text as="span" size="1" weight="bold" className={`${styles.statusPill} ${styles.statusFailed}`}>
+        <Text as="span" size="1" weight="bold" className={styles.pill}>
           <LucideIcon icon={X} size={12} />
           {t("backgroundUpload.status.failed")}
         </Text>
@@ -128,7 +119,7 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
 
   return (
     <Card size="3" className={styles.root}>
-      <Box pb="4">
+      <Section pb="4">
       <Flex align="start" justify="between" gap="3" wrap="wrap">
         <Flex direction="column" gap="1" minWidth="0">
           <Flex align="center" gap="1">
@@ -155,7 +146,7 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
           </Button>
         </Flex>
       </Flex>
-      </Box>
+      </Section>
 
       <input
         ref={fileInputRef}
@@ -171,36 +162,30 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
       />
 
       <Box ref={uploadSurfaceRef} className={styles.uploadSurface}>
-        <Box className={styles.uploadSurfacePy}>
+        <Section className={styles.uploadSurfacePy}>
       <Flex align="stretch" gap="3">
-        <Flex asChild align="center" justify="center" flexShrink="0" className={`${styles.addTile} ${atLimit ? styles.addTileDisabled : ""}`}>
-          <Button type="button" variant="ghost" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
-            <Box px="2" width="100%" height="100%">
-              <Box py="2" height="100%">
-                <span className={styles.addContent}>
-              <span className={styles.addIconWrap}>
-                {uploading ? (
-                  <LucideIcon icon={RefreshCw} size={24} className={styles.spin} />
-                ) : drafts.length === 0 ? (
-                  <LucideIcon icon={Cloud} size={24} />
-                ) : (
-                  <LucideIcon icon={Camera} size={24} />
-                )}
-              </span>
-              <Text as="span" size="2" className={styles.addTitle}>
-                {activeDraft
-                  ? t("backgroundUpload.activeUpload", { name: activeDraft.fileName || t("backgroundUpload.fallbackName", { index: activeDraft.sortOrder + 1 }) })
-                  : atLimit
-                    ? t("backgroundUpload.full")
-                    : drafts.length === 0
-                      ? t("backgroundUpload.dropTitle")
-                      : t("backgroundUpload.add")}
-              </Text>
-                </span>
-              </Box>
-            </Box>
-          </Button>
-        </Flex>
+        <Button type="button" variant="ghost" className={`${styles.addTile} ${atLimit ? styles.addTileDisabled : ""}`} disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
+          <Flex direction="column" align="center" justify="center" gap="2">
+            <Flex align="center" justify="center" className={styles.addIcon}>
+              {uploading ? (
+                <LucideIcon icon={RefreshCw} size={24} className={styles.spin} />
+              ) : drafts.length === 0 ? (
+                <LucideIcon icon={Cloud} size={24} />
+              ) : (
+                <LucideIcon icon={Camera} size={24} />
+              )}
+            </Flex>
+            <Text as="span" size="2">
+              {activeDraft
+                ? t("backgroundUpload.activeUpload", { name: activeDraft.fileName || t("backgroundUpload.fallbackName", { index: activeDraft.sortOrder + 1 }) })
+                : atLimit
+                  ? t("backgroundUpload.full")
+                  : drafts.length === 0
+                    ? t("backgroundUpload.dropTitle")
+                    : t("backgroundUpload.add")}
+            </Text>
+          </Flex>
+        </Button>
 
         {drafts.length > 0 ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -214,18 +199,22 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
           </DndContext>
         ) : null}
       </Flex>
-        </Box>
+        </Section>
       </Box>
 
       {drafts.length > 1 ? (
-        <Text as="p" size="1" color="gray" mt="2">
-          {t("backgroundUpload.reorderHint")}
-        </Text>
+        <Section mt="2">
+          <Text as="p" size="1" color="gray">
+            {t("backgroundUpload.reorderHint")}
+          </Text>
+        </Section>
       ) : null}
       {imageError ? (
-        <Text as="p" size="1" color="red" mt="1">
-          {imageError}
-        </Text>
+        <Section mt="1">
+          <Text as="p" size="1" color="red">
+            {imageError}
+          </Text>
+        </Section>
       ) : null}
     </Card>
   );

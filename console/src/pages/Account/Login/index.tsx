@@ -2,7 +2,7 @@ import { AnimatedIcon, ArrowNarrowRightIcon, RightChevron, ShieldCheck, UsersIco
 import type { Login } from "nfx-ui/types";
 
 import { useMemo, useState } from "react";
-import { Avatar, Badge, Box, Button, Flex, Heading, Link, Spinner, Table, Tabs, Text } from "@radix-ui/themes";
+import { Section, Grid, Container, Avatar, Badge, Box, Button, Flex, Heading, Link, Spinner, Table, Tabs, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { ProfileKind, ProfileKindEnum } from "nfx-ui/enums";
 import { useLoginWithEmail, useLoginWithPhone, useSelectProfile } from "nfx-ui/hooks";
@@ -74,11 +74,12 @@ export default function LoginPage() {
   ];
 
   return (
-    <AuthMotionRoot className={styles.page}>
-      <Box asChild className={styles.rack}>
+    <Box className={`${styles.pageFill} ${styles.pageInk} ${styles.pageSize} ${styles.pageClip}`}>
+    <AuthMotionRoot display="grid" className={styles.pageGrid}>
+      <Box asChild className={`${styles.rackEdge} ${styles.rackFill} ${styles.rackSize} ${styles.rackScroll}`}>
         <aside>
-          <Box className={styles.rackPx}>
-            <Box className={styles.rackPy}>
+          <Container className={styles.rackPx}>
+            <Section className={styles.rackPy}>
               <Flex direction="column" gap="6" justify="between" height="100%">
                 <Flex direction="column" gap="2" className={styles.rackBrand} data-auth-motion>
                   <Logo variant="plain" size="small" to={ROUTES.LOGIN} title={rack.t("productName")} />
@@ -95,8 +96,8 @@ export default function LoginPage() {
                       {rack.t("capacityValue")}
                     </Text>
                   </Flex>
-                  <Box className={styles.meterTrack} aria-hidden>
-                    <Box className={styles.meterFill} />
+                  <Box className={`${styles.meterTrackSize} ${styles.meterTrackClip} ${styles.meterTrackFill}`} aria-hidden>
+                    <Box className={`${styles.meterFillSize} ${styles.meterFillPaint}`} />
                   </Box>
                   <Text size="1" color="gray">
                     {rack.t("capacityHint")}
@@ -124,15 +125,16 @@ export default function LoginPage() {
                   {rack.t("summary")}
                 </Text>
               </Flex>
-            </Box>
-          </Box>
+            </Section>
+          </Container>
         </aside>
       </Box>
 
-      <Box asChild className={styles.session}>
+      <Box className={styles.sessionFill}>
+      <Flex asChild className={styles.session}>
         <section>
-          <Box className={styles.sessionPx}>
-            <Box className={styles.sessionPy}>
+          <Container className={`${styles.sessionPx} ${styles.sessionGrow}`}>
+            <Section className={styles.sessionPy}>
               <Flex direction="column" height="100%">
                 <AuthToolbar />
                 <Flex className={styles.sessionBody} align="center">
@@ -172,7 +174,7 @@ export default function LoginPage() {
                               key={`${kind}:${profile.profileId}`}
                               type="button"
                               variant="ghost"
-                              className={styles.profileRow}
+                              className={`${styles.profileRowWide} ${styles.profileRowAlign} ${styles.profileRowInk} ${styles.profileRowHit}`}
                               disabled={selectProfile.isPending}
                               onClick={async () => {
                                 await selectProfile.mutateAsync({
@@ -182,8 +184,9 @@ export default function LoginPage() {
                                 routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW, replace: true });
                               }}
                             >
-                              <Box className={styles.profileRowPy}>
-                                <Box className={styles.profileRowGrid}>
+                              <Box className={`${styles.profileRowRule} ${styles.profileRowFill}`}>
+                              <Section className={styles.profileRowPy}>
+                                <Grid className={styles.profileRowGrid}>
                                   <Avatar size="2" radius="none" fallback={initial} src={profile.avatarImageId ? buildImageUrl(profile.avatarImageId) : undefined} />
                                   <Flex direction="column" className={styles.profileMeta} gap="1">
                                     <Flex align="center" gap="2" wrap="wrap">
@@ -199,7 +202,8 @@ export default function LoginPage() {
                                     </Text>
                                   </Flex>
                                   {selectProfile.isPending ? <Spinner size="2" /> : <AnimatedIcon icon={RightChevron} size={16} />}
-                                </Box>
+                                </Grid>
+                              </Section>
                               </Box>
                             </Button>
                           );
@@ -278,10 +282,12 @@ export default function LoginPage() {
                   </Box>
                 </Flex>
               </Flex>
-            </Box>
-          </Box>
+            </Section>
+          </Container>
         </section>
+      </Flex>
       </Box>
     </AuthMotionRoot>
+    </Box>
   );
 }
