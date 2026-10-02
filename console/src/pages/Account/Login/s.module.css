@@ -78,7 +78,7 @@ width: 42%;
 }.sessionPy {
   padding-block: var(--space-5) var(--space-7);
 }
-}.sessionBody {
+.sessionBody {
   flex: 1;
   min-height: 0;
 }.strip {
