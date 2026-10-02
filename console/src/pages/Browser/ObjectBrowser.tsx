@@ -212,7 +212,7 @@ export default function ObjectBrowserPage() {
         ) : null}
       </Flex>
       </Flex>
-      <FormDialog>
+      <FormDialog
         open={folderOpen}
         onOpenChange={setFolderOpen}
         title={t("Create Folder")}
