@@ -14,12 +14,14 @@ import styles from "./s.module.css";
 function Info({ label, value }: { label: string; value: string }) {
   const { t } = useTranslation("pages.User.Profile.Overview");
   return (
-    <Flex direction="column" gap="1">
-      <Text size="1" color="gray" weight="medium">
-        {label}
-      </Text>
-      <Text size="2">{value || t("labels.notSpecified")}</Text>
-    </Flex>
+    <Section py="3" className={styles.infoCell}>
+      <Flex direction="column" gap="1">
+        <Text size="1" color="gray" weight="medium">
+          {label}
+        </Text>
+        <Text size="2">{value || t("labels.notSpecified")}</Text>
+      </Flex>
+    </Section>
   );
 }
 

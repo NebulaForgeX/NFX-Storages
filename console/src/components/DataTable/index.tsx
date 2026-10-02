@@ -3,7 +3,7 @@ import type { AnimatedIconComponent } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Box, DropdownMenu, IconButton, Table } from "@radix-ui/themes";
+import { Box, DropdownMenu, Flex, IconButton, Section, Spinner, Table, Text } from "@radix-ui/themes";
 
 import EmptyState from "../EmptyState";
 
@@ -46,7 +46,16 @@ export function DataTable<T>({
   selectedKey,
 }: DataTableProps<T>) {
   if (loading) {
-    return <EmptyState icon={emptyIcon ?? StackIcon} title={empty ?? "Loading..."} />;
+    return (
+      <Section py="6">
+        <Flex align="center" justify="center" gap="2">
+          <Spinner />
+          <Text size="2" color="gray">
+            {empty ?? "Loading..."}
+          </Text>
+        </Flex>
+      </Section>
+    );
   }
   if (!rows.length) {
     return <EmptyState icon={emptyIcon ?? StackIcon} title={empty ?? "No data"} />;

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Container, Section, Button, Flex, Heading, Table, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Heading, Section, Table, Text } from "@radix-ui/themes";
 
 import styles from "./s.module.css";
 
@@ -11,6 +11,7 @@ export interface PropertyItem {
 
 export function PropertyList({ items }: { items: PropertyItem[] }) {
   return (
+    <Box overflow="hidden" style={{ borderRadius: "var(--radius-3)", background: "var(--color-panel-solid)", boxShadow: "var(--shadow-2)" }}>
     <Table.Root variant="surface" size="1">
       <Table.Body>
         {items.map((item) => (
@@ -25,6 +26,7 @@ export function PropertyList({ items }: { items: PropertyItem[] }) {
         ))}
       </Table.Body>
     </Table.Root>
+    </Box>
   );
 }
 

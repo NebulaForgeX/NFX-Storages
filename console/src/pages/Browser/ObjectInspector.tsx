@@ -2,7 +2,7 @@ import { FileDescriptionIcon, LayersIcon, LockIcon, ShieldCheck } from "nfx-ui/i
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Box, Button, Flex, Heading, Select, Switch, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Heading, Section, Select, Switch, Text, TextField } from "@radix-ui/themes";
 import { DataTable, Inspector, PropertyList } from "@/components";
 import {
   useDeleteAllObjectVersions,
@@ -182,9 +182,18 @@ export default function ObjectInspector({ bucket, objectKey, onClose, onDeleted 
         </Box>
       ) : null}
       {previewText ? (
-        <pre style={{ whiteSpace: "pre-wrap", fontSize: 12, maxHeight: 220, overflow: "auto" }}>{previewText}</pre>
+        <Box style={{ background: "var(--gray-a2)", borderRadius: "var(--radius-2)", maxHeight: 220, overflow: "auto" }}>
+          <Section py="3">
+            <Container px="3">
+              <pre style={{ whiteSpace: "pre-wrap", margin: 0, fontFamily: "var(--default-font-family)", color: "var(--gray-12)" }}>{previewText}</pre>
+            </Container>
+          </Section>
+        </Box>
       ) : null}
 
+      <Box style={{ borderTop: "1px solid var(--gray-a5)" }}>
+      <Section py="3">
+      <Flex direction="column" gap="2">
       <Heading as="h3" size="2">
         <Flex align="center" gap="2">
           <FileDescriptionIcon size={14} />
@@ -195,7 +204,13 @@ export default function ObjectInspector({ bucket, objectKey, onClose, onDeleted 
       <Button size="1" variant="outline" onClick={() => void saveTagLines()}>
         {t("Save")}
       </Button>
+      </Flex>
+      </Section>
+      </Box>
 
+      <Box style={{ borderTop: "1px solid var(--gray-a5)" }}>
+      <Section py="3">
+      <Flex direction="column" gap="2">
       <Heading as="h3" size="2">
         <Flex align="center" gap="2">
           <LockIcon size={14} />
@@ -237,7 +252,13 @@ export default function ObjectInspector({ bucket, objectKey, onClose, onDeleted 
           }
         />
       </Flex>
+      </Flex>
+      </Section>
+      </Box>
 
+      <Box style={{ borderTop: "1px solid var(--gray-a5)" }}>
+      <Section py="3">
+      <Flex direction="column" gap="2">
       <Heading as="h3" size="2">
         <Flex align="center" gap="2">
           <LayersIcon size={14} />
@@ -292,6 +313,9 @@ export default function ObjectInspector({ bucket, objectKey, onClose, onDeleted 
           {t("Delete All Versions")}
         </Button>
       ) : null}
+      </Flex>
+      </Section>
+      </Box>
     </Inspector>
   );
 }

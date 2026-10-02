@@ -3,7 +3,10 @@
 }.clipScroll {
   overflow-y: auto;
 }.edge {
-  border-left: 1px solid var(--gray-a5);
+  background: var(--color-panel-solid);
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-2);
 }.labelWidth {
   width: 36%;
 }.labelNowrap {
