@@ -63,7 +63,6 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
   useEffect(() => () => clearTimeout(closeTimer.current), []);
   return (
     <li className="ps-menuitem-root">
-      <Section my="1">
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger>
           <IconButton
@@ -88,7 +87,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
               content.current?.querySelector<HTMLAnchorElement>("a[href]")?.focus();
             }}
           >
-            <Box className={`${styles.collapsedSubmenuRadius} ${styles.collapsedSubmenuFill} ${styles.collapsedSubmenuInk}`}>{icon}</Box>
+            {icon}
           </IconButton>
         </Popover.Trigger>
         <Popover.Content
@@ -144,7 +143,6 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
           </Box>
         </Popover.Content>
       </Popover.Root>
-      </Section>
     </li>
   );
 }

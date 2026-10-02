@@ -20,7 +20,7 @@ import UserTopBar from "../UserTopBar";
 import styles from "./s.module.css";
 
 const SIDEBAR_WIDTH = "234px";
-const SIDEBAR_COLLAPSED_WIDTH = "84px";
+const SIDEBAR_COLLAPSED_WIDTH = "88px";
 
 function MenuLabel({ children, active = false }: { children: ReactNode; active?: boolean }) {
   return (
@@ -47,28 +47,48 @@ function SectionTitle({ label, icon }: { label: string; icon: AnimatedIconCompon
 
 function createMenuItemStyles(collapsed: boolean) {
   return {
-    button: ({ active, level = 0 }: { active: boolean; level?: number }) => ({
-      height: level > 0 ? "34px" : "40px",
-      margin: level > 0 ? (collapsed ? "var(--space-1) var(--space-2)" : "var(--space-1) 0 var(--space-1) var(--space-6)") : "var(--space-2) 0",
-      borderRadius: "var(--radius-chip)",
-      paddingLeft: level > 0 ? "var(--space-3)" : "var(--space-2)",
-      paddingRight: "var(--space-2)",
-      fontSize: level > 0 ? "14px" : "15px",
-      fontWeight: 400,
-      color: active ? "var(--accent-11)" : "var(--gray-11)",
-      backgroundColor: active ? "var(--accent-a3)" : "transparent",
-      transition: "background-color 150ms ease, color 150ms ease",
-      "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
-      "&:focus-visible": {
-        outline: "2px solid var(--accent-8)",
-        outlineOffset: "2px",
-      },
-    }),
+    button: ({ active, level = 0 }: { active: boolean; level?: number }) =>
+      collapsed && level === 0
+        ? {
+            width: "40px",
+            height: "40px",
+            margin: "4px auto",
+            padding: "0",
+            borderRadius: "var(--radius-3)",
+            justifyContent: "center",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: active ? "var(--accent-11)" : "var(--gray-11)",
+            backgroundColor: active ? "var(--accent-a3)" : "transparent",
+            transition: "background-color 150ms ease, color 150ms ease",
+            "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
+            "&:focus-visible": {
+              outline: "2px solid var(--accent-8)",
+              outlineOffset: "2px",
+            },
+          }
+        : {
+            height: level > 0 ? "34px" : "40px",
+            margin: level > 0 ? "var(--space-1) 0 var(--space-1) var(--space-6)" : "var(--space-2) 0",
+            borderRadius: "var(--radius-chip)",
+            paddingLeft: level > 0 ? "var(--space-3)" : "var(--space-2)",
+            paddingRight: "var(--space-2)",
+            fontSize: level > 0 ? "14px" : "15px",
+            fontWeight: 400,
+            color: active ? "var(--accent-11)" : "var(--gray-11)",
+            backgroundColor: active ? "var(--accent-a3)" : "transparent",
+            transition: "background-color 150ms ease, color 150ms ease",
+            "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
+            "&:focus-visible": {
+              outline: "2px solid var(--accent-8)",
+              outlineOffset: "2px",
+            },
+          },
     icon: ({ level = 0 }: { level?: number }) => ({
       width: "20px",
       minWidth: "20px",
       height: "20px",
-      marginRight: "var(--space-2)",
+      marginRight: collapsed || level > 0 ? "0" : "var(--space-2)",
       color: "inherit",
       ...(level > 0 ? { display: "none" } : {}),
     }),

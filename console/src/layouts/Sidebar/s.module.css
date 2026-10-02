@@ -164,9 +164,16 @@ min-height: 0;
   bottom: calc(50% + 8px);
 }.menuArea :global(.ps-submenu-content .ps-menu-button) {
   position: relative;
-}.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
-  justify-content: center;
+}.menuAreaCollapsed :global(.ps-menu-root > ul) {
   padding: 0;
+}
+.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
+  width: 40px;
+  height: 40px;
+  margin: 4px auto;
+  padding: 0;
+  justify-content: center;
+  border-radius: var(--radius-3);
 }.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
   margin: 0;
 }.menuAreaCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-label),
@@ -269,24 +276,29 @@ min-height: 0;
   padding-block: var(--space-1) var(--space-2);
 }.menuArea:not(.menuAreaCollapsed) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
   visibility: hidden;
-}.menuAreaCollapsed .sectionTitleY {
-  margin-block: 17px 9px;
-  padding-block: var(--space-4) 0;
+}.menuAreaCollapsed .sectionTitle :global(.rt-Text),
+.menuAreaCollapsed .sectionTitleIcon {
+  display: none;
+}
+.menuAreaCollapsed .sectionTitleY {
+  margin-block: var(--space-3) var(--space-2);
+  padding-block: var(--space-3) 0;
 }.menuAreaCollapsed .sectionTitleX {
   padding-inline: 0;
-  margin-inline: -8px;
-}.menuAreaCollapsed .sectionTitle {
-  text-align: center;
-  justify-content: center;
-}.menuAreaCollapsed .sectionTitle :global(.rt-Text) {
-  font-size: 9px;
-  line-height: 11px;
-  letter-spacing: 0;
-  overflow-wrap: normal;
-  word-break: normal;
+  margin-inline: 0;
 }.collapsedSubmenuSize {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
   height: 40px;
+  margin: 4px auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-3);
+  color: var(--gray-11);
+  background: transparent;
+  cursor: pointer;
 }.collapsedSubmenuPadX {
   padding-inline: 0;
 }.collapsedSubmenuPadY {
@@ -300,10 +312,14 @@ min-height: 0;
 }.collapsedSubmenuInk {
   color: var(--gray-11);
   cursor: pointer;
-}.collapsedSubmenuSize:hover .collapsedSubmenuFill,
+}.collapsedSubmenuSize:hover,
+.collapsedSubmenuActive,
+.collapsedSubmenuSize:hover .collapsedSubmenuFill,
 .collapsedSubmenuActive .collapsedSubmenuFill {
   background: var(--gray-a3);
-}.collapsedSubmenuSize:hover .collapsedSubmenuInk,
+}.collapsedSubmenuSize:hover,
+.collapsedSubmenuActive,
+.collapsedSubmenuSize:hover .collapsedSubmenuInk,
 .collapsedSubmenuActive .collapsedSubmenuInk {
   color: var(--gray-12);
 }.collapsedSubmenuSize:focus-visible {
@@ -331,10 +347,14 @@ min-height: 0;
   font: inherit;
 }.flyoutClip :global(.ps-menu-button.ps-active .ps-menu-label) {
   font-weight: 500;
-}.collapsedSubmenuCurrent .collapsedSubmenuFill,
+}.collapsedSubmenuCurrent,
+.collapsedSubmenuCurrent:hover,
+.collapsedSubmenuCurrent .collapsedSubmenuFill,
 .collapsedSubmenuCurrent:hover .collapsedSubmenuFill {
   background: var(--accent-a3);
-}.collapsedSubmenuCurrent .collapsedSubmenuInk,
+}.collapsedSubmenuCurrent,
+.collapsedSubmenuCurrent:hover,
+.collapsedSubmenuCurrent .collapsedSubmenuInk,
 .collapsedSubmenuCurrent:hover .collapsedSubmenuInk {
   color: var(--accent-11);
 }.menuArea :global(.ps-submenu-root > .ps-menu-button.ps-active) {
@@ -375,7 +395,6 @@ min-height: 0;
 .menuDotFill > *,
 .collapsedSubmenuRadius > *,
 .collapsedSubmenuEdge > *,
-.collapsedSubmenuFill > *,
 .contentInner > *,
 .sidebarSize > *,
 .toggleSize > *,
@@ -386,7 +405,6 @@ min-height: 0;
 .logoutHit > *,
 .menuIconDotSize > *,
 .menuDotSize > *,
-.collapsedSubmenuSize > *,
 .flyoutSize > *,
 .flyoutClip > * {
   height: 100%;
