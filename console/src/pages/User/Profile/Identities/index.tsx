@@ -24,7 +24,9 @@ import { isVerificationCodeComplete, normalizeVerificationCode } from "nfx-ui/ut
 import { useTranslation } from "react-i18next";
 
 import { PageHeader, Suspense } from "@/components";
+import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
+import { ROUTES } from "@/navigations";
 import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
 
 type SectionId = "emails" | "password" | "profiles";
@@ -82,11 +84,11 @@ function EmailRow({
   };
 }) {
   const { t } = useTranslation("pages.User.Profile.Identities");
-  const deleteEmail = useDeleteEmail();
-  const setPrimary = useSetPrimaryEmail();
-  const sendCode = useSendEmailVerificationCode();
-  const verify = useVerifyEmail();
-  const updateEmail = useUpdateEmail();
+  const deleteEmail = useDeleteEmail({ successMsg: t("toasts.deleteEmailSuccess") });
+  const setPrimary = useSetPrimaryEmail({ successMsg: t("toasts.setPrimaryEmailSuccess") });
+  const sendCode = useSendEmailVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
+  const verify = useVerifyEmail({ successMsg: t("toasts.verifyEmailSuccess") });
+  const updateEmail = useUpdateEmail({ successMsg: t("toasts.updateEmailSuccess") });
   const [code, setCode] = useState("");
   const [nextEmail, setNextEmail] = useState(item.email);
   const [editing, setEditing] = useState(false);
@@ -186,7 +188,7 @@ function EmailRow({
 function EmailsSection() {
   const { t } = useTranslation("pages.User.Profile.Identities");
   const emails = useListEmails();
-  const createEmail = useCreateEmail();
+  const createEmail = useCreateEmail({ successMsg: t("toasts.createEmailSuccess") });
   const [newEmail, setNewEmail] = useState("");
   const emailItems = safeArray(emails.data?.items);
 
@@ -228,8 +230,8 @@ function EmailsSection() {
 function PasswordSection() {
   const { t } = useTranslation("pages.User.Profile.Identities");
   const currentLanguage = usePreferenceStore((s) => s.language);
-  const changePassword = useChangePassword();
-  const sendCode = useSendChangePasswordVerificationCode();
+  const changePassword = useChangePassword({ successMsg: t("toasts.changePasswordSuccess") });
+  const sendCode = useSendChangePasswordVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
   const emails = useListEmails();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -339,7 +341,12 @@ function ProfilesSection() {
   const authorityProfiles = useListProfiles(ProfileKindEnum.AUTHORITY);
   const createProfile = useCreateForgerProfile();
   const deleteProfile = useDeleteProfile();
-  const selectProfile = useSelectProfile();
+  const selectProfile = useSelectProfile({
+    switchingMsg: t("profileSwitching"),
+    onCommit: () => {
+      routerEventEmitter.navigate({ to: ROUTES.BROWSER, replace: true });
+    },
+  });
   const [displayName, setDisplayName] = useState("");
   const [profileLanguage, setProfileLanguage] = useState<LanguageEnum>(LanguageEnum.EN);
   const [switchingId, setSwitchingId] = useState<Nullable<string>>(null);

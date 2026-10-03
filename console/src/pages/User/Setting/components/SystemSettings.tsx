@@ -11,7 +11,7 @@ export default function SystemSettings() {
     keyPrefix: "systemSettings",
   });
   const { profile } = useCurrentProfile();
-  const update = useUpdateProfileSettings();
+  const update = useUpdateProfileSettings({ successMsg: t("saveSuccess") });
   const [loginNotification, setLoginNotification] = useState(true);
 
   useEffect(() => {

@@ -22,11 +22,16 @@ import styles from "./s.module.css";
 export default function LoginPage() {
   const { t } = useTranslation("pages.Account.Login");
   const rack = useTranslation("pages.Account.AuthShell");
-  const emailForm = useInitLoginForm();
-  const phoneForm = useInitLoginWithPhoneForm();
+  const emailForm = useInitLoginForm(t);
+  const phoneForm = useInitLoginWithPhoneForm(t);
   const loginEmail = useLoginWithEmail();
   const loginPhone = useLoginWithPhone();
-  const selectProfile = useSelectProfile();
+  const selectProfile = useSelectProfile({
+    switchingMsg: t("selectProfile.switching"),
+    onCommit: () => {
+      routerEventEmitter.navigate({ to: ROUTES.BROWSER, replace: true });
+    },
+  });
   const [profiles, setProfiles] = useState<Login.ProfileItem[]>([]);
   const [channel, setChannel] = useState<"email" | "phone">("email");
 
@@ -36,7 +41,7 @@ export default function LoginPage() {
       setProfiles(list);
       return;
     }
-    routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW, replace: true });
+    routerEventEmitter.navigate({ to: ROUTES.BROWSER, replace: true });
   };
 
   const onEmail: SubmitHandler<LoginFormData> = async (data) => {
@@ -179,9 +184,8 @@ export default function LoginPage() {
                               onClick={async () => {
                                 await selectProfile.mutateAsync({
                                   profileId: profile.profileId,
-                                  kind,
+                                  kind: profile.kind,
                                 });
-                                routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW, replace: true });
                               }}
                             >
                               <Box className={`${styles.profileRowRule} ${styles.profileRowFill}`}>

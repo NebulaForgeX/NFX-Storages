@@ -60,5 +60,8 @@
       "failed": "Échec",
       "uploading": "Téléversement"
     }
+  },
+  "toasts": {
+    "clearAvatarSuccess": "Avatar retiré."
   }
 }

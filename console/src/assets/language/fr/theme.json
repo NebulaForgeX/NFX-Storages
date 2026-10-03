@@ -1,0 +1,14 @@
+{
+  "themeSwitcher": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "baseSwitcher": {
+    "default": "Autre",
+    "ios": "iOS",
+    "android": "Android",
+    "windows": "Windows",
+    "linux": "Linux"
+  }
+}

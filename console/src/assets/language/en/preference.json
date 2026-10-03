@@ -1,0 +1,49 @@
+{
+  "baseSwitcher": {
+    "default": "Default",
+    "ios": "iOS",
+    "android": "Android",
+    "windows": "Windows",
+    "linux": "Linux"
+  },
+  "preference": {
+    "theme": "Theme",
+    "language": "Language",
+    "layout": "Layout",
+    "preferences": "Preferences"
+  },
+  "actions": {
+    "reset": "Reset",
+    "saveTheme": "Save theme"
+  },
+  "labels": {
+    "appearance": "Appearance",
+    "accent": "Accent",
+    "gray": "Gray",
+    "radius": "Radius",
+    "scaling": "Scaling",
+    "panelBackground": "Panel background",
+    "font": "Font",
+    "livePreview": "Live preview",
+    "previewBadge": "Preview",
+    "previewSolid": "Solid",
+    "previewSoft": "Soft",
+    "sampleInput": "Sample input",
+    "notifications": "Notifications",
+    "unsavedChanges": "Unsaved changes",
+    "fontSystem": "System",
+    "fontIbmPlex": "IBM Plex",
+    "fontNoto": "Noto Sans",
+    "fontSourceSans": "Source Sans 3",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "colorAndAppearance": "Appearance & color",
+    "layoutAndType": "Radius & type"
+  },
+  "sections": {
+    "language": {
+      "title": "Language"
+    }
+  }
+}

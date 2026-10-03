@@ -34,5 +34,8 @@
     "passwordMin": "Password must be at least 8 characters",
     "confirmRequired": "Confirm your password",
     "passwordMismatch": "Passwords do not match"
+  },
+  "toasts": {
+    "sendVerificationCodeSuccess": "If this address can receive email, a verification code has been sent."
   }
 }

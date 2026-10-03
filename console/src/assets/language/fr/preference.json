@@ -1,0 +1,49 @@
+{
+  "baseSwitcher": {
+    "default": "Défaut",
+    "ios": "iOS",
+    "android": "Android",
+    "windows": "Windows",
+    "linux": "Linux"
+  },
+  "preference": {
+    "theme": "Thème",
+    "language": "Langue",
+    "layout": "Disposition",
+    "preferences": "Préférences"
+  },
+  "actions": {
+    "reset": "Réinitialiser",
+    "saveTheme": "Enregistrer le thème"
+  },
+  "labels": {
+    "appearance": "Apparence",
+    "accent": "Accent",
+    "gray": "Gris",
+    "radius": "Rayon",
+    "scaling": "Échelle",
+    "panelBackground": "Fond de panneau",
+    "font": "Police",
+    "livePreview": "Aperçu",
+    "previewBadge": "Aperçu",
+    "previewSolid": "Solide",
+    "previewSoft": "Doux",
+    "sampleInput": "Exemple",
+    "notifications": "Notifications",
+    "unsavedChanges": "Modifications non enregistrées",
+    "fontSystem": "Système",
+    "fontIbmPlex": "IBM Plex",
+    "fontNoto": "Noto Sans",
+    "fontSourceSans": "Source Sans 3",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "colorAndAppearance": "Apparence et couleur",
+    "layoutAndType": "Rayon et police"
+  },
+  "sections": {
+    "language": {
+      "title": "Langue"
+    }
+  }
+}

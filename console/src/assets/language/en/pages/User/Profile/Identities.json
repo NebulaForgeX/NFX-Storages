@@ -1,6 +1,7 @@
 {
   "title": "Identities",
   "description": "Switch profiles, manage emails and password for this Account.",
+  "profileSwitching": "Switching profile…",
   "empty": {
     "emails": {
       "title": "No emails yet",
@@ -70,5 +71,14 @@
       "title": "Community Profiles",
       "description": "Create another Profile. Authority profiles are granted by review."
     }
+  },
+  "toasts": {
+    "createEmailSuccess": "Email added.",
+    "verifyEmailSuccess": "Email verified.",
+    "updateEmailSuccess": "Email updated.",
+    "setPrimaryEmailSuccess": "Primary email updated.",
+    "deleteEmailSuccess": "Email removed.",
+    "sendVerificationCodeSuccess": "If this address can receive email, a verification code has been sent.",
+    "changePasswordSuccess": "Password updated."
   }
 }

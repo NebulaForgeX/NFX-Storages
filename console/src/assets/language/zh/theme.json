@@ -1,0 +1,14 @@
+{
+  "themeSwitcher": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统"
+  },
+  "baseSwitcher": {
+    "default": "其他",
+    "ios": "iOS",
+    "android": "Android",
+    "windows": "Windows",
+    "linux": "Linux"
+  }
+}

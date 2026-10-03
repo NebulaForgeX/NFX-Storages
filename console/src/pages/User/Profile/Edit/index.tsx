@@ -124,7 +124,7 @@ function AvatarSection() {
 export default function ProfileEditPage() {
   const { t } = useTranslation("pages.User.Profile.Edit");
   const { profile } = useCurrentProfile();
-  const patch = usePatchProfile();
+  const patch = usePatchProfile({ successMsg: t("edit.saveSuccess") });
   const [displayName, setDisplayName] = useState(safeStringable(profile?.displayName));
   const [bio, setBio] = useState(safeStringable(profile?.bio));
   const [city, setCity] = useState(safeStringable(profile?.city));

@@ -34,6 +34,7 @@
     "createAccount": "Créer un compte"
   },
   "selectProfile": {
+    "switching": "Changement de profil…",
     "eyebrow": "Choisir l'identité",
     "title": "Quel Profile continuer ?",
     "subtitle": "Votre Account peut porter plusieurs Profile.",

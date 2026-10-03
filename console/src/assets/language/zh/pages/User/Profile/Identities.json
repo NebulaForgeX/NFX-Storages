@@ -1,6 +1,7 @@
 {
   "title": "身份管理",
   "description": "切换身份，管理此账户下的邮箱与密码。",
+  "profileSwitching": "正在切换档案…",
   "empty": {
     "emails": {
       "title": "暂无邮箱",
@@ -70,5 +71,14 @@
       "title": "社区身份",
       "description": "可再创建一个 Profile。权威身份需审核授予。"
     }
+  },
+  "toasts": {
+    "createEmailSuccess": "邮箱已添加。",
+    "verifyEmailSuccess": "邮箱已验证。",
+    "updateEmailSuccess": "邮箱已更新。",
+    "setPrimaryEmailSuccess": "主邮箱已更新。",
+    "deleteEmailSuccess": "邮箱已删除。",
+    "sendVerificationCodeSuccess": "若邮箱可用，验证码已发送，请查收邮件。",
+    "changePasswordSuccess": "密码已更新。"
   }
 }

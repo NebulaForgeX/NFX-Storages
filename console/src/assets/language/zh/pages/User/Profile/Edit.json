@@ -60,5 +60,8 @@
       "failed": "失败",
       "uploading": "上传中"
     }
+  },
+  "toasts": {
+    "clearAvatarSuccess": "头像已移除。"
   }
 }

@@ -1,0 +1,49 @@
+{
+  "baseSwitcher": {
+    "default": "默认",
+    "ios": "iOS",
+    "android": "Android",
+    "windows": "Windows",
+    "linux": "Linux"
+  },
+  "preference": {
+    "theme": "主题",
+    "language": "语言",
+    "layout": "布局",
+    "preferences": "偏好"
+  },
+  "actions": {
+    "reset": "重置",
+    "saveTheme": "保存主题"
+  },
+  "labels": {
+    "appearance": "外观",
+    "accent": "强调色",
+    "gray": "灰色",
+    "radius": "圆角",
+    "scaling": "缩放",
+    "panelBackground": "面板背景",
+    "font": "字体",
+    "livePreview": "实时预览",
+    "previewBadge": "预览",
+    "previewSolid": "实心",
+    "previewSoft": "柔和",
+    "sampleInput": "示例输入",
+    "notifications": "通知",
+    "unsavedChanges": "有未保存更改",
+    "fontSystem": "系统",
+    "fontIbmPlex": "IBM Plex",
+    "fontNoto": "Noto Sans",
+    "fontSourceSans": "Source Sans 3",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "colorAndAppearance": "外观与颜色",
+    "layoutAndType": "圆角与字体"
+  },
+  "sections": {
+    "language": {
+      "title": "语言"
+    }
+  }
+}

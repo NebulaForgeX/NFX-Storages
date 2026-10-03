@@ -60,5 +60,8 @@
       "failed": "Failed",
       "uploading": "Uploading"
     }
+  },
+  "toasts": {
+    "clearAvatarSuccess": "Avatar removed."
   }
 }
