@@ -143,6 +143,9 @@ services:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
         VITE_S3_ENDPOINT: ${VITE_S3_ENDPOINT}
         VITE_BASE: ${VITE_BASE}
+    environment:
+      NAS_IP: ${NAS_IP}
+      NGINX_ENVSUBST_FILTER: NAS_IP
     ports:
       - "${NAS_IP}:${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
     restart: always
