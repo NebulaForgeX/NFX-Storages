@@ -1,17 +1,19 @@
 import { useEffect } from "react";
-import type { QueryClient } from "@tanstack/react-query";
-import { authEventEmitter } from "nfx-ui/events";
-import { AuthStore } from "nfx-ui/stores";
+import { QueryClient } from "@tanstack/react-query";
+import { queryEventEmitter, queryEvents } from "nfx-ui/events";
 
 export const useQueryInv = (queryClient: QueryClient) => {
   useEffect(() => {
-    const handleLogout = () => {
-      AuthStore.getState().clearAuth();
-      queryClient.clear();
+    const onResetActive = (onDone?: () => void) => {
+      void queryClient.resetQueries({ type: "active" }).then(() => {
+        onDone?.();
+      });
     };
-    authEventEmitter.onLogout(handleLogout);
+
+    queryEventEmitter.on(queryEvents.RESET_ACTIVE_QUERIES, onResetActive);
+
     return () => {
-      authEventEmitter.offLogout(handleLogout);
+      queryEventEmitter.off(queryEvents.RESET_ACTIVE_QUERIES, onResetActive);
     };
   }, [queryClient]);
 };

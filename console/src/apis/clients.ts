@@ -1,9 +1,11 @@
 import type { InternalAxiosRequestConfig } from "axios";
 
 import axios, { AxiosError } from "axios";
-import { AuthStore, clearAuth } from "nfx-ui/stores";
 import { refreshAuthTokens } from "nfx-ui/apis";
+import { authEventEmitter, authEvents } from "nfx-ui/events";
+import { AuthStore, clearAuth, hasSelectedProfile } from "nfx-ui/stores";
 import type { ApiErrorBody } from "nfx-ui/types";
+import { shouldForceLogoutAfterAuthRetry, shouldImmediateForceLogoutOnApiError } from "nfx-ui/utils";
 
 import { API_ENDPOINTS } from "@/apis/ip";
 
@@ -48,24 +50,39 @@ protectedClient.interceptors.response.use(
       return Promise.reject(error);
     }
     logApiError(error);
+
+    const emitLogout = () => {
+      if (!AuthStore.getState().isAuthValid) return;
+      if (!hasSelectedProfile(AuthStore.getState().currentProfileId)) return;
+      const aID = AuthStore.getState().currentAccountId;
+      authEventEmitter.emit(authEvents.LOGOUT, aID ?? undefined);
+      clearAuth();
+    };
+
+    if (shouldImmediateForceLogoutOnApiError(error)) {
+      emitLogout();
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && error.config && !error.config._retry) {
       error.config._retry = true;
       try {
-        const ok = await refreshAuthTokens("401");
-        if (!ok) throw error;
-        const newAccessToken = AuthStore.getState().accessToken;
-        if (newAccessToken && error.config.headers) {
-          error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+        const refreshed = await refreshAuthTokens("401");
+        if (!refreshed) {
+          emitLogout();
+          return Promise.reject(error);
         }
         return protectedClient.request(error.config);
-      } catch (refreshError) {
-        clearAuth();
-        if (window.location.pathname !== "/auth/login") {
-          window.location.href = "/auth/login";
-        }
-        return Promise.reject(refreshError);
+      } catch {
+        emitLogout();
+        return Promise.reject(error);
       }
     }
+
+    if (shouldForceLogoutAfterAuthRetry(error)) {
+      emitLogout();
+    }
+
     return Promise.reject(error);
   },
 );
